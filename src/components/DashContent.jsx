@@ -1,6 +1,6 @@
 import React from 'react'
-import { Hexagon, Clock, Trophy, Check, Star } from 'lucide-react'
 import ProfileStatsCard from './ProfileStatsCard'
+import GameCard from './GameCard'
 
 const DashContent = (props) => {
   return (
@@ -32,96 +32,9 @@ const DashContent = (props) => {
                     <h1 className='font-bold text-[#8a9bb0] tracking-wider'>RECENTLY PLAYED</h1>
                     <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>5 Games</span>
                 </div>
-                <div className='bg-[#0d1117] border border-white/5 rounded-xl p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                    <div className='flex gap-4 flex-1 min-w-0'>
-                        <div className='w-11 h-11 bg-green-300/20 border font-bold border-green-300/20 flex justify-center items-center rounded-[6px] '>E</div>
-                        <div className='flex flex-col flex-1 min-w-0'>
-                            <h1 className='body font-bold'>Elden Ring</h1>
-                            <span className='body text-[#4a5568] text-[11px]'>Action RPG - 94h</span>
-                            <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full mt-1'>
-                                <div className='h-full w-[67%] bg-green-500 rounded-full'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className='body flex flex-col items-end text-[13px]' >
-                            <h1 className='text-orange-200'>67%</h1>
-                            <h1 className='text-green-400'>PLAYING</h1>
-                        </div>
-                    </div>
-                </div>
-                <div className='bg-[#0d1117] border border-white/5 rounded-xl p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                    <div className='flex gap-4 flex-1 min-w-0'>
-                        <div className='w-11 h-11 bg-green-300/20 border font-bold border-green-300/20 flex justify-center items-center rounded-[6px] '>S</div>
-                        <div className='flex flex-col flex-1 min-w-0'>
-                            <h1 className='body font-bold'>Stardew Valley</h1>
-                            <span className='body text-[#4a5568] text-[11px]'>Simulation - 210h</span>
-                            <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full mt-1'>
-                                <div className='h-full w-[55%] bg-green-500 rounded-full'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className='body flex flex-col items-end text-[13px]' >
-                            <h1 className='text-orange-200'>55%</h1>
-                            <h1 className='text-green-400'>PLAYING</h1>
-                        </div>
-                    </div>
-                </div>
-                <div className='bg-[#0d1117] border border-white/5 rounded-xl p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                    <div className='flex gap-4 flex-1 min-w-0'>
-                        <div className='w-11 h-11 bg-green-300/20 border font-bold border-green-300/20 flex justify-center items-center rounded-[6px] '>H</div>
-                        <div className='flex flex-col flex-1 min-w-0'>
-                            <h1 className='body font-bold'>Hollow Knight</h1>
-                            <span className='body text-[#4a5568] text-[11px]'>Metroidvania - 28h</span>
-                            <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full mt-1'>
-                                <div className='h-full w-[28%] bg-green-500 rounded-full'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className='body flex flex-col items-end text-[13px]' >
-                            <h1 className='text-orange-200'>28%</h1>
-                            <h1 className='text-green-400'>PLAYING</h1>
-                        </div>
-                    </div>
-                </div>
-                <div className='bg-[#0d1117] border border-white/5 rounded-xl p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                    <div className='flex gap-4 flex-1 min-w-0'>
-                        <div className='w-11 h-11 bg-green-300/20 border font-bold border-green-300/20 flex justify-center items-center rounded-[6px] '>C</div>
-                        <div className='flex flex-col flex-1 min-w-0'>
-                            <h1 className='body font-bold'>Cyberpunk  2077</h1>
-                            <span className='body text-[#4a5568] text-[11px]'>Action RPG - 42h</span>
-                            <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full mt-1'>
-                                <div className='h-full w-[27%] bg-red-700 rounded-full'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className='body flex flex-col items-end text-[13px]' >
-                            <h1 className='text-orange-200'>27%</h1>
-                            <h1 className='text-red-700'>DROPPED</h1>
-                        </div>
-                    </div>
-                </div>
-                <div className='bg-[#0d1117] border border-white/5 rounded-xl p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-                    <div className='flex gap-4 flex-1 min-w-0'>
-                        <div className='w-11 h-11 bg-green-300/20 border font-bold border-green-300/20 flex justify-center items-center rounded-[6px] '>S</div>
-                        <div className='flex flex-col flex-1 min-w-0'>
-                            <h1 className='body font-bold'>Sekiro : Shadow's Die Twice</h1>
-                            <span className='body text-[#4a5568] text-[11px]'>Action RPG - 564h</span>
-                            <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full mt-1'>
-                                <div className='h-full w-[100%] bg-blue-500 rounded-full'></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div className='body flex flex-col items-end text-[13px]' >
-                            <h1 className='text-orange-200'>100%</h1>
-                            <h1 className='text-blue-400'>COMPLETED</h1>
-                        </div>
-                    </div>
-                </div>
+                {props.game_card.map(function(elem){
+                    return <GameCard name={elem.name} genre={elem.genre} hours={elem.hours} color1={elem.color1} initial={elem.initial} progress={elem.progress} color2={elem.color2} status={elem.status} />
+                })}
             </div>
             <div className='w-full xl:w-[320px] flex flex-col min-w-0 gap-4'>
                 <div className='w-full bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-6'>
