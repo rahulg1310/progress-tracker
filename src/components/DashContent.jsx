@@ -1,6 +1,8 @@
 import React from 'react'
 import ProfileStatsCard from './ProfileStatsCard'
 import GameCard from './GameCard'
+import LibraryStatus from './LibraryStatus'
+import GenreBreakdown from './GenreBreakdown'
 
 const DashContent = (props) => {
   return (
@@ -42,38 +44,9 @@ const DashContent = (props) => {
                         <h1 className='font-bold tracking-wider text-[#8a9bb0]'>LIBRARY STATUS</h1>
                     </div>
                     <div className='flex gap-4 px-3 justify-center'>
-                        <div className='flex flex-col items-center'>
-                            <div className='h-16 w-16 bg-[conic-gradient(#00f5a0_35%,#1a2332_0)] rounded-full flex items-center justify-center mb-2'>
-                                <div className='w-14 h-14 rounded-full bg-[#111620] flex items-center justify-center'>
-                                    <span className='font-bold text-[#00f5a0]'>3</span>
-                                </div>
-                            </div>
-                            <span className='body text-[#4a5568] text-[13px]'>Playing</span>
-                        </div>
-                        <div className='flex flex-col items-center'>
-                            <div className='h-16 w-16 bg-[conic-gradient(#0aa5ff_35%,#1a2332_0)] rounded-full flex items-center justify-center mb-2'>
-                                <div className='w-14 h-14 rounded-full bg-[#111620] flex items-center justify-center'>
-                                    <span className='font-bold text-[#0aa5ff]'>3</span>
-                                </div>
-                            </div>
-                            <span className='body text-[#4a5568] text-[13px]'>Completed</span>
-                        </div>
-                        <div className='flex flex-col items-center'>
-                            <div className='h-16 w-16 bg-[conic-gradient(#6200ff_15%,#1a2332_0)] rounded-full flex items-center justify-center mb-2'>
-                                <div className='w-14 h-14 rounded-full bg-[#111620] flex items-center justify-center'>
-                                    <span className='font-bold text-[#6200ff]'>1</span>
-                                </div>
-                            </div>
-                            <span className='body text-[#4a5568] text-[13px]'>Backlog</span>
-                        </div>
-                        <div className='flex flex-col items-center'>
-                            <div className='h-16 w-16 bg-[conic-gradient(#f50000_15%,#1a2332_0)] rounded-full flex items-center justify-center mb-2'>
-                                <div className='w-14 h-14 rounded-full bg-[#111620] flex items-center justify-center'>
-                                    <span className='font-bold text-[#f50000]'>1</span>
-                                </div>
-                            </div>
-                            <span className='body text-[#4a5568] text-[13px]'>Dropped</span>
-                        </div>
+                        {props.library_status.map(function(elem){
+                            return <LibraryStatus num={elem.num} cg={elem.cg} color2={elem.color2} status={elem.status} />
+                        })}
                     </div>
                 </div>
                 <div className='w-full bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-6 h-full'>
@@ -81,60 +54,9 @@ const DashContent = (props) => {
                         <h1 className='font-bold tracking-wider text-[#8a9bb0]'>GENRE BREAKDOWN</h1>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                            <span className='body text-xs text-[#8a9bb0] w-[70px] wrap-break-word'>Action RPG</span>
-                            <div className='w-[60%] h-1 rounded-full bg-[#1a2332]'>
-                                <div className='w-[100%] h-full rounded-full bg-amber-400'>
-                                </div>
-                            </div>
-                            <span className='body text-xs text-[#8a9bb0]'>2</span>
-                        </div>
-                        <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                            <span className='body text-xs text-[#8a9bb0] w-[70px] wrap-break-word'>Action RPG</span>
-                            <div className='w-[60%] h-1 rounded-full bg-[#1a2332]'>
-                                <div className='w-[50%] h-full rounded-full bg-amber-400'>
-                                </div>
-                            </div>
-                            <span className='body text-xs text-[#8a9bb0]'>1</span>
-                        </div><div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                            <span className='body text-[11px] text-[#8a9bb0] w-[70px] wrap-break-word'>Metroidvania</span>
-                            <div className='w-[60%] h-1 rounded-full bg-[#1a2332]'>
-                                <div className='w-[50%] h-full rounded-full bg-amber-400'>
-                                </div>
-                            </div>
-                            <span className='body text-xs text-[#8a9bb0]'>1</span>
-                        </div><div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                            <div className='flex flex-col flex-1 min-w-0'>
-                                <span className='body text-xs text-[#8a9bb0] w-[70px] wrap-break-word'>Action Adventure</span>
-                                
-                            </div>
-                            <div className='w-[60%] h-1 rounded-full bg-[#1a2332]'>
-                                <div className='w-[50%] h-full rounded-full bg-amber-400'>
-                                </div>
-                            </div>
-                            <span className='body text-xs text-[#8a9bb0]'>1</span>
-                        </div><div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                            <span className='body text-xs text-[#8a9bb0] w-[70px] wrap-break-word'>Roguelike</span>
-                            <div className='w-[60%] h-1 rounded-full bg-[#1a2332]'>
-                                <div className='w-[50%] h-full rounded-full bg-amber-400'>  
-                                </div>
-                            </div>
-                            <span className='body text-xs text-[#8a9bb0]'>1</span>
-                        </div><div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                            <span className='body text-xs text-[#8a9bb0] w-[70px] wrap-break-word'>RPG</span>
-                            <div className='w-[60%] h-1 rounded-full bg-[#1a2332]'>
-                                <div className='w-[50%] h-full rounded-full bg-amber-400'>
-                                </div>
-                            </div>
-                            <span className='body text-xs text-[#8a9bb0]'>1</span>
-                        </div><div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                            <span className='body text-xs text-[#8a9bb0] w-[70px] wrap-break-word'>Action</span>
-                            <div className='w-[60%] h-1 rounded-full bg-[#1a2332]'>
-                                <div className='w-[50%] h-full rounded-full bg-amber-400'>
-                                </div>
-                            </div>
-                            <span className='body text-xs text-[#8a9bb0]'>1</span>
-                        </div>
+                        {props.genre_breakdown.map(function(elem){
+                            return <GenreBreakdown num={elem.num} progress={elem.progress} genre={elem.genre} />
+                        })}
                     </div>
                 </div>
             </div>

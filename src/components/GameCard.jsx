@@ -9,7 +9,8 @@ const GameCard = (props) => {
                 <h1 className='body font-bold'>{props.name}</h1>
                 <span className='body text-[#4a5568] text-[11px]'>{props.genre} - {props.hours}</span>
                 <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full mt-1'>
-                        <div className={`h-full w-[${props.progress}] ${props.color1} rounded-full`}></div>
+                        <div className={`h-full ${props.color1} rounded-full`}
+                        style={{width: props.progress}}></div>
                 </div>
             </div>
         </div>
