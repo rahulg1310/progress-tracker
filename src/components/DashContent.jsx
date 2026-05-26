@@ -3,6 +3,7 @@ import ProfileStatsCard from './ProfileStatsCard'
 import GameCard from './GameCard'
 import LibraryStatus from './LibraryStatus'
 import GenreBreakdown from './GenreBreakdown'
+import TopByPlaytime from './TopByPlaytime'
 
 const DashContent = (props) => {
   return (
@@ -67,41 +68,9 @@ const DashContent = (props) => {
                 <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>557h total</span>
             </div>
             <div className='flex flex-col gap-3'>
-                <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                    <span className='body text-[13px] text-[#8a9bb0] w-[100px]'>Sekiro</span>
-                    <div className='flex-1 h-2 rounded-full bg-[#1a2332]'>
-                        <div className='w-[100%] h-full rounded-full bg-amber-400'></div>
-                    </div>
-                    <span className='body text-xs text-[#4a5568]'>210h</span>
-                </div>
-                <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                    <span className='body text-[13px] text-[#8a9bb0] w-[100px] '>Cyberpunk 2077</span>
-                    <div className='flex-1 h-2 rounded-full bg-[#1a2332]'>
-                        <div className='w-[30%] h-full rounded-full bg-blue-400'></div>
-                    </div>
-                    <span className='body text-xs text-[#4a5568]'>42h</span>
-                </div>
-                <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                    <span className='body text-[13px] text-[#8a9bb0] w-[100px]'>Stardew Valley</span>
-                    <div className='w-[80%] h-2 rounded-full bg-[#1a2332]'>
-                        <div className='w-[27%] h-full rounded-full bg-green-400'></div>
-                    </div>
-                    <span className='body text-xs text-[#4a5568]'>21h</span>
-                </div>
-                <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                    <span className='body text-[13px] text-[#8a9bb0] w-[100px]'>God Of War</span>
-                    <div className='w-[80%] h-2 rounded-full bg-[#1a2332]'>
-                        <div className='w-[80%] h-full rounded-full bg-red-400'></div>
-                    </div>
-                    <span className='body text-xs text-[#4a5568]'>64h</span>
-                </div>
-                <div className='flex flex-col sm:flex-row gap-3 sm:gap-6 sm:items-center'>
-                    <span className='body text-[13px] text-[#8a9bb0] w-[100px] '>Elden Ring</span>
-                    <div className='w-[80%] h-2 rounded-full bg-[#1a2332]'>
-                        <div className='w-[85%] h-full rounded-full bg-yellow-400'></div>
-                    </div>
-                    <span className='body text-xs text-[#4a5568]'>190h</span>
-                </div>
+                {props.top_by_playtime.map(function(elem){
+                    return <TopByPlaytime name={elem.name} progress={elem.progress} hours={elem.hours} color={elem.color}/>
+                })}
             </div>
         </div>
         <div className='w-full xl:w-[73%] bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>

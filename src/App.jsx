@@ -155,11 +155,44 @@
         }
     ]
 
+    let top_by_playtime = [
+        {
+          name : 'Sekiro',
+          progress : 'w-[100%]',
+          color : 'bg-amber-400',
+          hours : '210h'
+        },
+        {
+          name : 'Cyberpunk 2077',
+          progress : 'w-[30%]',
+          color : 'bg-blue-400',
+          hours : '42h'
+        },
+        {
+          name : 'Stardew Valley',
+          progress : 'w-[27%]',
+          color : 'bg-green-400',
+          hours : '21h'
+        },
+        {
+          name : 'God Of War',
+          progress : 'w-[80%]',
+          color : 'bg-red-400',
+          hours : '64h'
+        },
+        {
+          name : 'Elden Ring',
+          progress : 'w-[85%]',
+          color : 'bg-yellow-400',
+          hours : '190h'
+        }
+    ]
+
     return (
       <div className='flex h-screen overflow-hidden'>
         <Sidebar />
         <div className='flex-1 overflow-y-auto'>
-          <Dashboard profile_stats={profile_stats} game_card={game_card} library_status={library_status} genre_breakdown={genre_breakdown} />
+          <Dashboard profile_stats={profile_stats} game_card={game_card} library_status={library_status} genre_breakdown={genre_breakdown} top_by_playtime={top_by_playtime} />
         </div>
       </div>
     )
