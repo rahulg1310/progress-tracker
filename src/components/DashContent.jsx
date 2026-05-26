@@ -1,11 +1,8 @@
 import React from 'react'
-import { Hexagon } from 'lucide-react'
-import { Clock } from 'lucide-react'
-import { Trophy } from 'lucide-react'
-import { Check } from 'lucide-react'
-import { Star } from 'lucide-react'
+import { Hexagon, Clock, Trophy, Check, Star } from 'lucide-react'
+import ProfileStatsCard from './ProfileStatsCard'
 
-const DashContent = () => {
+const DashContent = (props) => {
   return (
     <div className='min-h-screen w-full px-4 md:px-8  xl:px-12 py-5 overflow-y-auto'>
       <div className='flex flex-col gap-6 w-full'>
@@ -25,56 +22,9 @@ const DashContent = () => {
             </div>
         </div>
         <div className='flex flex-wrap gap-4 w-full'>
-            <div className='flex items-center bg-[#111620] px-6 py-3 rounded-2xl border border-gray-400/15 flex-1 min-w-[240px]'>
-                <div className='mr-4 bg-green-400/15 p-2.5 rounded-xl'>
-                    <Hexagon size={20} color='#47b60c'/>
-                </div>
-                <div className='flex flex-col flex-1 min-w-0'>
-                    <h1 className='font-bold text-2xl'>8</h1>
-                    <span className='body text-[#8a9bb0] text-[13px]'>Games Played</span>
-                    <span className='body text-[#4a5568] text-[11px]'>3 Completed</span>
-                </div>
-            </div>
-            <div className='flex items-center bg-[#111620] px-6 py-3 rounded-2xl border border-gray-400/15 flex-1 min-w-[240px]'>
-                <div className='mr-4 bg-blue-400/15 p-2.5 rounded-xl'>
-                    <Clock size={20} color='#5fc9ec'/>
-                </div>
-                <div className='flex flex-col flex-1 min-w-0'>
-                    <h1 className='font-bold text-2xl'>557h</h1>
-                    <span className='body text-[#8a9bb0] text-[13px]'>Total Playtime</span>
-                    <span className='body text-[#4a5568] text-[11px]'>~24 Days</span>
-                </div>
-            </div>
-            <div className='flex items-center bg-[#111620] px-6 py-3 rounded-2xl border border-gray-400/15 flex-1 min-w-[240px]'>
-                <div className='mr-4 bg-purple-700/15 p-2.5 rounded-xl'>
-                    <Trophy size={20} color='#d127e7'/>
-                </div>
-                <div className='flex flex-col flex-1 min-w-0'>
-                    <h1 className='font-bold text-2xl'>209</h1>
-                    <span className='body text-[#8a9bb0] text-[13px]'>Achievements</span>
-                    <span className='body text-[#4a5568] text-[11px]'>Unlocked</span>
-                </div>
-            </div>
-            <div className='flex items-center bg-[#111620] px-6 py-3 rounded-2xl border border-gray-400/15 flex-1 min-w-[240px]'>
-                <div className='mr-4 bg-orange-500/15 p-2.5 rounded-xl'>
-                    <Check size={20} color='#e7b427'/>
-                </div>
-                <div className='flex flex-col flex-1 min-w-0'>
-                    <h1 className='font-bold text-2xl'>38%</h1>
-                    <span className='body text-[#8a9bb0] text-[13px]'>Completion Rate</span>
-                    <span className='body text-[#4a5568] text-[11px]'>3 Still Playing</span>
-                </div>
-            </div>
-            <div className='flex items-center bg-[#111620] px-6 py-3 rounded-2xl border border-gray-400/15 flex-1 min-w-[240px]'>
-                <div className='mr-4 bg-red-500/15 p-2.5 rounded-xl'>
-                    <Star size={20} color='#e70d0d'/>
-                </div>
-                <div className='flex flex-col flex-1 min-w-0'>
-                    <h1 className='font-bold text-2xl'>9.3</h1>
-                    <span className='body text-[#8a9bb0] text-[13px]'>Avg Rating</span>
-                    <span className='body text-[#4a5568] text-[11px]'>Across Rated Games</span>
-                </div>
-            </div>
+            {props.profile_stats.map(function(elem){
+                return <ProfileStatsCard num={elem.num} title={elem.title} stats={elem.stats} icon={elem.icon} color1={elem.color1} />
+            })}
         </div>
         <div className='flex flex-col xl:flex-row gap-4 min-w-0'>
             <div className='flex-1 min-w-0 bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4'>
