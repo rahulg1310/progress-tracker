@@ -1,12 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Gamepad2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 const SignUp = () => {
   const navigate = useNavigate();  
+  const [user, setUser] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [cpass, setCpass] = useState('');
+  const [userError, setUserError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [cpassError, setCpassError] = useState('');
+
+  const validate = () =>{
+    setUserError('');
+    setEmailError('');
+    setPasswordError('');
+    setCpassError('');
+    if(!email.includes('@')){
+        setEmailError('Please enter valid email');
+        return false;
+    }
+    if(user===''){
+        setUserError('Please enter user');
+        return false;
+    }
+    if(email===''){
+        setEmailError('Please enter email');
+        return false;
+    }
+    if(password===''){
+        setPasswordError('Please enter password');
+        return false;
+    }
+    if(password.length<6){
+        setPasswordError('Please enter alteast 6 characters');
+        return false;
+    }
+    if(cpass===''){
+        setCpassError('Please confirm password');
+        return false;
+    }
+    if(cpass!==password){
+        setCpassError('Password not matching');
+        return false;
+    }
+    return true;
+  }
+
   return (
     <div className='min-h-screen w-full bg-[#080c10] flex justify-center items-center px-4'>
-      <div className='bg-[#111820] flex flex-col gap-5 py-8 px-8     rounded-2xl border border-white/15 items-center w-full max-w-110'>
+      <div className='bg-[#111820] flex flex-col gap-5 py-8 px-8 rounded-2xl border border-white/15 items-center w-full max-w-110'>
         <div className='flex items-center'>
             <Gamepad2 size={38} className='mr-3'/>
             <h1 className='font-bold bg-linear-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent text-3xl tracking-wider'>QUESTLOG</h1>
@@ -17,21 +62,52 @@ const SignUp = () => {
         </div>
         <div className='flex flex-col w-full items-start'>
             <form 
+            className='flex flex-col gap-5 w-full'
             onSubmit={(e)=>{
                 e.preventDefault();
-                navigate('/dashboard');
+                if(validate()){
+                    navigate('/dashboard');
+                }
             }}
-            action="" className='w-full'>
-                <span className='body text-[13px] text-[#8a9bb0]'>Username</span>
-                <input type="text" name="" id="" placeholder='TheRadBrad' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 mb-5 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
-                <span className='body text-[13px] text-[#8a9bb0]'>Email</span>
-                <input type="email" name="" id="" placeholder='user@example.com'
-                autoComplete="email" className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 mb-5 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
-                <span className='body text-[13px] text-[#8a9bb0]'>Password</span>
-                <input type="password" name="" id="" placeholder='Min. 6 Characters' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 mb-5' />
-                <span className='body text-[13px] text-[#8a9bb0]'>Confirm Password</span>
-                <input type="password" name="" id="" placeholder='Enter Password' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 mb-7   ' />
-                <button type='w-full submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200'>Continue</button>       
+            action="">
+                <div>
+                    <span className='body text-[13px] text-[#8a9bb0]'>Username</span>
+                    <input 
+                    onChange={(e)=>{
+                        setUser(e.target.value);
+                    }}
+                    value={user} type="text" name="" id="" placeholder='TheRadBrad' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
+                    <span className='body text-[11px] text-[#ff2929] ml-1'>{userError}</span>
+                </div>
+                <div>
+                    <span className='body text-[13px] text-[#8a9bb0]'>Email</span>
+                    <input 
+                    onChange={(e)=>{
+                        setEmail(e.target.value);
+                    }}
+                    value={email} type="text" name="" id="" placeholder='user@example.com'
+                    autoComplete="email" className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
+                    <span className='body text-[11px] text-[#ff2929] ml-1'>{emailError}</span>
+                </div>
+                <div>
+                    <span className='body text-[13px] text-[#8a9bb0]'>Password</span>
+                    <input 
+                    onChange={(e)=>{
+                        setPassword(e.target.value);
+                    }}
+                    value={password} type="password" name="" id="" placeholder='Min. 6 Characters' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
+                    <span className='body text-[11px] text-[#ff2929] ml-1'>{passwordError}</span>
+                </div>
+                <div>
+                    <span className='body text-[13px] text-[#8a9bb0]'>Confirm Password</span>
+                    <input 
+                    onChange={(e)=>{
+                        setCpass(e.target.value);
+                    }}
+                    value={cpass} type="password" name="" id="" placeholder='Enter Password' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 ' />
+                    <span className='body text-[11px] text-[#ff2929] ml-1 mb-3'>{cpassError}</span>
+                </div>
+                <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 mt-3'>Continue</button>       
             </form>
         </div>
         

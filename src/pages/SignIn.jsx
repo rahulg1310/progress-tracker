@@ -6,6 +6,29 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError,setEmailError] = useState('');
+  const [passError,setPassError] = useState('');
+  const validate = () =>{
+    setEmailError('');
+    setPassError('');
+    if(!email.includes('@')){
+        setEmailError('Please enter valid email');
+        return false;
+    }
+    if(email===''){
+        setEmailError('Please enter email');
+        return false;
+    }
+    if(password===''){
+        setPassError('Please enter password');
+        return false;
+    }
+    if(password.length<6){
+        setPassError('Please enter atleast 6 characters');
+        return false;
+    }
+    return true;
+  }
   return (
     <div className='min-h-screen w-full bg-[#080c10] flex justify-center items-center px-4'>
       <div className='bg-[#111820] flex flex-col gap-5 py-8 px-8     rounded-2xl border border-white/15 items-center w-full max-w-110'>
@@ -21,15 +44,31 @@ const SignIn = () => {
             <form 
             onSubmit={(e)=>{
                 e.preventDefault();
-                navigate('/dashboard');
+                if(validate()){
+                    navigate('/dashboard');
+                }
             }}
-            action="" className='w-full'>
-                <span className='body text-[13px] text-[#8a9bb0]'>Email</span>
-                <input type="text" name="" id="" placeholder='user@example.com' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 mb-5 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
-                <span className='body text-[13px] text-[#8a9bb0]'>Password</span>
-                <input type="password" name="" id="" placeholder='Enter Password' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 mb-5' />
+            action="" className='w-full flex flex-col gap-5'>
+                <div>
+                    <span className='body text-[13px] text-[#8a9bb0]'>Email</span>
+                    <input 
+                    onChange={(e)=>{
+                        setEmail(e.target.value);
+                    }}
+                    value={email} type="text" name="" id="" placeholder='user@example.com' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
+                    <span className='body text-[11px] text-[#ff2929] ml-1'>{emailError}</span>
+                </div>
+                <div>
+                    <span className='body text-[13px] text-[#8a9bb0]'>Password</span>
+                    <input 
+                    onChange={(e)=>{
+                        setPassword(e.target.value);
+                    }}
+                    value={password} type="password" name="" id="" placeholder='Enter Password' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 ' />
+                    <span className='body text-[11px] text-[#ff2929] ml-1'>{passError}</span>
+                </div>
                 <div className='w-full flex justify-end'>
-                    <button className='body text-[13px] text-[#38d60c] transition-all duration-200 mb-5'>Forgot Password?</button>
+                    <button className='body text-[13px] text-[#38d60c] transition-all duration-200'>Forgot Password?</button>
                 </div>
                 <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200'
                 >Sign In</button>
