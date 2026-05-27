@@ -2,6 +2,7 @@
   import Dashboard from './pages/Dashboard'
   import Sidebar from './components/Sidebar'
   import { Hexagon, Clock, Trophy, Check, Star } from 'lucide-react'
+  import SignIn from './pages/SignIn'
 
   const App = () => {
     let profile_stats =[
@@ -190,10 +191,11 @@
 
     return (
       <div className='flex h-screen overflow-hidden'>
-        <Sidebar />
+        <SignIn />
+        {/*<Sidebar />
         <div className='flex-1 overflow-y-auto'>
           <Dashboard profile_stats={profile_stats} game_card={game_card} library_status={library_status} genre_breakdown={genre_breakdown} top_by_playtime={top_by_playtime} />
-        </div>
+        </div>*/}
       </div>
     )
   }
