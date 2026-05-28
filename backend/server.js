@@ -14,6 +14,37 @@ app.get('/',(req,res)=>{
     res.send('Questlog Backend Running');
 });
 
+app.post('/signin',async (req,res)=>{
+    try{
+        const { email,password} = req.body;
+        const existingEmail = await User.findOne({email});
+        if(!existingEmail){
+            return res.status(400).json({
+                success : false,
+                message : "Invalid Credentials"
+            })
+        }
+        const isMatch = await bcrypt.compare(password,existingEmail.password);
+        if(!isMatch){
+            return res.status(400).json({
+                success : false,
+                message : "Invalid Credentials"
+            })
+        }
+        res.status(200).json({
+            success:true,
+            message:'Login Successful'
+        });
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({
+            success : false,
+            message : "Server Error"
+        });
+    }
+})
+
 app.post('/signup',async (req,res)=>{
     try{
         const { username,email,password } = req.body;

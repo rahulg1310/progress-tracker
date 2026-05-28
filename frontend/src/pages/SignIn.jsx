@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Gamepad2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -42,10 +43,22 @@ const SignIn = () => {
         </div>
         <div className='flex flex-col w-full items-start'>
             <form 
-            onSubmit={(e)=>{
+            onSubmit={async (e)=>{
                 e.preventDefault();
                 if(validate()){
-                    navigate('/dashboard');
+                    try{
+                        const response = await axios.post('http://localhost:5000/signin',{
+                            email : email,
+                            password : password
+                        });
+                        console.log(response.data);
+                        navigate('/dashboard');
+                    }
+                    catch(error){
+                        console.log(error.response.data);
+                        const message = error.response.data.message;
+                        setPassError(message);
+                    }
                 }
             }}
             action="" className='w-full flex flex-col gap-5'>
