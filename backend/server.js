@@ -1,38 +1,74 @@
 const express = require('express');
 const cors = require('cors');
+const connectDB = require('./config/db');
+const User = require('./models/User');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+connectDB();
+
 app.get('/',(req,res)=>{
     res.send('Questlog Backend Running');
 });
 
-app.post('/signup',(req,res)=>{
-    const { email,password } = req.body;
-    if(!email){
+app.post('/signup',async (req,res)=>{
+    try{
+        const { username,email,password } = req.body;
+        if(!username){
         return res.status(400).json({
             success : false,
-            message : "Email is required"
+            message : "Username required"
+            })
+        }
+        if(!email){
+            return res.status(400).json({
+                success : false,
+                message : "Email is required"
+            });
+        }
+        if(!password){
+            return res.status(400).json({
+                success : false,
+                message : "Password is required"
+            });
+        }
+        if(password.length<6){
+            return res.status(400).json({
+                success : false,
+                message : "Password must be atleast 6 characters"
+            });
+        }
+        const existingUser = await User.findOne({username});
+        const existingEmail = await User.findOne({email});
+        if(existingUser){
+            return res.status(400).json({
+                success:false,
+                message:'User already exists'
+            })
+        }
+        if(existingEmail){
+            return res.status(400).json({
+                success:false,
+                message:'Email already exists'
+            });
+        }
+        const hashedPass = await bcrypt.hash(password,10);
+        const newUser = await User.create({username,email,password : hashedPass});
+        res.status(201).json({
+            success : true,
+            message : "Signup Successful"
         });
     }
-    if(!password){
-        return res.status(400).json({
-            success : false,
-            message : "Password is required"
+    catch(error){
+        console.log(error);
+        res.status(500).json({
+            success:false,
+            message:'Server Error'
         });
     }
-    if(password.length<6){
-        return res.status(400).json({
-            success : false,
-            message : "Password must be atleast 6 characters"
-        });
-    }
-    res.status(201).json({
-        success : true,
-        message : "Signup Successful"
-    });
 });
 
 app.listen(5000,()=>{

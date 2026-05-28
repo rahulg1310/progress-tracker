@@ -25,8 +25,8 @@ const DashContent = (props) => {
             </div>
         </div>
         <div className='flex flex-wrap gap-4 w-full'>
-            {props.profile_stats.map(function(elem){
-                return <ProfileStatsCard num={elem.num} title={elem.title} stats={elem.stats} icon={elem.icon} color1={elem.color1} />
+            {props.profile_stats.map(function(elem,idx){
+                return <ProfileStatsCard key={idx} num={elem.num} title={elem.title} stats={elem.stats} icon={elem.icon} color1={elem.color1} />
             })}
         </div>
         <div className='flex flex-col xl:flex-row gap-4 min-w-0'>
@@ -35,8 +35,8 @@ const DashContent = (props) => {
                     <h1 className='font-bold text-[#8a9bb0] tracking-wider'>RECENTLY PLAYED</h1>
                     <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>5 Games</span>
                 </div>
-                {props.game_card.map(function(elem){
-                    return <GameCard name={elem.name} genre={elem.genre} hours={elem.hours} color1={elem.color1} initial={elem.initial} progress={elem.progress} color2={elem.color2} status={elem.status} />
+                {props.game_card.map(function(elem,idx){
+                    return <GameCard key={idx} name={elem.name} genre={elem.genre} hours={elem.hours} color1={elem.color1} initial={elem.initial} progress={elem.progress} color2={elem.color2} status={elem.status} />
                 })}
             </div>
             <div className='w-full xl:w-[320px] flex flex-col min-w-0 gap-4'>
@@ -45,8 +45,8 @@ const DashContent = (props) => {
                         <h1 className='font-bold tracking-wider text-[#8a9bb0]'>LIBRARY STATUS</h1>
                     </div>
                     <div className='flex gap-4 px-3 justify-center'>
-                        {props.library_status.map(function(elem){
-                            return <LibraryStatus num={elem.num} cg={elem.cg} color2={elem.color2} status={elem.status} />
+                        {props.library_status.map(function(elem,idx){
+                            return <LibraryStatus key={idx} num={elem.num} cg={elem.cg} color2={elem.color2} status={elem.status} />
                         })}
                     </div>
                 </div>
@@ -55,8 +55,8 @@ const DashContent = (props) => {
                         <h1 className='font-bold tracking-wider text-[#8a9bb0]'>GENRE BREAKDOWN</h1>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        {props.genre_breakdown.map(function(elem){
-                            return <GenreBreakdown num={elem.num} progress={elem.progress} genre={elem.genre} />
+                        {props.genre_breakdown.map(function(elem,idx){
+                            return <GenreBreakdown key={idx} num={elem.num} progress={elem.progress} genre={elem.genre} />
                         })}
                     </div>
                 </div>
@@ -68,8 +68,8 @@ const DashContent = (props) => {
                 <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>557h total</span>
             </div>
             <div className='flex flex-col gap-3'>
-                {props.top_by_playtime.map(function(elem){
-                    return <TopByPlaytime name={elem.name} progress={elem.progress} hours={elem.hours} color={elem.color}/>
+                {props.top_by_playtime.map(function(elem,idx){
+                    return <TopByPlaytime key={idx} name={elem.name} progress={elem.progress} hours={elem.hours} color={elem.color}/>
                 })}
             </div>
         </div>

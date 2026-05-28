@@ -23,12 +23,12 @@ const SignUp = () => {
         setUserError('Please enter user');
         return false;
     }
-    if(!email.includes('@')){
-        setEmailError('Please enter valid email');
-        return false;
-    }
     if(email===''){
         setEmailError('Please enter email');
+        return false;
+    }
+    if(!email.includes('@')){
+        setEmailError('Please enter valid email');
         return false;
     }
     if(password===''){
@@ -67,7 +67,27 @@ const SignUp = () => {
             onSubmit={async (e)=>{
                 e.preventDefault();
                 if(validate()){
-                    navigate('/dashboard');
+                    try{
+                        const response = await axios.post('http://localhost:5000/signup',
+                            {
+                                username : user,
+                                email : email,
+                                password : password
+                            }
+                        );
+                        console.log(response.data);
+                        navigate('/dashboard');
+                    }
+                    catch(error){
+                        console.log(error.response.data);
+                        const message = error.response.data.message;
+                        if(message.includes('User')){
+                            setUserError(message);
+                        }
+                        else if(message.includes('Email')){
+                            setEmailError(message);
+                        }
+                    }
                 }
             }}
             action="">
