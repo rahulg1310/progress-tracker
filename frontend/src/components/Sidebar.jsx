@@ -11,8 +11,11 @@ import { Heart } from 'lucide-react'
 import { UsersRound } from 'lucide-react'
 import { LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { UserData } from '../context/UserContext'
+import { useContext } from 'react'
 
 const Sidebar = () => {
+  const {user , setUser} = useContext(UserData);
   const navigate = useNavigate();
   return (
     <>
@@ -41,10 +44,11 @@ const Sidebar = () => {
             </div>
         </div>
         <div className='w-full flex flex-col justify-between px-4 py-4 flex-1'>
-            <div className='w-full flex justify-center'>Profile</div>
+            <div className='w-full flex justify-center text-[#00ff73] body text-2xl'>{user?.username}</div>
             <div className='w-full flex justify-center'>
               <button 
               onClick={()=>{
+                setUser(null);
                 navigate('/');
               }}
               className='w-full py-1 flex justify-center items-center gap-2 font-bold tracking-wider text-xl hover:bg-gray-800 rounded-[7px] transition-all duration-150 text-[#8a9bb0]'>Logout <LogOut size={15}/></button>

@@ -4,15 +4,18 @@ import GameCard from './GameCard'
 import LibraryStatus from './LibraryStatus'
 import GenreBreakdown from './GenreBreakdown'
 import TopByPlaytime from './TopByPlaytime'
+import { useContext } from 'react'
+import { UserData } from '../context/UserContext'
 
 const DashContent = (props) => {
+  const {user} = useContext(UserData);
   return (
     <div className='min-h-screen w-full px-4 md:px-8  xl:px-12 py-5 overflow-y-auto'>
       <div className='flex flex-col gap-6 w-full'>
         <div className='flex justify-between items-center'>
             <div>
                 <h1 className='font-bold text-4xl tracking-wider'>Dashboard</h1>
-                <h4 className='body text-[13px] text-[#8a9bb0]'>Welcome Back, <span className='text-[#00f5a0]'>ZOICCY</span></h4>
+                <h4 className='body text-[13px] text-[#8a9bb0]'>Welcome Back, <span className='text-[#00f5a0]'>{user?.username}</span></h4>
             </div>
             <div>
                 <div className='px-3 flex bg-yellow-400/10 rounded-3xl border border-yellow-400/20 justify-center items-center'>
@@ -62,7 +65,7 @@ const DashContent = (props) => {
                 </div>
             </div>
         </div>
-        <div className='w-full xl:w-[73%] bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>
+        <div className='w-full flex-1 bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>
             <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
                 <h1 className='font-bold text-[#8a9bb0] tracking-wider'>TOP BY PLAYTIME</h1>
                 <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>557h total</span>
@@ -73,7 +76,7 @@ const DashContent = (props) => {
                 })}
             </div>
         </div>
-        <div className='w-full xl:w-[73%] bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>
+        <div className='w-full flex-1 bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>
             <div>
                 <h1 className='font-bold text-[#8a9bb0] tracking-wider'>LEVEL</h1>
             </div>

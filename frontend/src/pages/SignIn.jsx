@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Gamepad2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useContext } from 'react'
+import { UserData } from '../context/UserContext'
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -9,6 +11,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [emailError,setEmailError] = useState('');
   const [passError,setPassError] = useState('');
+  const { setUser } = useContext(UserData);
   const validate = () =>{
     setEmailError('');
     setPassError('');
@@ -51,7 +54,8 @@ const SignIn = () => {
                             email : email,
                             password : password
                         });
-                        console.log(response.data);
+                        console.log(response.data.userData);
+                        setUser(response.data.userData);
                         navigate('/dashboard');
                     }
                     catch(error){

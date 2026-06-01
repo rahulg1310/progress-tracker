@@ -33,7 +33,11 @@ app.post('/signin',async (req,res)=>{
         }
         res.status(200).json({
             success:true,
-            message:'Login Successful'
+            message:'Login Successful',
+            userData :{
+                email : existingEmail.email,
+                username : existingEmail.username
+            }
         });
     }
     catch(error){

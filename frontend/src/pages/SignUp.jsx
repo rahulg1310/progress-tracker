@@ -76,7 +76,7 @@ const SignUp = () => {
                             }
                         );
                         console.log(response.data);
-                        navigate('/dashboard');
+                        navigate('/');
                     }
                     catch(error){
                         console.log(error.response.data);
@@ -128,7 +128,7 @@ const SignUp = () => {
                     value={cpass} type="password" name="" id="" placeholder='Enter Password' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 ' />
                     <span className='body text-[11px] text-[#ff2929] ml-1 mb-3'>{cpassError}</span>
                 </div>
-                <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 mt-3'>Continue</button>       
+                <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 mt-3'>Create Account</button>       
             </form>
         </div>
         
