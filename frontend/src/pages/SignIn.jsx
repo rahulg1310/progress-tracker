@@ -56,6 +56,8 @@ const SignIn = () => {
                         });
                         console.log(response.data.userData);
                         setUser(response.data.userData);
+                        localStorage.setItem("user",JSON.stringify(response.data.userData));
+                        localStorage.setItem("token",JSON.stringify(response.data.token));
                         navigate('/dashboard');
                     }
                     catch(error){

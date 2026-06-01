@@ -49,6 +49,8 @@ const Sidebar = () => {
               <button 
               onClick={()=>{
                 setUser(null);
+                localStorage.removeItem("user");
+                localStorage.removeItem("token");
                 navigate('/');
               }}
               className='w-full py-1 flex justify-center items-center gap-2 font-bold tracking-wider text-xl hover:bg-gray-800 rounded-[7px] transition-all duration-150 text-[#8a9bb0]'>Logout <LogOut size={15}/></button>

@@ -3,6 +3,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(express.json());
@@ -31,9 +32,13 @@ app.post('/signin',async (req,res)=>{
                 message : "Invalid Credentials"
             })
         }
+        const token = jwt.sign({
+            userId : existingEmail._id
+        },'questlog_secret');
         res.status(200).json({
             success:true,
             message:'Login Successful',
+            token,
             userData :{
                 email : existingEmail.email,
                 username : existingEmail.username
