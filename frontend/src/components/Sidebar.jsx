@@ -28,9 +28,17 @@ const Sidebar = () => {
                     
                 </div>
                 <div className='font-semibold text-[#8a9bb0] text-lg flex flex-col gap-1 items-start px-3'>
-                    <button className='flex items-center gap-2 w-full hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-150'><LayoutDashboard size={15} className='mb-0.5'/> Dashboard</button>
-                    <button className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-150'><Clock size={15} className='mb-0.5'/>Sessions</button>
-                    <button className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-150'><UserRound size={15} className='mb-0.5'/>Profile</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/dashboard');
+                    }}
+                    className='flex items-center gap-2 w-full hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><LayoutDashboard size={15} className='mb-0.5'/> Dashboard</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/sessions');
+                    }}
+                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Clock size={15} className='mb-0.5'/>Sessions</button>
+                    <button className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><UserRound size={15} className='mb-0.5'/>Profile</button>
                 </div>
             </div>
             <div className='px-3 py-3 border-b border-b-gray-400/30'>
@@ -53,7 +61,7 @@ const Sidebar = () => {
                 localStorage.removeItem("token");
                 navigate('/');
               }}
-              className='w-full py-1 flex justify-center items-center gap-2 font-bold tracking-wider text-xl hover:bg-gray-800 rounded-[7px] transition-all duration-150 text-[#8a9bb0]'>Logout <LogOut size={15}/></button>
+              className='w-full py-1 flex justify-center items-center gap-2 font-bold tracking-wider text-xl hover:bg-gray-800 rounded-[7px] transition-all duration-200 text-[#8a9bb0]'>Logout <LogOut size={15}/></button>
             </div>
         </div>
       </div>
