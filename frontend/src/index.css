@@ -80,3 +80,11 @@ input,select,textarea{
 .mono{
   font-family: var(--font-mono);
 }
+
+.button_border{
+  cursor: pointer;
+  font-family: inherit;
+  background-color: none;
+  border: 0.1px solid rgba(255,255,255,0.3);
+}
+

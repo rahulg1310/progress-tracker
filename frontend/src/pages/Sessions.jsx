@@ -36,11 +36,17 @@ const Sessions = () => {
         color : 'text-[#ec4899]'
     },
   ]
+
+  const game_button = [
+    {
+        name : 'All'
+    },
+  ]
   return (
     <div className='flex min-h-screen w-full bg-[#080c10]'>
         <Sidebar />
         <div className='flex-1 overflow-y-auto'>
-            <SessionContent session_card={session_card}/>
+            <SessionContent session_card={session_card} game_button={game_button}/>
         </div>
     </div>
   )
