@@ -41,6 +41,30 @@ const Sessions = () => {
     {
         name : 'All'
     },
+    {
+        name : 'Valorant'
+    },
+    {
+        name : 'League Of Legends'
+    },
+    {
+        name : 'Fortnite'
+    },
+    {
+        name : 'Counter Strike : 2'
+    },
+    {
+        name : 'Apex Legends'
+    },
+    {
+        name : 'Overwatch 2'
+    },
+    {
+        name : 'Rainbow Six Siege'
+    },
+    {
+        name : 'Call Of Duty'
+    }
   ]
   return (
     <div className='flex min-h-screen w-full bg-[#080c10]'>
