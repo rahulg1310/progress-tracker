@@ -124,6 +124,7 @@ const SessionContent = (props) => {
   ]
   };
   
+  
   const [modal, setModal] = useState(false);
   const [sessions, setSessions] = useState(()=>{
     const savedSessions=localStorage.getItem("sessions");
@@ -155,12 +156,54 @@ const SessionContent = (props) => {
   const filteredSessions = sessions.filter(function(elem){
     return ((selectedGame === 'All' || selectedGame===elem.game) && (result === 'All' || result===elem.result))
   });
+  const totalSessions = sessions.length;
+  const totalDuration = sessions.reduce((total,elem)=>{
+    return total+Number(elem.duration);
+  },0);
+  const totalTime = totalSessions === 0 ? 0 : (totalDuration/60).toFixed(1);
+  const totalWins = sessions.filter((elem)=>{
+    return elem.result === 'Win';
+  }).length;
+  const winRate = totalSessions === 0 ? 0 : ((totalWins/totalSessions)*100).toFixed(0);
+  const avgSession = sessions.length === 0 ? 0 : (totalDuration / sessions.length).toFixed(0);
+  const totalKD = sessions.reduce((total,elem)=>{
+    return total + Number(elem.ratio);
+  },0);
+  const avgKD = sessions.length === 0 ? 0 : (totalKD / sessions.length).toFixed(2);
+
+  const session_card = [
+    {
+        data : totalSessions,
+        title : 'Total Sessions',
+        color : 'text-[#00f5a0]'
+    },
+    {
+        data : totalTime+'h',
+        title : 'Total Hours',
+        color : 'text-[#00d9f5]'
+    },
+    {
+        data : avgKD,
+        title : 'Avg K/D',
+        color : 'text-[#a78bfa]'
+    },
+    {
+        data : winRate+'%',
+        title : 'Win Rate',
+        color : 'text-[#f9e020]'
+    },
+    {
+        data : avgSession+'m',
+        title : 'Avg Session',
+        color : 'text-[#f97316]'
+    }
+  ]
+
   return (
     <div className='w-full py-5 px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
         <div className='flex flex-col'>
             <h1 className='font-bold text-4xl tracking-wider'>Session Tracker</h1>
-            <h4 className='body text-[13px] text-[#8a9bb0]'>{props.session_card.data} Sessions Logged</h4>
         </div>
         <div>
             <button 
@@ -181,7 +224,7 @@ const SessionContent = (props) => {
         </div>
       </div>
       <div className='flex gap-3 '>
-        {props.session_card.map(function(elem,idx){
+        {session_card.map(function(elem,idx){
             return <SessionContentCard key={idx} data={elem.data} title={elem.title} color={elem.color} />
         })}
       </div>

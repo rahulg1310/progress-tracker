@@ -18,24 +18,24 @@ const StatsCard = (props) => {
               <h1 className='mono text-[16px] text-green-400'>{props.kills}</h1>
               <h1 className='body text-[12px] text-[#4a5568]'>KILLS</h1>
             </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+            <div className='flex flex-col gap-0 justify-center items-center'>
               <h1 className='mono text-[16px] text-red-500'>{props.deaths}</h1>
               <h1 className='body text-[12px] text-[#4a5568]'>DEATHS</h1>
             </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+            <div className='flex flex-col gap-0 justify-center items-center'>
               <h1 className='mono text-[16px] text-cyan-400'>{props.assists}</h1>
               <h1 className='body text-[12px] text-[#4a5568]'>ASSISTS</h1>
             </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+            <div className='flex flex-col gap-0 justify-center items-center'>
               <h1 className='mono text-[16px] text-yellow-200'>{props.ratio}</h1>
               <h1 className='body text-[12px] text-[#4a5568]'>K/D</h1>
             </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+            <div className='flex flex-col gap-0 justify-center items-center'>
               <h1 className='mono text-[16px]'>{props.duration}m</h1>
               <h1 className='body text-[12px] text-[#4a5568]'>DURATION</h1>
             </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
-              <h1 className='mono text-[16px] text-purple-600'>{props.mood}</h1>
+            <div className='flex flex-col gap-0 justify-center items-center'>
+              <h1 className='mono text-[16px] text-purple-600 lowercase font-semibold'>{props.mood}</h1>
               <h1 className='body text-[12px] text-[#4a5568]'>MOOD</h1>
             </div>
           </div> 
