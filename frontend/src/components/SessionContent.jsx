@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import SessionContentCard from './SessionContentCard'
 import SessionGameButton from './SessionGameButton'
 import SessionModal from './SessionModal'
+import { ArrowRight } from 'lucide-react'
 
 const SessionContent = (props) => {
   const ranks = {
@@ -121,16 +122,23 @@ const SessionContent = (props) => {
     "Iridescent",
     "Top 250"
   ]
-};
+  };
   
   const [modal, setModal] = useState(false);
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState(()=>{
+    const savedSessions=localStorage.getItem("sessions");
+    if(savedSessions){
+      return JSON.parse(savedSessions);
+    }
+    return [];
+  });
   const [duration, setDuration] = useState(0);
   const [kills, setKills] = useState(0);
   const [deaths, setDeaths] = useState(0);
   const [assists, setAssists] = useState(0);
   const ratio = deaths === 0 ? kills : (kills / deaths).toFixed(2);
   const [game, setGame] = useState("Valorant");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [brank, setBrank] = useState(ranks[game][0]);
   const [arank, setArank] = useState(ranks[game][0]);
   const [selectedGame, setSelectedGame] = useState("All");
@@ -152,6 +160,7 @@ const SessionContent = (props) => {
                 setKills(0);
                 setAssists(0);
                 setGame("Valorant");
+                setDate(new Date().toISOString().split("T")[0]);
                 setBrank(ranks["Valorant"][0]);
                 setArank(ranks["Valorant"][0]);
                 setSessionResult("");
@@ -182,37 +191,78 @@ const SessionContent = (props) => {
                 onClick={()=>{
                   setResult("All");
                 }}
-                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition:all duration-200 ${
+                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition-all duration-200 ${
                   "All"===result ? "border-cyan-400 text-cyan-400" : "border-white/25 text-white"
                 }`}>All</button>
                 <button 
                 onClick={()=>{
                   setResult("Win");
                 }}
-                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition:all duration-200 ${
+                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition-all duration-200 ${
                   "Win"===result ? "border-green-400 text-green-400" : "border-white/25 text-white"
                 } `}>Win</button>
                 <button 
                 onClick={()=>{
                   setResult("Loss");
                 }}
-                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition:all duration-200 ${
+                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition-all duration-200 ${
                   "Loss"===result ? "border-red-400 text-red-400" : "border-white/25 text-white"
                 } `}>Loss</button>
                 <button 
                 onClick={()=>{
                   setResult("Draw");
                 }}
-                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition:all duration-200 ${
+                className={`button_border text-[14px] rounded-full px-3 border hover:bg-gray-700 transition-all duration-200 ${
                   "Draw"===result ? "border-yellow-400 text-yellow-400" : "border-white/25 text-white"
                 } `}>Draw</button>
             </div>
         </div>
       </div>
       {modal && (
-        <SessionModal modal={modal} setModal={setModal} sessions={sessions} setSessions={setSessions} kills={kills} setKills={setKills} deaths={deaths} setDeaths={setDeaths} assists={assists} setAssists={setAssists} ratio={ratio} game={game} setGame={setGame} brank={brank} setBrank={setBrank} arank={arank} setArank={setArank} selectedGame={selectedGame} setSelectedGame={setSelectedGame} sessionResult={sessionResult} setSessionResult={setSessionResult} mood={mood} setMood={setMood} duration={duration} setDuration={setDuration} ranks={ranks} />
+        <SessionModal modal={modal} setModal={setModal} sessions={sessions} setSessions={setSessions} kills={kills} setKills={setKills} deaths={deaths} setDeaths={setDeaths} assists={assists} setAssists={setAssists} ratio={ratio} game={game} setGame={setGame} brank={brank} setBrank={setBrank} arank={arank} setArank={setArank} selectedGame={selectedGame} setSelectedGame={setSelectedGame} sessionResult={sessionResult} setSessionResult={setSessionResult} mood={mood} setMood={setMood} duration={duration} setDuration={setDuration} ranks={ranks} date={date} setDate={setDate} />
       )}
+      <div className='flex flex-col gap-2'>
+        <div className='w-3/4 flex flex-col gap-3 bg-[#0d1117] border border-white/5 rounded-xl py-4 px-6 hover:border-white/13 hover:-translate-y-1 transition-all duration-200 '>
+          <div className='flex justify-between'>
+            <h1 className='font-bold text-xl'>Valorant</h1>
+            <h1 className='body font-semibold text-[13px] text-green-600 py-1 px-3 bg-green-600/10 rounded-xl'>WIN</h1>
+          </div>
+          <h2 className='body text-[12px] text-[#4a5568]'>Date</h2>
+          <div className='flex gap-6'>
+            <div className='flex flex-col gap-0 justify-center items-center'>
+              <h1 className='mono text-[16px] text-green-400'>18</h1>
+              <h1 className='body text-[12px] text-[#4a5568]'>KILLS</h1>
+            </div>
+            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+              <h1 className='mono text-[16px] text-red-500'>16</h1>
+              <h1 className='body text-[12px] text-[#4a5568]'>DEATHS</h1>
+            </div>
+            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+              <h1 className='mono text-[16px] text-cyan-400'>5</h1>
+              <h1 className='body text-[12px] text-[#4a5568]'>ASSISTS</h1>
+            </div>
+            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+              <h1 className='mono text-[16px] text-yellow-200'>1.13</h1>
+              <h1 className='body text-[12px] text-[#4a5568]'>K/D</h1>
+            </div>
+            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+              <h1 className='mono text-[16px]'>31m</h1>
+              <h1 className='body text-[12px] text-[#4a5568]'>DURATION</h1>
+            </div>
+            <div className='flex flex-col gap-0 justify-center itemcs-center'>
+              <h1 className='mono text-[16px] text-purple-600'>tilted</h1>
+              <h1 className='body text-[12px] text-[#4a5568]'>MOOD</h1>
+            </div>
+          </div> 
+          <div className='flex items-center gap-2'>
+            <h1 className='mono text-[14px]'>Immortal 1</h1>
+            <ArrowRight size={17} /> 
+            <h1 className='mono text-[14px]'>Immortal 2</h1>
+          </div>
+        </div>
+      </div>
     </div>
+    
   )
 }
 
