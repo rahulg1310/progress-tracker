@@ -152,6 +152,9 @@ const SessionContent = (props) => {
   const [result,setResult] = useState("All");
   const [sessionResult,setSessionResult] = useState("Win");
   const [mood,setMood] = useState("Focused");
+  const filteredSessions = sessions.filter(function(elem){
+    return ((selectedGame === 'All' || selectedGame===elem.game) && (result === 'All' || result===elem.result))
+  });
   return (
     <div className='w-full py-5 px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
@@ -230,9 +233,19 @@ const SessionContent = (props) => {
       )}
       <div className='flex flex-col gap-2.5'>
         {
-          sessions.map(function(elem,idx){
+          filteredSessions.length === 0 ? (
+            <div className='p-8 text-center'>
+              <h1 className='font-bold text-xl text-[#8a9bb0]'>
+                No Sessions Found
+              </h1>
+              <p className='body text-sm text-[#4a5568] mt-2'>
+                Log your first gaming session to get started.
+              </p>
+            </div>
+          ) :
+          (filteredSessions.map(function(elem,idx){
             return <StatsCard key={idx} index={idx} game={elem.game} duration={elem.duration} kills={elem.kills} deaths={elem.deaths} assists={elem.assists} ratio={elem.ratio} rankBefore={elem.rankBefore} rankAfter={elem.rankAfter} result={elem.result} date={elem.date} mood={elem.mood} deleteSession={deleteSession} />
-          })
+          }))
         }
       </div>
     </div>

@@ -83,8 +83,9 @@ input,select,textarea{
 
 .button_border{
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--font-body);
   background-color: none;
- 
+  font-size: 13px;
+  
 }
 
