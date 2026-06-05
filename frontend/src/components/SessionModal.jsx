@@ -193,7 +193,7 @@ const SessionModal = (props) => {
                     ratio : props.ratio,
                     rankBefore : props.brank,
                     rankAfter : props.arank,
-                    result : props.result,
+                    result : props.sessionResult,
                     date : props.date,
                     mood : props.mood
                   };

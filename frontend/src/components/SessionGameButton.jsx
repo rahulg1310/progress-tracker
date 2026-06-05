@@ -7,7 +7,7 @@ const SessionGameButton = (props) => {
         onClick={()=>{
           props.setSelectedGame(props.name);
         }}
-        className={`button_border text-[14px] rounded-full px-3 border transition:all duration-200 ${
+        className={`button_border text-[14px] rounded-full px-3 hover:bg-gray-700 border transition:all duration-200 ${
           props.selectedGame === props.name ? "border-green-400 text-green-400" : "border-white/25 text-white"
         } `}>{props.name}</button>
     </>

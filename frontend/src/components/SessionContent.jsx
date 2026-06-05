@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SessionContentCard from './SessionContentCard'
 import SessionGameButton from './SessionGameButton'
 import SessionModal from './SessionModal'
-import { ArrowRight } from 'lucide-react'
+import StatsCard from './StatsCard'
 
 const SessionContent = (props) => {
   const ranks = {
@@ -132,6 +132,13 @@ const SessionContent = (props) => {
     }
     return [];
   });
+  const deleteSession = (index) =>{
+    const updatedSession = sessions.filter((_,idx)=>{
+      return idx!==index;
+    });
+    setSessions(updatedSession);
+    localStorage.setItem('sessions',JSON.stringify(updatedSession));
+  }
   const [duration, setDuration] = useState(0);
   const [kills, setKills] = useState(0);
   const [deaths, setDeaths] = useState(0);
@@ -143,8 +150,8 @@ const SessionContent = (props) => {
   const [arank, setArank] = useState(ranks[game][0]);
   const [selectedGame, setSelectedGame] = useState("All");
   const [result,setResult] = useState("All");
-  const [sessionResult,setSessionResult] = useState("");
-  const [mood,setMood] = useState("");
+  const [sessionResult,setSessionResult] = useState("Win");
+  const [mood,setMood] = useState("Focused");
   return (
     <div className='w-full py-5 px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
@@ -163,8 +170,8 @@ const SessionContent = (props) => {
                 setDate(new Date().toISOString().split("T")[0]);
                 setBrank(ranks["Valorant"][0]);
                 setArank(ranks["Valorant"][0]);
-                setSessionResult("");
-                setMood("");
+                setSessionResult("Win");
+                setMood("Focused");
                 setModal(true);
             }}
             className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 px-3'>+ Log Session</button>
@@ -221,45 +228,12 @@ const SessionContent = (props) => {
       {modal && (
         <SessionModal modal={modal} setModal={setModal} sessions={sessions} setSessions={setSessions} kills={kills} setKills={setKills} deaths={deaths} setDeaths={setDeaths} assists={assists} setAssists={setAssists} ratio={ratio} game={game} setGame={setGame} brank={brank} setBrank={setBrank} arank={arank} setArank={setArank} selectedGame={selectedGame} setSelectedGame={setSelectedGame} sessionResult={sessionResult} setSessionResult={setSessionResult} mood={mood} setMood={setMood} duration={duration} setDuration={setDuration} ranks={ranks} date={date} setDate={setDate} />
       )}
-      <div className='flex flex-col gap-2'>
-        <div className='w-3/4 flex flex-col gap-3 bg-[#0d1117] border border-white/5 rounded-xl py-4 px-6 hover:border-white/13 hover:-translate-y-1 transition-all duration-200 '>
-          <div className='flex justify-between'>
-            <h1 className='font-bold text-xl'>Valorant</h1>
-            <h1 className='body font-semibold text-[13px] text-green-600 py-1 px-3 bg-green-600/10 rounded-xl'>WIN</h1>
-          </div>
-          <h2 className='body text-[12px] text-[#4a5568]'>Date</h2>
-          <div className='flex gap-6'>
-            <div className='flex flex-col gap-0 justify-center items-center'>
-              <h1 className='mono text-[16px] text-green-400'>18</h1>
-              <h1 className='body text-[12px] text-[#4a5568]'>KILLS</h1>
-            </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
-              <h1 className='mono text-[16px] text-red-500'>16</h1>
-              <h1 className='body text-[12px] text-[#4a5568]'>DEATHS</h1>
-            </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
-              <h1 className='mono text-[16px] text-cyan-400'>5</h1>
-              <h1 className='body text-[12px] text-[#4a5568]'>ASSISTS</h1>
-            </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
-              <h1 className='mono text-[16px] text-yellow-200'>1.13</h1>
-              <h1 className='body text-[12px] text-[#4a5568]'>K/D</h1>
-            </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
-              <h1 className='mono text-[16px]'>31m</h1>
-              <h1 className='body text-[12px] text-[#4a5568]'>DURATION</h1>
-            </div>
-            <div className='flex flex-col gap-0 justify-center itemcs-center'>
-              <h1 className='mono text-[16px] text-purple-600'>tilted</h1>
-              <h1 className='body text-[12px] text-[#4a5568]'>MOOD</h1>
-            </div>
-          </div> 
-          <div className='flex items-center gap-2'>
-            <h1 className='mono text-[14px]'>Immortal 1</h1>
-            <ArrowRight size={17} /> 
-            <h1 className='mono text-[14px]'>Immortal 2</h1>
-          </div>
-        </div>
+      <div className='flex flex-col gap-2.5'>
+        {
+          sessions.map(function(elem,idx){
+            return <StatsCard key={idx} index={idx} game={elem.game} duration={elem.duration} kills={elem.kills} deaths={elem.deaths} assists={elem.assists} ratio={elem.ratio} rankBefore={elem.rankBefore} rankAfter={elem.rankAfter} result={elem.result} date={elem.date} mood={elem.mood} deleteSession={deleteSession} />
+          })
+        }
       </div>
     </div>
     
