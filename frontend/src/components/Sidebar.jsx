@@ -32,13 +32,22 @@ const Sidebar = () => {
                     onClick={()=>{
                       navigate('/dashboard');
                     }}
-                    className='flex items-center gap-2 w-full hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><LayoutDashboard size={15} className='mb-0.5'/> Dashboard</button>
+                    className='flex items-center gap-2 w-full hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><LayoutDashboard size={15} className='mb-0.5'/>Dashboard</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/library');
+                    }}
+                    className='flex items-center gap-2 w-full hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Library size={15} className='mb-0.5'/>Library</button>
                     <button 
                     onClick={()=>{
                       navigate('/sessions');
                     }}
                     className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Clock size={15} className='mb-0.5'/>Sessions</button>
-                    <button className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><UserRound size={15} className='mb-0.5'/>Profile</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/profile');
+                    }}
+                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><UserRound size={15} className='mb-0.5'/>Profile</button>
                 </div>
             </div>
             <div className='px-3 py-3 border-b border-b-gray-400/30'>

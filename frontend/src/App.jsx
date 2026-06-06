@@ -4,6 +4,8 @@
     import SignIn from './pages/SignIn'
     import SignUp from './pages/SignUp'
     import Sessions from './pages/Sessions'
+    import Library from './pages/Library'
+    import Profile from './pages/Profile'
     import { Routes, Route } from 'react-router-dom'
 
     const App = () => {
@@ -15,6 +17,8 @@
             <Route path="/signup" element={<SignUp />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/sessions" element={<Sessions />} />
+            <Route path="/library" element={<Library />} />\
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
       )
