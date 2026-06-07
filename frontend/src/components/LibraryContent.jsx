@@ -1,10 +1,25 @@
 import React, { useState } from 'react'
 import { Search } from 'lucide-react'
+import LibraryModal from './LibraryModal';
 
 const LibraryContent = () => {
   const [searchGame, setSearchGame] = useState('');
-  const [result, setResult] = useState('All')
-  const [sortBy, setSortBy] = useState('Last Played')
+  const [result, setResult] = useState('All');
+  const [sortBy, setSortBy] = useState('Last Played');
+  const [totalGames, setTotalGames] = useState(0);
+  const [modal, setModal] = useState(false);
+  const [title, setTitle] = useState('');
+  const [genre, setGenre] = useState('');
+  const [platform, setPlatform] = useState('PC');
+  const [status, setStatus] = useState('Playing');
+  const [progress, setProgress] = useState(0);
+  const [playtime,setPlayime] = useState(0);
+  const [rating,setRating] = useState(null);
+  const [colorAccent,setColorAccent] = useState('#FFFFFF');
+  const [achievementsEarned,setAchievementsEarned] = useState(0);
+  const [totalAchievements,setTotalAchievements] = useState(0);
+  const [notes,setNotes] = useState('');
+  const [games, setGames] = useState([]);
   return (
     <div className='w-full py-5 px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
@@ -13,6 +28,20 @@ const LibraryContent = () => {
         </div>
         <div>
             <button 
+            onClick={()=>{
+                setTitle('');
+                setGenre('');
+                setPlatform('PC');
+                setStatus('Playing');
+                setProgress(0);
+                setPlayime(0);
+                setRating(0);
+                setColorAccent('#FFFFFF');
+                setAchievementsEarned(0);
+                setTotalAchievements(0);
+                setNotes('');
+                setModal(true);
+            }}
             className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 px-3'>+ Add Game</button>
         </div>
       </div>
@@ -67,7 +96,7 @@ const LibraryContent = () => {
             onChange={(e)=>{
                 setSortBy(e.target.value);
             }}
-            value={sortBy} className='body outline-none text-[15px] text-white bg-[#111820]'>
+            value={sortBy} className='body outline-none text-[13px] text-white bg-[#111820]'>
                 <option>Last Played</option>
                 <option>Title</option>
                 <option>Playtime</option>
@@ -76,6 +105,12 @@ const LibraryContent = () => {
             </select>
         </div>
       </div>
+      <div className='flex flex-col gap-3'>
+        <h1 className='text-[#4a5568] text-[13px] font-semibold'>{totalGames} Games</h1>
+      </div>
+      {modal && (
+        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlayime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} />
+      )}
     </div>
   )
 }

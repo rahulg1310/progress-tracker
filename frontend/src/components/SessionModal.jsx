@@ -4,7 +4,7 @@ const SessionModal = (props) => {
   return (
         <div className='fixed inset-0 bg-black/70 flex justify-center items-center p-4 z-50'>
           <div className='bg-[#111820] max-w-3xl w-full rounded-2xl border border-gray-400/20 flex flex-col gap-5 p-6'>
-            <div className='flex justify-between items-center '>
+            <div className='flex justify-between items-center'>
               <h1 className='font-bold text-xl tracking-wider'>Log Gaming Session</h1>
               <button 
               onClick={()=>{
