@@ -33,6 +33,9 @@ const LibraryModal = (props) => {
             <input 
             onChange={(e)=>{
                 props.setTitle(e.target.value);
+                if(e.target.value.trim() !== ""){
+                    setTitleError("");
+                }
             }}
             type="text" value={props.title} placeholder='Game title...' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
             <span className='body text-[11px] text-[#ff2929]'>{titleError}</span>
@@ -43,6 +46,9 @@ const LibraryModal = (props) => {
                 <input 
                 onChange={(e)=>{
                     props.setGenre(e.target.value);
+                    if(e.target.value.trim() !== ""){
+                        setGenreError("");
+                    }
                 }}
                 type="text" value={props.genre} placeholder='e.g. Action RPG' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
                 <span className='body text-[11px] text-[#ff2929]'>{genreError}</span>

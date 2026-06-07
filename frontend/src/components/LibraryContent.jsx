@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { Search } from 'lucide-react'
 import LibraryModal from './LibraryModal';
+import LibraryGameCard from './LibraryGameCard';
 
 const LibraryContent = () => {
   const [searchGame, setSearchGame] = useState('');
   const [result, setResult] = useState('All');
   const [sortBy, setSortBy] = useState('Last Played');
-  const [totalGames, setTotalGames] = useState(0);
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState('');
   const [genre, setGenre] = useState('');
@@ -19,7 +19,14 @@ const LibraryContent = () => {
   const [achievementsEarned,setAchievementsEarned] = useState(0);
   const [totalAchievements,setTotalAchievements] = useState(0);
   const [notes,setNotes] = useState('');
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState(()=>{
+    const savedGames = localStorage.getItem('games');
+    if(savedGames){
+        return JSON.parse(savedGames);
+    }
+    return [];
+  });
+  const totalGames = games.length;
   return (
     <div className='w-full py-5 px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
@@ -107,6 +114,13 @@ const LibraryContent = () => {
       </div>
       <div className='flex flex-col gap-3'>
         <h1 className='text-[#4a5568] text-[13px] font-semibold'>{totalGames} Games</h1>
+        <div className='flex flex-wrap gap-3'>
+            {
+                games.map(function(elem,idx){
+                    return <LibraryGameCard />
+                })
+            }
+        </div>
       </div>
       {modal && (
         <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlayime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} />
