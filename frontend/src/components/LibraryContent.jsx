@@ -26,7 +26,24 @@ const LibraryContent = () => {
     }
     return [];
   });
-  const totalGames = games.length;
+  
+  const filteredGames = games.filter((elem)=>{
+    return (result==="All" || elem.status===result) && elem.title.toLowerCase().includes(searchGame.toLowerCase());
+  })
+  const sortedGames = [...filteredGames];
+  if(sortBy==="Title"){
+    sortedGames.sort((a,b)=>a.title.localeCompare(b.title));
+  }
+  if(sortBy==="Playtime"){
+    sortedGames.sort((a,b)=>b.playtime-a.playtime);
+  }
+  if(sortBy==="Progress"){
+    sortedGames.sort((a,b)=>b.progress-a.progress)
+  }
+  if(sortBy==="Rating"){
+    sortedGames.sort((a,b)=>b.rating-a.rating)
+  }
+   const totalGames = sortedGames.length;
   return (
     <div className='w-full py-5 px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
@@ -114,10 +131,23 @@ const LibraryContent = () => {
       </div>
       <div className='flex flex-col gap-3'>
         <h1 className='text-[#4a5568] text-[13px] font-semibold'>{totalGames} Games</h1>
-        <div className='flex flex-wrap gap-3'>
+        <div className='flex flex-wrap gap-4'>
             {
-                games.map(function(elem,idx){
-                    return <LibraryGameCard />
+                filteredGames.length === 0 ? (
+                  <div className='flex w-full justify-center items-center'>
+                  <div className='p-8 text-center'>
+                    <h1 className='font-bold text-xl text-[#8a9bb0]'>
+                      No Games Found
+                    </h1>
+                  <p className='body text-sm text-[#4a5568] mt-2'>
+                    Add your first game to get started.
+                  </p>
+                  </div>
+                  </div>
+                )
+                :
+                sortedGames.map(function(elem,idx){
+                    return <LibraryGameCard key={idx} index={idx} title={elem.title} genre={elem.genre} platform={elem.platform} status={elem.status} progress={elem.progress} playtime={elem.playtime} rating={elem.rating} colorAccent={elem.colorAccent} achievementsEarned={elem.achievementsEarned} totalAchievements={elem.totalAchievements} notes={elem.notes}  />
                 })
             }
         </div>

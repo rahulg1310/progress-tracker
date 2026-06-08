@@ -172,7 +172,7 @@ const LibraryModal = (props) => {
                     totalAchievements : props.totalAchievements,
                     notes : props.notes
                   };
-                  const updatedGames = [...props.games,newGame];
+                  const updatedGames = [newGame,...props.games];
                   props.setGames(updatedGames);
                   localStorage.setItem('games',JSON.stringify(updatedGames));
                   setTitleError("");

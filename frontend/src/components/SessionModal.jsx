@@ -197,7 +197,7 @@ const SessionModal = (props) => {
                     date : props.date,
                     mood : props.mood
                   };
-                  const updatedSessions = [...props.sessions,newSession];
+                  const updatedSessions = [newSession,...props.sessions];
                   props.setSessions(updatedSessions);
                   localStorage.setItem('sessions',JSON.stringify(updatedSessions));
                   props.setModal(false);
