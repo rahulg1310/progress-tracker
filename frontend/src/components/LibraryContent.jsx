@@ -5,6 +5,7 @@ import LibraryGameCard from './LibraryGameCard';
 
 const LibraryContent = () => {
   const [searchGame, setSearchGame] = useState('');
+  const [editIndex, setEditIndex] = useState(null);
   const [result, setResult] = useState('All');
   const [sortBy, setSortBy] = useState('Last Played');
   const [modal, setModal] = useState(false);
@@ -43,7 +44,34 @@ const LibraryContent = () => {
   if(sortBy==="Rating"){
     sortedGames.sort((a,b)=>b.rating-a.rating)
   }
-   const totalGames = sortedGames.length;
+  const totalGames = sortedGames.length;
+
+  const deleteGame = (id)=>{
+    const updatedGames = games.filter((elem)=>{
+      return id!==elem.id;
+    });
+    setGames(updatedGames);
+    localStorage.setItem('games',JSON.stringify(updatedGames));
+  }
+  const editGame = (id)=>{
+    const game=games.find(function(elem){
+      return elem.id===id;
+    })
+    setTitle(game.title);
+    setGenre(game.genre);
+    setPlatform(game.platform);
+    setStatus(game.status);
+    setProgress(game.progress);
+    setPlayime(game.playtime);
+    setRating(game.rating);
+    setColorAccent(game.colorAccent);
+    setAchievementsEarned(game.achievementsEarned);
+    setTotalAchievements(game.totalAchievements);
+    setNotes(game.notes);
+    setEditIndex(id);
+    setModal(true);
+  }
+
   return (
     <div className='w-full py-5 px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
@@ -64,6 +92,7 @@ const LibraryContent = () => {
                 setAchievementsEarned(0);
                 setTotalAchievements(0);
                 setNotes('');
+                setEditIndex(null);
                 setModal(true);
             }}
             className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 px-3'>+ Add Game</button>
@@ -133,7 +162,7 @@ const LibraryContent = () => {
         <h1 className='text-[#4a5568] text-[13px] font-semibold'>{totalGames} Games</h1>
         <div className='flex flex-wrap gap-4'>
             {
-                filteredGames.length === 0 ? (
+                sortedGames.length === 0 ? (
                   <div className='flex w-full justify-center items-center'>
                   <div className='p-8 text-center'>
                     <h1 className='font-bold text-xl text-[#8a9bb0]'>
@@ -147,13 +176,13 @@ const LibraryContent = () => {
                 )
                 :
                 sortedGames.map(function(elem,idx){
-                    return <LibraryGameCard key={idx} index={idx} title={elem.title} genre={elem.genre} platform={elem.platform} status={elem.status} progress={elem.progress} playtime={elem.playtime} rating={elem.rating} colorAccent={elem.colorAccent} achievementsEarned={elem.achievementsEarned} totalAchievements={elem.totalAchievements} notes={elem.notes}  />
+                    return <LibraryGameCard key={idx} id={elem.id} index={idx} title={elem.title} genre={elem.genre} platform={elem.platform} status={elem.status} progress={elem.progress} playtime={elem.playtime} rating={elem.rating} colorAccent={elem.colorAccent} achievementsEarned={elem.achievementsEarned} totalAchievements={elem.totalAchievements} notes={elem.notes} deleteGame={deleteGame} editGame={editGame}  />
                 })
             }
         </div>
       </div>
       {modal && (
-        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlayime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} />
+        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlayime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} editIndex={editIndex} setEditIndex={setEditIndex} />
       )}
     </div>
   )

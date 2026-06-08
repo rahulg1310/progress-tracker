@@ -34,8 +34,16 @@ const LibraryGameCard = (props) => {
         className='w-full flex justify-center items-center py-10 relative'
       >
         <div className='opacity-0 group-hover:opacity-100 absolute top-3 left-3 flex gap-2 transition-all duration-200 '>
-          <button className='rounded bg-black/30 backdrop-blur-sm px-2 py-1 hover:bg-black transition-all duration-200'><Settings2 size={17} color='#878787'/></button>
-          <button className='rounded bg-black/30 backdrop-blur-sm px-2 py-1 hover:bg-black transition-all duration-200'><Trash2 size={17} color='#878787'/></button>
+          <button 
+          onClick={()=>{
+            props.editGame(props.id);
+          }}
+          className='rounded bg-black/30 backdrop-blur-sm px-2 py-1 hover:bg-black transition-all duration-200'><Settings2 size={17} color='#878787'/></button>
+          <button 
+          onClick={()=>{
+            props.deleteGame(props.id);
+          }}
+          className='rounded bg-black/30 backdrop-blur-sm px-2 py-1 hover:bg-black transition-all duration-200'><Trash2 size={17} color='#878787'/></button>
         </div>
         <span style={{boxShadow : `0 0 10px ${cfg.glow}`}} className={`absolute top-3 right-3 w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
         <h1 className='font-bold text-5xl text-white'>{props.title[0]}</h1>

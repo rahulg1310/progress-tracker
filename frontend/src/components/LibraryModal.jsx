@@ -19,7 +19,7 @@ const LibraryModal = (props) => {
     <div className='fixed inset-0 bg-black/70 flex justify-center items-center p-4 z-50'>
       <div className='bg-[#111820] max-w-3xl w-full rounded-2xl border border-gray-400/20 flex flex-col gap-5 p-6'>
         <div className='flex justify-between items-center'>
-            <h1 className='font-bold text-xl tracking-wider'>Add New Game</h1>
+            <h1 className='font-bold text-xl tracking-wider'>{props.editIndex === null ? "Add New Game" : "Edit Game"}</h1>
             <button 
             onClick={()=>{
                 setTitleError("");
@@ -172,14 +172,28 @@ const LibraryModal = (props) => {
                     totalAchievements : props.totalAchievements,
                     notes : props.notes
                   };
-                  const updatedGames = [newGame,...props.games];
+                  let updatedGames;
+                  if(props.editIndex==null){
+                    updatedGames=[{id : Date.now(),...newGame},...props.games];
+                  }
+                  else{
+                    updatedGames = props.games.map(function(elem){
+                        if(elem.id === props.editIndex){
+                            return{
+                                ...newGame,
+                                id : elem.id
+                            } ;
+                        }
+                        return elem;
+                    });
+                  }
                   props.setGames(updatedGames);
                   localStorage.setItem('games',JSON.stringify(updatedGames));
                   setTitleError("");
                     setGenreError("");
                   props.setModal(false);
                 }}
-                className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>Add Game</button>
+                className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>{props.editIndex === null ? "Add Game" : "Update Game  "}</button>
             </div>
       </div>
     </div>
