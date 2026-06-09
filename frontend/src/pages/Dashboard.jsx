@@ -36,6 +36,17 @@ const Dashboard = () => {
 
   const gamesByPlaytime = recentGames.sort((a,b)=>b.playtime-a.playtime);
 
+  const genreCount = {};
+
+  games.forEach((elem)=>{
+    if(genreCount[elem.genre]){
+      genreCount[elem.genre]++;
+    }
+    else{
+      genreCount[elem.genre] = 1;
+    }
+  })
+
   let profile_stats =[
         {
           num : totalGames,
@@ -112,38 +123,13 @@ const Dashboard = () => {
         }
   ]
 
-    let genre_breakdown = [
-        {
-          num : '2',
-          genre : 'Action RPG',
-          progress : '100%'
-        },
-        {
-          num : '1',
-          genre : 'Metroidvania',
-          progress : '50%'
-        },
-        {
-          num : '1',
-          genre : 'Action Adventure',
-          progress : '50%'
-        },
-        {
-          num : '1',
-          genre : 'Roguelike',
-          progress : '50%'
-        },
-        {
-          num : '1',
-          genre : 'RPG',
-          progress : '50%'
-        },
-        {
-          num : '1',
-          genre : 'Action',
-          progress : '50%'
-        }
-  ]
+    let genre_breakdown = Object.entries(genreCount).map(([genre,count])=>{
+      return{
+        genre ,
+        num : count,
+        progress : `${(count/totalGames)*100}%`
+      }
+    })
 
     let top_by_playtime = gamesByPlaytime.map(function(elem){
       return{
