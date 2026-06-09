@@ -26,6 +26,8 @@ const Dashboard = () => {
     return elem.status==="Playing";
   }).length;
 
+  const recentGames = games.slice(0,5);
+
   let profile_stats =[
         {
           num : totalGames,
@@ -64,58 +66,16 @@ const Dashboard = () => {
         }
   ]
 
-    let game_card = [
-        {
-          name : 'Elden Ring',
-          genre : 'Action RPG',
-          hours : '94h',
-          color1 : 'bg-green-500',
-          initial : 'E',
-          progress : '67%',
-          color2 : 'text-green-400',
-          status : 'PLAYING'
-        },
-        {
-          name : 'Stardew Valley',
-          genre : 'Simulation',
-          hours : '210h',
-          color1 : 'bg-green-500',
-          initial : 'S',
-          progress : '55%',
-          color2 : 'text-green-400',
-          status : 'PLAYING'
-        },
-        {
-          name : 'Hollow Knight',
-          genre : 'Metroidvania',
-          hours : '8h',
-          color1 : 'bg-green-500',
-          initial : 'H',
-          progress : '28%',
-          color2 : 'text-green-400',
-          status : 'PLAYING'
-        },
-        {
-          name : 'Cyberpunk 2077',
-          genre : 'Action',
-          hours : '42h',
-          color1 : 'bg-red-700',
-          initial : 'C',
-          progress : '27%',
-          color2 : 'text-red-700',
-          status : 'DROPPED'
-        },
-        {
-          name : "Sekiro : Shadow's Die Twice",
-          genre : 'Action RPG',
-          hours : '564h',
-          color1 : 'bg-blue-500',
-          initial : 'S',
-          progress : '100%',
-          color2 : 'text-blue-400',
-          status : 'COMPLETED'
-        },
-  ]
+    const game_card = recentGames.map((elem)=>{
+      return{name : elem.title,
+        genre: elem.genre,
+        hours: elem.playtime + 'h',
+        color1: elem.colorAccent,
+        initial: elem.title[0],
+        progress: elem.progress + '%',
+        color2: elem.colorAccent,
+        status: elem.status.toUpperCase()}
+    });
 
     let library_status = [
         {

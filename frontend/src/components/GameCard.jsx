@@ -9,15 +9,15 @@ const GameCard = (props) => {
                 <h1 className='body font-bold'>{props.name}</h1>
                 <span className='body text-[#4a5568] text-[11px]'>{props.genre} - {props.hours}</span>
                 <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full mt-1'>
-                        <div className={`h-full ${props.color1} rounded-full`}
-                        style={{width: props.progress}}></div>
+                        <div className={`h-full rounded-full`}
+                        style={{width: props.progress, backgroundColor : props.color1}}></div>
                 </div>
             </div>
         </div>
         <div>
             <div className='body flex flex-col items-end text-[13px]' >
                 <h1 className='text-orange-200'>{props.progress}</h1>
-                <h1 className={`${props.color2}`}>{props.status}</h1>
+                <h1 style={{color : props.color2}}>{props.status}</h1>
             </div>
         </div>
     </div>
