@@ -1,40 +1,62 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Sidebar from '../components/Sidebar'
 import DashContent from '../components/DashContent'
 import { Hexagon, Clock, Trophy, Check, Star } from 'lucide-react'
-
+import { GamesData } from '../context/GamesContext'
 const Dashboard = () => {
+  const {games} = useContext(GamesData);
+  const totalGames = games.length;
+  const totalPlayTime = games.reduce((sum,elem)=>{
+    return sum+elem.playtime;
+  },0)
+  const totalAchievements=games.reduce((sum,elem)=>{
+    return sum+elem.achievementsEarned;
+  },0)
+  const completedGames = games.filter((elem)=>{
+    return elem.status==="Completed";
+  }).length
+  const totalDays = (totalPlayTime/24).toFixed(0);
+  const completionRate = games.reduce((sum,elem)=>{
+    return sum+elem.progress;
+  },0)/totalGames;
+  const avgRating = games.reduce((sum,elem)=>{
+    return sum+elem.rating;
+  },0)/totalGames;
+  const gamesPlaying = games.filter((elem)=>{
+    return elem.status==="Playing";
+  }).length;
+
   let profile_stats =[
         {
-          num : '8',
+          num : totalGames,
           title : 'Games Played',
-          stats : '3 Completed',
+          stats : completedGames+' Completed',
           icon: <Hexagon size={20} color='#47b60c' />,
           color1 : 'bg-green-400/15'
         },
         {
-          num : '557h',
+          num : totalPlayTime+'h',
           title : 'Total Playtime',
-          stats : '~24 Days',
+          stats : '~'+totalDays+' Days',
           icon: <Clock size={20} color='#5fc9ec'/>,
           color1 : 'bg-blue-400/15'
         },
         {
-          num : '209',
+          num : totalAchievements,
           title : 'Achievements',
           stats : 'Unlocked',
           icon: <Trophy size={20} color='#d127e7'/>,
           color1 : 'bg-purple-700/15'
         },
         {
-          num : '38%',
+          num : completionRate.toFixed(0)+'%',
           title : 'Completion Rate',
-          stats : '3 Still Playing',
+          stats : gamesPlaying+' Still Playing',
           icon: <Check size={20} color='#e7b427'/>,
           color1 : 'bg-orange-500/15'
         },
         {
-          num : '9.3',
+          num : avgRating.toFixed(1),
           title : 'Avg Rating',
           stats : 'Across Rated Games',
           icon: <Star size={20} color='#e70d0d'/>,

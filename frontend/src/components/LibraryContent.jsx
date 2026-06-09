@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Search } from 'lucide-react'
 import LibraryModal from './LibraryModal';
 import LibraryGameCard from './LibraryGameCard';
+import { GamesData } from '../context/GamesContext';
 
 const LibraryContent = () => {
   const [searchGame, setSearchGame] = useState('');
@@ -14,19 +15,13 @@ const LibraryContent = () => {
   const [platform, setPlatform] = useState('PC');
   const [status, setStatus] = useState('Playing');
   const [progress, setProgress] = useState(0);
-  const [playtime,setPlayime] = useState(0);
+  const [playtime,setPlaytime] = useState(0);
   const [rating,setRating] = useState(null);
   const [colorAccent,setColorAccent] = useState('#FFFFFF');
   const [achievementsEarned,setAchievementsEarned] = useState(0);
   const [totalAchievements,setTotalAchievements] = useState(0);
   const [notes,setNotes] = useState('');
-  const [games, setGames] = useState(()=>{
-    const savedGames = localStorage.getItem('games');
-    if(savedGames){
-        return JSON.parse(savedGames);
-    }
-    return [];
-  });
+  const {games, setGames} = useContext(GamesData);
   
   const filteredGames = games.filter((elem)=>{
     return (result==="All" || elem.status===result) && elem.title.toLowerCase().includes(searchGame.toLowerCase());
@@ -62,7 +57,7 @@ const LibraryContent = () => {
     setPlatform(game.platform);
     setStatus(game.status);
     setProgress(game.progress);
-    setPlayime(game.playtime);
+    setPlaytime(game.playtime);
     setRating(game.rating);
     setColorAccent(game.colorAccent);
     setAchievementsEarned(game.achievementsEarned);
@@ -86,7 +81,7 @@ const LibraryContent = () => {
                 setPlatform('PC');
                 setStatus('Playing');
                 setProgress(0);
-                setPlayime(0);
+                setPlaytime(0);
                 setRating(0);
                 setColorAccent('#FFFFFF');
                 setAchievementsEarned(0);
@@ -182,7 +177,7 @@ const LibraryContent = () => {
         </div>
       </div>
       {modal && (
-        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlayime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} editIndex={editIndex} setEditIndex={setEditIndex} />
+        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlaytime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} editIndex={editIndex} setEditIndex={setEditIndex} />
       )}
     </div>
   )
