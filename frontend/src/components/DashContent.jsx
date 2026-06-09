@@ -68,7 +68,7 @@ const DashContent = (props) => {
         <div className='w-full flex-1 bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>
             <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
                 <h1 className='font-bold text-[#8a9bb0] tracking-wider'>TOP BY PLAYTIME</h1>
-                <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>557h total</span>
+                <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>{props.totalPlaytime}h total</span>
             </div>
             <div className='flex flex-col gap-3'>
                 {props.top_by_playtime.map(function(elem,idx){

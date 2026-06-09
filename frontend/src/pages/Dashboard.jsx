@@ -34,6 +34,8 @@ const Dashboard = () => {
 
   const recentGames = games.slice(0,5);
 
+  const gamesByPlaytime = recentGames.sort((a,b)=>b.playtime-a.playtime);
+
   let profile_stats =[
         {
           num : totalGames,
@@ -143,45 +145,21 @@ const Dashboard = () => {
         }
   ]
 
-    let top_by_playtime = [
-        {
-          name : 'Sekiro',
-          progress : 'w-[100%]',
-          color : 'bg-amber-400',
-          hours : '210h'
-        },
-        {
-          name : 'Cyberpunk 2077',
-          progress : 'w-[30%]',
-          color : 'bg-blue-400',
-          hours : '42h'
-        },
-        {
-          name : 'Stardew Valley',
-          progress : 'w-[27%]',
-          color : 'bg-green-400',
-          hours : '21h'
-        },
-        {
-          name : 'God Of War',
-          progress : 'w-[80%]',
-          color : 'bg-red-400',
-          hours : '64h'
-        },
-        {
-          name : 'Elden Ring',
-          progress : 'w-[85%]',
-          color : 'bg-yellow-400',
-          hours : '190h'
-        }
-  ]
+    let top_by_playtime = gamesByPlaytime.map(function(elem){
+      return{
+        name : elem.title,
+        progress : (elem.progress ?? 0) + '%',
+        color : elem.colorAccent,
+        hours : elem.playtime+'h'
+      }
+    })
 
 
   return (
     <div className='flex min-h-screen w-full bg-[#080c10]'>
       <Sidebar />
       <div className='flex-1 overflow-y-auto'>
-        <DashContent profile_stats={profile_stats} game_card={game_card} library_status={library_status} genre_breakdown={genre_breakdown} top_by_playtime={top_by_playtime}/>
+        <DashContent profile_stats={profile_stats} game_card={game_card} library_status={library_status} genre_breakdown={genre_breakdown} top_by_playtime={top_by_playtime} totalPlaytime={totalPlayTime}/>
       </div>
     </div>
   )
