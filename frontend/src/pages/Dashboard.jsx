@@ -15,6 +15,12 @@ const Dashboard = () => {
   const completedGames = games.filter((elem)=>{
     return elem.status==="Completed";
   }).length
+  const backlogGames = games.filter((elem)=>{
+    return elem.status==="Backlog";
+  }).length
+  const droppedGames = games.filter((elem)=>{
+    return elem.status==="Dropped";
+  }).length
   const totalDays = (totalPlayTime/24).toFixed(0);
   const completionRate = games.reduce((sum,elem)=>{
     return sum+elem.progress;
@@ -79,26 +85,26 @@ const Dashboard = () => {
 
     let library_status = [
         {
-          num : '3',
-          cg : 'conic-gradient(#00f5a0 35%,#1a2332 0)',
+          num : gamesPlaying,
+          cg : 'conic-gradient(#00f5a0 '+(gamesPlaying/totalGames)*100+'%,#1a2332 0)',
           color2 : 'text-[#00f5a0]',
           status : 'Playing'
         },
         {
-          num : '3',
-          cg : 'conic-gradient(#0aa5ff 35%,#1a2332 0)',
+          num : completedGames,
+          cg : 'conic-gradient(#0aa5ff '+(completedGames/totalGames)*100+'%,#1a2332 0)',
           color2 : 'text-[#0aa5ff]',
           status : 'Completed'
         },
         {
-          num : '1',
-          cg : 'conic-gradient(#6200ff 15%,#1a2332 0)',
+          num : backlogGames,
+          cg : 'conic-gradient(#6200ff '+(backlogGames/totalGames)*100+'%,#1a2332 0)',
           color2 : 'text-[#6200ff]',
           status : 'Backlog'
         },
         {
-          num : '1',
-          cg : 'conic-gradient(#f50000 15%,#1a2332 0)',
+          num : droppedGames,
+          cg : 'conic-gradient(#f50000 '+(droppedGames/totalGames)*100+'%,#1a2332 0)',
           color2 : 'text=[#f50000]',
           status : 'Dropped'
         }
