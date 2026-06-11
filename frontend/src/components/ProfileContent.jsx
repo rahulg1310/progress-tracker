@@ -7,16 +7,16 @@ const ProfileContent = () => {
   return (
     <div className='w-full py-5 px-12 flex flex-col'>
       <h1 className='font-bold text-4xl tracking-wider mb-10'>Profile</h1>
-      <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4'>
+      <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4 mb-5'>
         <div className='h-20 w-20 rounded-full bg-gray-700 flex justify-center items-center'>
             <div className='h-19 w-19 rounded-full bg-[#1a2332] overflow-hidden'>
                 <img src="https://i.pinimg.com/236x/86/36/07/863607364f9d235e29d570f40315be07.jpg" alt="pfp" className='' />
             </div>
         </div>
         <div className='font-bold text-3xl flex gap-1 items-end'>
-            <h1>{user?.username}</h1>
-            <span className='text-[#4a5568] text-lg'>#7743</span>
-            <button className='text-[#7d8ca7] text-[13px] ml-0.5 rounded-xl px-2 py-1 bg-[#1a2332] hover:-translate-y-0.5 hover:bg-gray-700 transition-all duration-200'>Edit Profile</button>
+            <h1 className='min-w-0'>{user?.username}</h1>
+            <span className='text-[#4a5568] text-lg min-w-0'>#7743</span>
+            <button className='text-[#7d8ca7] text-[13px] ml-0.5 rounded-xl px-2 py-1 bg-[#1a2332] hover:-translate-y-0.5 hover:bg-gray-700 transition-all duration-200 min-w-0'>Edit Profile</button>
         </div>
         <h1 className='body text-[#8a9bb0] text-[15px]'>250 on my wrist, 250 on my bitch</h1>
         <div className='flex gap-2 items-center'>
@@ -37,6 +37,49 @@ const ProfileContent = () => {
         <div className='flex gap-5'>
             <span className='body text-[#8a9bb0] text-[13px]'>Joined May 2026</span>
             <span className='body text-[#8a9bb0] text-[13px]'>Fav Genre : Souls</span>
+        </div>
+      </div>
+      <div className='w-full md:w-1/2 bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-2 mb-5'>
+        <h1 className='body text-lg font-bold mb-5'>Gaming Stats</h1>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Games in Library</h1>
+            <span className='mono text-[14px] text-green-400 font-semibold'>8</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Games Completed</h1>
+            <span className='mono text-[14px] text-blue-400 font-semibold'>3</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Currently Playing</h1>
+            <span className='mono text-[14px] text-amber-400 font-semibold'>3</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>In Backlog</h1>
+            <span className='mono text-[14px] text-cyan-400 font-semibold'>1</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Total Playtime</h1>
+            <span className='mono text-[14px] text-orange-400 font-semibold'>577h</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Average Session</h1>
+            <span className='mono text-[14px] text-red-400 font-semibold'>~72h / game</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Achievements Earned</h1>
+            <span className='mono text-[14px] text-green-400 font-semibold'>209</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Completion Rate</h1>
+            <span className='mono text-[14px] text-blue-400 font-semibold'>8</span>
+        </div>
+        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Average Rating</h1>
+            <span className='mono text-[14px] text-amber-400 font-semibold'>9.3 / 10</span>
+        </div>
+        <div className='flex justify-between mb-2 py-1'>
+            <h1 className='body text-[#8a9bb0] text-[14px]'>Current Streak</h1>
+            <span className='mono text-[14px] text-orange-400 font-semibold'>12 Days</span>
         </div>
       </div>
     </div>
