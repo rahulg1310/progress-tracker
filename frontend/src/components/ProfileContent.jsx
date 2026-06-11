@@ -149,8 +149,40 @@ const ProfileContent = () => {
             </div>
         </div>
       </div>
-      <div className='w-full bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-3 '>
-
+      <div className='w-full bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-3 mb-5 overflow-y-auto'>
+        <h1 className='body text-lg font-bold '>Completed Games</h1>
+        <div className='flex flex-wrap gap-2.5'>
+            <div className='py-2 px-4 bg-[#080c10] rounded-[8px] flex gap-8'>
+                <div className='flex gap-3 items-center'>
+                    <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
+                    <div className='flex flex-col'>
+                        <h1 className='body font-semibol text-sm'>Elden Ring</h1>
+                        <h1 className='body text-[11px] text-[#4a5568]'>112h - 45 Achievements</h1>
+                    </div>
+                </div>
+                <div className='mono text-[12px] text-amber-400'>10/10</div>
+            </div>
+            <div className='py-2 px-4 bg-[#080c10] rounded-[8px] flex gap-8'>
+                <div className='flex gap-3 items-center'>
+                    <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
+                    <div className='flex flex-col'>
+                        <h1 className='body font-semibol text-sm'>Sekiro</h1>
+                        <h1 className='body text-[11px] text-[#4a5568]'>512h - 75 Achievements</h1>
+                    </div>
+                </div>
+                <div className='mono text-[12px] text-amber-400'>10/10</div>
+            </div>
+            <div className='py-2 px-4 bg-[#080c10] rounded-[8px] flex gap-8'>
+                <div className='flex gap-3 items-center'>
+                    <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
+                    <div className='flex flex-col'>
+                        <h1 className='body font-semibol text-sm'>Resident Evil Requiem</h1>
+                        <h1 className='body text-[11px] text-[#4a5568]'>24h - 25 Achievements</h1>
+                    </div>
+                </div>
+                <div className='mono text-[12px] text-amber-400'>10/10</div>
+            </div>
+        </div>
       </div>
     </div>
   )
