@@ -40,7 +40,7 @@ const ProfileContent = () => {
         </div>
       </div>
       <div className='w-full md:w-1/2 bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-2 mb-5'>
-        <h1 className='body text-lg font-bold mb-5'>Gaming Stats</h1>
+            
         <div className='flex justify-between border-b border-gray-400/15 py-1'>
             <h1 className='body text-[#8a9bb0] text-[14px]'>Games in Library</h1>
             <span className='mono text-[14px] text-green-400 font-semibold'>8</span>
@@ -81,6 +81,46 @@ const ProfileContent = () => {
             <h1 className='body text-[#8a9bb0] text-[14px]'>Current Streak</h1>
             <span className='mono text-[14px] text-orange-400 font-semibold'>12 Days</span>
         </div>
+      </div>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-5'>
+        <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-3 '>
+            <h1 className='body text-lg font-bold mb-5'>Completion Overview</h1>
+            <div className='flex justify-around mb-3'>
+                <div className='flex flex-col gap-2 items-center'>
+                    <div style={{background : 'conic-gradient(#4ADE80 38%,#1a2332 0)'}} className='h-23 w-23 rounded-full flex justify-center items-center'>
+                        <div className='h-20 w-20 rounded-full bg-[#111620] flex justify-center items-center'>
+                            <span className='font-bold text-green-400'>38%</span>
+                        </div>
+                    </div>
+                    <span className='body text-[12px] text-[#8a9bb0]'>Completion Rate</span>
+                </div>
+                <div className='flex flex-col gap-2 items-center'>
+                    <div style={{background : 'conic-gradient(#C084FC 57%,#1a2332 0)'}} className='h-23 w-23 rounded-full flex justify-center items-center'>
+                        <div className='h-20 w-20 rounded-full bg-[#111620] flex justify-center items-center'>
+                            <span className='font-bold text-purple-400'>57%</span>
+                        </div>
+                    </div>
+                    <span className='body text-[12px] text-[#8a9bb0]'>Achievement Rate</span>
+                </div>
+                <div className='flex flex-col gap-2 items-center'>
+                    <div style={{background : 'conic-gradient(#FBBF24 84%,#1a2332 0)'}} className='h-23 w-23 rounded-full flex justify-center items-center'>
+                        <div className='h-20 w-20 rounded-full bg-[#111620] flex justify-center items-center'>
+                            <span className='font-bold text-amber-400'>84%</span>
+                        </div>
+                    </div>
+                    <span className='body text-[12px] text-[#8a9bb0]'>XP Progress</span>
+                </div>
+            </div>
+        </div>
+        <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-3 '>
+            <h1 className='body text-lg font-bold mb-5'>Top Rated Games</h1>
+            <div className='flex'>
+
+            </div>
+        </div>
+      </div>
+      <div className='w-full bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-3 '>
+
       </div>
     </div>
   )
