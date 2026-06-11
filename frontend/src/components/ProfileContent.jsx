@@ -113,9 +113,39 @@ const ProfileContent = () => {
             </div>
         </div>
         <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-3 '>
-            <h1 className='body text-lg font-bold mb-5'>Top Rated Games</h1>
-            <div className='flex'>
-
+            <h1 className='body text-lg font-bold mb-1'>Top Rated Games</h1>
+            <div className='flex justify-between items-center'>
+                <div className='flex gap-3 items-center'>   
+                    <span className='font-bold text-lg text-amber-400'>#1</span>
+                    <div className='h-10 w-10 flex justify-center items-center bg-amber-500/20 rounded-[8px] border border-amber-500/50'>E</div>
+                    <div className='flex flex-col justify-start'>
+                        <h1 className='body text-[13px]'>Elden Ring</h1>
+                        <h1 className='body text-[11px] text-[#4a5568]'>Souls</h1>
+                    </div>
+                </div>
+                <span className='text-[11px] mono text-amber-400'>10/10</span>
+            </div>
+            <div className='flex justify-between items-center'>
+                <div className='flex gap-3 items-center'>   
+                    <span className='font-bold text-lg text-cyan-400'>#1</span>
+                    <div className='h-10 w-10 flex justify-center items-center bg-cyan-500/20 rounded-[8px] border border-cyan-500/50'>S</div>
+                    <div className='flex flex-col justify-start'>
+                        <h1 className='body text-[13px]'>Sekiro</h1>
+                        <h1 className='body text-[11px] text-[#4a5568]'>Soulslike</h1>
+                    </div>
+                </div>
+                <span className='text-[11px] mono text-cyan-400'>10/10</span>
+            </div>
+            <div className='flex justify-between items-center'>
+                <div className='flex gap-3 items-center'>   
+                    <span className='font-bold text-lg text-red-400'>#1</span>
+                    <div className='h-10 w-10 flex justify-center items-center bg-red-500/20 rounded-[8px] border border-red-500/50'>M</div>
+                    <div className='flex flex-col justify-start'>
+                        <h1 className='body text-[13px]'>Marvel's Spider Man</h1>
+                        <h1 className='body text-[11px] text-[#4a5568]'>Action</h1>
+                    </div>
+                </div>
+                <span className='text-[11px] mono text-red-400'>10/10</span>
             </div>
         </div>
       </div>
