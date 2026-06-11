@@ -23,11 +23,11 @@ const Sidebar = () => {
         <div className='h-[83%] w-full flex flex-col justify-between'>
             <div className='flex flex-col gap-4'>
                 <div className='py-5 flex justify-center '>
-                    <Gamepad2 size={35}/>
-                    <h1 className='font-bold text-3xl bg-linear-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent ml-2 mr-2'>QUESTLOG</h1>
+                  
+                    <h1 className='font-bold mono text-4xl bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent ml-2 mr-2'>路 KAIRO</h1>
                     
                 </div>
-                <div className='font-semibold text-[#8a9bb0] text-lg flex flex-col gap-1 items-start px-3'>
+                <div className='font-semibold text-[#8a9bb0] text-xl flex flex-col gap-1 items-start px-3'>
                     <button 
                     onClick={()=>{
                       navigate('/dashboard');
@@ -50,18 +50,19 @@ const Sidebar = () => {
                     className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><UserRound size={15} className='mb-0.5'/>Profile</button>
                 </div>
             </div>
-            <div className='px-3 py-3 border-b border-b-gray-400/30'>
-                <div className='px-3 flex bg-yellow-400/10 rounded-[8px] border border-yellow-400/20 justify-start items-center'>
-                <div><span className='text-2xl'>🔥</span></div>
-                <div className='py-2 px-4 flex flex-col items-start '>
-                    <h4 className='font-bold text-2xl text-yellow-400'>12</h4>
-                    <span className='text-[#4a5568] text-xs'>Day Streak</span>
+        </div>
+        <div className='w-full flex flex-col justify-between px-4 py-4 flex-1 border-t-2 border-gray-600/40'>
+            <div className='w-full flex justify-center mono text-xl font-semibold'>
+              <div className='flex gap-1 items-center'>
+                <div className='w-18 h-18 flex justify-center items-center bg-gray-700 rounded-full mr-2'>
+                  <div className='w-17 h-17 rounded-full overflow-hidden'>
+                    <img src="https://pbs.twimg.com/media/G1c19UTWoAAYFAs.jpg" alt="pfp" className='' />
+                  </div>
                 </div>
+                  <h1>{user?.username}</h1>
+                  <span className='text-[12px] text-[#4a5568] mt-2.5'>#7743</span>
               </div>
             </div>
-        </div>
-        <div className='w-full flex flex-col justify-between px-4 py-4 flex-1'>
-            <div className='w-full flex justify-center text-[#00ff73] body text-2xl'>{user?.username}</div>
             <div className='w-full flex justify-center'>
               <button 
               onClick={()=>{

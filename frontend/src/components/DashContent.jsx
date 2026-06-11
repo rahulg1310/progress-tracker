@@ -15,7 +15,7 @@ const DashContent = (props) => {
         <div className='flex justify-between items-center'>
             <div>
                 <h1 className='font-bold text-4xl tracking-wider'>Dashboard</h1>
-                <h4 className='body text-[13px] text-[#8a9bb0]'>Welcome Back, <span className='text-[#00f5a0]'>{user?.username}</span></h4>
+                <h4 className='body text-[13px] text-[#8a9bb0]'>Welcome Back, <span className='text-[#00f5a0] mono'>{user?.username}</span></h4>
             </div>
             <div>
                 <div className='px-3 flex bg-yellow-400/10 rounded-3xl border border-yellow-400/20 justify-center items-center'>
@@ -65,7 +65,7 @@ const DashContent = (props) => {
                 </div>
             </div>
         </div>
-        <div className='w-full flex-1 bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>
+        <div className='w-full flex-1 bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 mb-3'>
             <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
                 <h1 className='font-bold text-[#8a9bb0] tracking-wider'>TOP BY PLAYTIME</h1>
                 <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>{props.totalPlaytime}h total</span>
@@ -74,39 +74,6 @@ const DashContent = (props) => {
                 {props.top_by_playtime.map(function(elem,idx){
                     return <TopByPlaytime key={idx} name={elem.name} progress={elem.progress} hours={elem.hours} color={elem.color}/>
                 })}
-            </div>
-        </div>
-        <div className='w-full flex-1 bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 '>
-            <div>
-                <h1 className='font-bold text-[#8a9bb0] tracking-wider'>LEVEL</h1>
-            </div>
-            <div className='flex gap-7'>
-                <div>
-                    <div className='h-24 w-24 bg-[conic-gradient(#3b2fe6_85%,#1a2332_0)] rounded-full flex items-center justify-center mb-2'>
-                        <div className='w-20 h-20 rounded-full bg-[#111620] flex items-center justify-center'>
-                            <span className='font-bold text-[#afabe6] text-xl'>47</span>
-                        </div>
-                    </div>
-                </div>
-                <div className='flex flex-col gap-2 w-full'>
-                    <div className='flex justify-between'>
-                        <h1 className='body text-[14px] text-[#8a9bb0]'>Current XP</h1>
-                        <h1 className='mono text-[14px] text-[#e8edf2] font-bold'>8,420</h1>
-                    </div>
-                    <div className='flex justify-between'>
-                        <h1 className='body text-[14px] text-[#8a9bb0]'>Next Level</h1>
-                        <h1 className='mono text-[14px] text-[#e8edf2] font-bold'>10,000</h1>
-                    </div>
-                    <div className='flex justify-between'>
-                        <h1 className='body text-[14px] text-[#8a9bb0]'>Remaining</h1>
-                        <h1 className='mono text-[14px] text-[#e8edf2] font-bold'>1,580</h1>
-                    </div>
-                    <div>
-                        <div className='w-full h-1.5 rounded-full bg-[#1a2332]'>
-                            <div className='w-[85%] h-full rounded-full bg-linear-to-r from-blue-500 to-cyan-500'></div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
       </div>
