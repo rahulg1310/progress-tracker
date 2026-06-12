@@ -148,7 +148,7 @@ const LibraryModal = (props) => {
             }} 
             value={props.notes} placeholder='Personal notes...' className='bg-[#080c10] h-30 py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568] placeholder:text-[#4a5568]'></textarea>
         </div>
-        <div className='flex justify-end gap-8 border-t border-t-gray-600/70 pt-5'>
+            <div className='flex justify-end gap-8 border-t border-t-gray-600/70 pt-5'>
                 <button 
                 onClick={()=>{
                   setTitleError("");

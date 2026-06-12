@@ -1,22 +1,33 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { UserData } from '../context/UserContext'
-
+import ProfileModal from './ProfileModal';
 
 const ProfileContent = () => {
-  const {user} = useContext(UserData);
+  const {user,setUser} = useContext(UserData);
+  const [editUser, setEditUser] = useState("");
+  const [editBio, setEditBio] = useState("");
+  const [editPfp, setEditPfp] = useState("");
+  const [modal, setModal] = useState(false);
   return (
     <div className='w-full py-5 px-12 flex flex-col'>
       <h1 className='font-bold text-4xl tracking-wider mb-10'>Profile</h1>
       <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4 mb-5'>
         <div className='h-20 w-20 rounded-full bg-gray-700 flex justify-center items-center'>
             <div className='h-19 w-19 rounded-full bg-[#1a2332] overflow-hidden'>
-                <img src="https://pbs.twimg.com/media/G1c19UTWoAAYFAs.jpg" alt="pfp" className='' />
+                <img src="https://pbs.twimg.com/media/G1c19UTWoAAYFAs.jpg" alt="pfp" />
             </div>
         </div>
         <div className='font-bold text-3xl flex gap-1 items-end'>
             <h1 className='min-w-0'>{user?.username}</h1>
             <span className='text-[#4a5568] text-lg min-w-0'>#7743</span>
-            <button className='text-[#7d8ca7] text-[13px] ml-0.5 rounded-[7px] px-2 py-1 bg-black hover:-translate-y-0.5 hover:bg-gray-800 transition-all duration-200 min-w-0 mb-1'>Edit Profile</button>
+            <button 
+            onClick={()=>{
+                setEditUser("");
+                setEditBio("");
+                setEditPfp("");
+                setModal(true);
+            }}
+            className='text-[#7d8ca7] text-[13px] ml-0.5 rounded-[7px] px-2 py-1 bg-black hover:-translate-y-0.5 hover:bg-gray-800 transition-all duration-200 min-w-0 mb-1'>Edit Profile</button>
         </div>
         <h1 className='body text-[#8a9bb0] text-[15px]'>250 on my wrist, 250 on my bitch</h1>
         <div className='flex gap-2 items-center'>
@@ -165,6 +176,9 @@ const ProfileContent = () => {
             </div>
         </div>
       </div>
+      {modal && (
+        <ProfileModal setModal={setModal} editUser={editUser} setEditUser={setEditUser} editBio={editBio} setEditBio={setEditBio} editPfp={editPfp} setEditPfp={setEditPfp} />
+      )}
     </div>
   )
 }

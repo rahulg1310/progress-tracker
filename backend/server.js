@@ -11,10 +11,6 @@ app.use(cors());
 
 connectDB();
 
-app.get('/',(req,res)=>{
-    res.send('Questlog Backend Running');
-});
-
 app.post('/signin',async (req,res)=>{
     try{
         const { email,password} = req.body;
@@ -40,8 +36,11 @@ app.post('/signin',async (req,res)=>{
             message:'Login Successful',
             token,
             userData :{
+                _id : existingEmail._id,
                 email : existingEmail.email,
-                username : existingEmail.username
+                username : existingEmail.username,
+                bio : existingEmail.bio,
+                profilePicture : existingEmail.profilePicture
             }
         });
     }
