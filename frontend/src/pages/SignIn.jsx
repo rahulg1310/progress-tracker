@@ -93,14 +93,6 @@ const SignIn = () => {
                 >Sign In</button>
             </form>
         </div>
-        <div className='w-full flex justify-center'>
-            <span className='body text-xs text-[#4a5568]'>or continue with</span>
-        </div>
-        <div className='w-full flex justify-between gap-2'>
-            <button className='min-w-0 body flex-1 py-2 bg-[#212833] rounded-[7px] text-[#8a9bb0] text-[14px] hover:bg-gray-500/30 transition-all duration-200'>Steam</button>
-            <button className='min-w-0 body flex-1 py-2 bg-[#212833] rounded-[7px] text-[#8a9bb0] text-[14px] hover:bg-gray-500/30 transition-all duration-200'>Google</button>
-            <button className='min-w-0 body flex-1 py-2 bg-[#212833] rounded-[7px] text-[#8a9bb0] text-[14px] hover:bg-gray-500/30 transition-all duration-200'>Discord</button>
-        </div>
         <div className='w-full flex justify-center' >
             <h1 className='body text-[13px] text-[#8a9bb0] mr-1'>Don't have an account?</h1>
             <button 

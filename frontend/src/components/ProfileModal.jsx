@@ -7,6 +7,26 @@ const ProfileModal = (props) => {
   const [bioError, setBioError] = useState("");
   const [pfpError, setPfpError] = useState("");
   const {user,setUser} = useContext(UserData);
+  const updateProfile = async ()=>{
+    if(!isValid()) return;
+    try{
+        const res = await axios.put(`http://localhost:5000/profile/${user._id}`,
+        {
+        username : props.editUser,
+        bio : props.editBio,
+        profilePicture: props.editPfp
+        
+    });
+    console.log(res.data.user);
+    setUser(res.data.user);
+    localStorage.setItem("user",JSON.stringify(res.data.user));
+    props.setModal(false);
+    }
+    catch(error){
+        console.log(error);
+        setUserError(error.response?.data?.message);
+    }
+  }
   const isValid = () =>{
     if(props.editUser.trim() === ""){
         setUserError("Please Enter a Valid Username");
@@ -55,12 +75,12 @@ const ProfileModal = (props) => {
             </div>
             <div className='w-full flex flex-col gap-1'>
                 <span className='body text-[#8a9bb0] text-[12px] font-semibold'>About Me</span>
-                <input 
+                <textarea 
                 onChange={(e)=>{
                     props.setEditBio(e.target.value);
                     setBioError("");
                 }}
-                type="text" value={props.editBio} placeholder='Edit About Me...' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
+                rows={4} value={props.editBio} placeholder='Edit About Me...' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
                 <span className='body text-[11px] text-[#ff2929]'>{bioError}</span>
             </div>
             <div className='flex justify-end gap-8 border-t border-t-gray-600/70 pt-5'>
@@ -71,9 +91,7 @@ const ProfileModal = (props) => {
                 className='font-bold tracking-wider text-white bg-linear-to-r bg-[#080c10] rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>Cancel</button>
                 <button 
                 onClick={()=>{
-                    if(!isValid()) return;
-                    props.setModal(false);
-
+                    updateProfile();
                 }}
                 className='font-bold tracking-wider text-black bg-linear-to-r from-red-400 to-purple-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>Save Changes</button>
             </div>

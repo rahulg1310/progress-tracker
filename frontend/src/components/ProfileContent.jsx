@@ -22,14 +22,14 @@ const ProfileContent = () => {
             <span className='text-[#4a5568] text-lg min-w-0'>#7743</span>
             <button 
             onClick={()=>{
-                setEditUser("");
-                setEditBio("");
-                setEditPfp("");
+                setEditUser(user.username || "");
+                setEditBio(user.bio || "");
+                setEditPfp(user.profilePicture || "");
                 setModal(true);
             }}
             className='text-[#7d8ca7] text-[13px] ml-0.5 rounded-[7px] px-2 py-1 bg-black hover:-translate-y-0.5 hover:bg-gray-800 transition-all duration-200 min-w-0 mb-1'>Edit Profile</button>
         </div>
-        <h1 className='body text-[#8a9bb0] text-[15px]'>250 on my wrist, 250 on my bitch</h1>
+        <h1 className='body text-[#8a9bb0] text-[15px]'>{user?.bio}</h1>
         <div className='flex gap-2 items-center'>
             <h1 className='font-bold body text-[12px] text-green-400 bg-green-400/20 py-0.5 px-3 rounded-2xl border border-green-400'>Streak</h1>
             <h1 className='font-bold body text-[12px] text-purple-400 bg-purple-400/20 py-0.5 px-3 rounded-2xl border border-purple-400'>Achievements</h1>
