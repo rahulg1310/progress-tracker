@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const User = require('./models/User');
+const Game = require('./models/Game')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -109,6 +110,95 @@ app.post('/signup',async (req,res)=>{
         });
     }
 });
+
+app.put('/profile/:id',async(req,res)=>{
+    try{
+        const {username,bio,profilePicture} = req.body;
+        const existingUser = await User.findOne({
+            username
+        });
+        if(existingUser && existingUser._id.toString()!==req.params.id){
+            return res.status(400).json({
+                success : false,
+                message : "Username already taken"
+            }
+            )
+        }
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                username,
+                bio,
+                profilePicture
+            },
+            {new : true}
+        );
+        
+        if(!updatedUser){
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            })
+        }
+
+        res.status(200).json({
+            success : true,
+            user : updatedUser
+        }
+        )
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
+
+app.post('/games',async(req,res)=>{
+    try{
+        const {user,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes} = req.body;
+        if(!user){
+            return res.status(400).json({
+                success : false,
+                message : "User required"
+            })
+        }
+        if(!title){
+            return res.status(400).json({
+                success : false,
+                message : "Title required"
+            })
+        }
+        if(!genre){
+            return res.status(400).json({
+                success : false,
+                message : "Genre required"
+            })
+        }
+        const existingUser = await User.findById(user);
+        if(!existingUser){
+            return res.status(404).json({
+                success : false,
+                message : "User not found"
+            })
+        }
+        const newGame = await Game.create({user,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes});
+        return res.status(201).json({
+            success : true,
+            message : "Game created",
+            game : newGame
+        })
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
 
 app.listen(5000,()=>{
     console.log('Server started on port 5000');
