@@ -19,6 +19,7 @@ const LibraryModal = (props) => {
     }
     return true;
   }
+  
   const addGames = async ()=>{
     try{
         if(!isValid()) return;
@@ -35,12 +36,12 @@ const LibraryModal = (props) => {
                 colorAccent:props.colorAccent,
                 achievementsEarned:props.achievementsEarned,
                 totalAchievements:props.totalAchievements,
-                notes:props.notes
+                notes:props.notes,
+                coverImage : props.coverImage
             }
         );
-        props.setGames([
-            res.data.game,
-            ...props.games
+        props.setGames((prevGames)=>[
+            res.data.game,...prevGames
         ]);
         props.setModal(false);
     }
@@ -64,7 +65,8 @@ const LibraryModal = (props) => {
                 colorAccent:props.colorAccent,
                 achievementsEarned:props.achievementsEarned,
                 totalAchievements:props.totalAchievements,
-                notes:props.notes
+                notes:props.notes,
+                coverImage : props.coverImage
             }
         );
         props.setGames((prevGames)=>{

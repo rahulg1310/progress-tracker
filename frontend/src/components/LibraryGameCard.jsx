@@ -33,22 +33,24 @@ const LibraryGameCard = (props) => {
                   ${props.colorAccent}15,
                   #1a1f2e
                 )` }}
-        className='w-full flex justify-center items-center py-10 relative'
+        className='w-full h-48 relative overflow-hidden'
       >
-        <div className='opacity-0 group-hover:opacity-100 absolute top-3 left-3 flex gap-2 transition-all duration-200 '>
+        <div className='opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto  absolute top-3 left-3 flex gap-2 transition-all duration-500 z-10'>
           <button 
           onClick={()=>{
             props.editGame(props.id);
           }}
-          className='rounded bg-black/30 backdrop-blur-sm px-2 py-1 hover:bg-black transition-all duration-200'><Settings2 size={17} color='#878787'/></button>
+          className='rounded bg-black backdrop-blur-sm px-2 py-1  hover:bg-gray-600 transition-all duration-300'><Settings2 size={17} color='#878787'/></button>
           <button 
           onClick={()=>{
             props.deleteGame(props.id);
           }}
-          className='rounded bg-black/30 backdrop-blur-sm px-2 py-1 hover:bg-black transition-all duration-200'><Trash2 size={17} color='#878787'/></button>
+          className='rounded bg-black backdrop-blur-sm px-2 py-1 hover:bg-gray-600 transition-all duration-300'><Trash2 size={17} color='#878787'/></button>
         </div>
         <span style={{boxShadow : `0 0 10px ${cfg.glow}`}} className={`absolute top-3 right-3 w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
-        <h1 className='font-bold text-5xl text-white'>{props.title[0]}</h1>
+        {
+          props.coverImage ? (<img src={props.coverImage} alt={props.title} className="w-full h-full object-cover group-hover:scale-100 transition-all duration-300 "/>) : (<h1 className='font-bold text-5xl text-white'>{props.title[0]}</h1>)
+        }
       </div>
       <div className='flex flex-col gap-1.5 px-3 py-3'>
         <h2 className='font-bold text-[15px] leading-tight'>{props.title}</h2>

@@ -1,3 +1,5 @@
+require('dotenv').config();
+const axios = require('axios');
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -155,10 +157,18 @@ app.put('/profile/:id',async(req,res)=>{
         })
     }
 })
-
 app.post('/games',async(req,res)=>{
     try{
         const {user,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes} = req.body;
+        const rawgResponse = await axios.get("https://api.rawg.io/api/games",
+            {
+                params:{
+                key:process.env.RAWG_API_KEY,
+                search:title
+                }
+            }
+        );
+        const coverImage = rawgResponse.data.results[0]?.background_image || "";
         if(!user){
             return res.status(400).json({
                 success : false,
@@ -184,7 +194,7 @@ app.post('/games',async(req,res)=>{
                 message : "User not found"
             })
         }
-        const newGame = await Game.create({user,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes});
+        const newGame = await Game.create({user,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes,coverImage});
         return res.status(201).json({
             success : true,
             message : "Game created",
@@ -209,7 +219,9 @@ app.get('/games/:userId',async(req,res)=>{
                 message : "User not found"
             })
         }
-        const existingGames = await Game.find({user:req.params.userId});
+        const existingGames = await Game.find({
+                        user:req.params.userId
+                    }).sort({ createdAt: -1 });
         return res.status(200).json({
             success : true,
             message : "Getting games",

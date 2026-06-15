@@ -54,8 +54,13 @@ const gameSchema = new mongoose.Schema({
     coverImage:{
         type : String,
         default : ""
-    }
-})
+    },
+},
+{
+    timestamps : true
+}
+
+)
 
 const Game = mongoose.model('Game',gameSchema);
 

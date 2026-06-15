@@ -178,13 +178,13 @@ const LibraryContent = () => {
                 )
                 :
                 sortedGames.map(function(elem,idx){
-                    return <LibraryGameCard key={idx} id={elem._id} index={idx} title={elem.title} genre={elem.genre} platform={elem.platform} status={elem.status} progress={elem.progress} playtime={elem.playtime} rating={elem.rating} colorAccent={elem.colorAccent} achievementsEarned={elem.achievementsEarned} totalAchievements={elem.totalAchievements} notes={elem.notes} deleteGame={deleteGame} editGame={editGame}  />
+                    return <LibraryGameCard key={idx} id={elem._id} index={idx} title={elem.title} genre={elem.genre} platform={elem.platform} status={elem.status} progress={elem.progress} playtime={elem.playtime} rating={elem.rating} colorAccent={elem.colorAccent} achievementsEarned={elem.achievementsEarned} totalAchievements={elem.totalAchievements} notes={elem.notes} deleteGame={deleteGame} editGame={editGame} coverImage={elem.coverImage}  />
                 })
             }
         </div>
       </div>
       {modal && (
-        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlaytime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} editIndex={editIndex} setEditIndex={setEditIndex} />
+        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlaytime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} editIndex={editIndex} setEditIndex={setEditIndex}  />
       )}
     </div>
   )
