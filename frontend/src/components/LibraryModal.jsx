@@ -48,6 +48,36 @@ const LibraryModal = (props) => {
         console.log(error);
     }
   }
+
+  const updateGame = async () =>{
+    try{
+        if(!isValid()) return;
+        const res=await axios.put(`http://localhost:5000/games/${props.editIndex}`,
+            {
+                title:props.title,
+                genre:props.genre,
+                platform:props.platform,
+                status:props.status,
+                progress:props.progress,
+                playtime:props.playtime,
+                rating:props.rating,
+                colorAccent:props.colorAccent,
+                achievementsEarned:props.achievementsEarned,
+                totalAchievements:props.totalAchievements,
+                notes:props.notes
+            }
+        );
+        props.setGames((prevGames)=>{
+            return prevGames.map((elem)=>{
+                return elem._id===props.editIndex ? res.data.updatedGame : elem;
+            })
+        });
+        props.setModal(false);
+    }
+    catch(error){
+        console.log(error);
+    }
+  }
   
   return (
     <div className='fixed inset-0 bg-black/70 flex justify-center items-center p-4 z-50'>
@@ -192,7 +222,12 @@ const LibraryModal = (props) => {
                 className='font-bold tracking-wider text-white bg-linear-to-r bg-[#080c10] rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>Cancel</button>
                 <button 
                 onClick={()=>{
-                    addGames();
+                    if(props.editIndex===null){
+                        addGames();
+                    }
+                    else{
+                        updateGame();
+                    }
                 }}
                 className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>{props.editIndex === null ? "Add Game" : "Update Game  "}</button>
             </div>

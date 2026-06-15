@@ -4,6 +4,7 @@ import { Trophy } from 'lucide-react'
 import { Star } from 'lucide-react'
 import { Trash2 } from 'lucide-react'
 import { Settings2 } from 'lucide-react'
+import { useContext } from 'react'
 
 const statusConfig = {
   Playing:   { color: 'text-green-400',  border: 'border-green-400',  dot: 'bg-green-400', glow: "#4ade80" },
@@ -11,6 +12,7 @@ const statusConfig = {
   Backlog:   { color: 'text-yellow-400', border: 'border-yellow-400', dot: 'bg-yellow-400', glow: "#facc15" },
   Dropped:   { color: 'text-red-400',    border: 'border-red-400',    dot: 'bg-red-400', glow: "#f87171" },
 }
+
 
 
 const LibraryGameCard = (props) => {

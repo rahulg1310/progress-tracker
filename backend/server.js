@@ -200,6 +200,106 @@ app.post('/games',async(req,res)=>{
     }
 })
 
+app.get('/games/:userId',async(req,res)=>{
+    try{
+        const existingUser = await User.findById(req.params.userId);
+        if(!existingUser){
+            return res.status(404).json({
+                success : false,
+                message : "User not found"
+            })
+        }
+        const existingGames = await Game.find({user:req.params.userId});
+        return res.status(200).json({
+            success : true,
+            message : "Getting games",
+            existingGames
+        })
+        
+    }
+    catch(error){
+        return res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
+
+app.delete('/games/:gameId',async(req,res)=>{
+    try{
+        const deletedGame = await Game.findByIdAndDelete(req.params.gameId);
+        if(!deletedGame){
+            return res.status(404).json({
+                success : false,
+                message : "Game not found"
+            })
+        }
+        return res.status(200).json({
+            success : true,
+            message : "Deleting game",
+            deletedGame
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
+
+app.put('/games/:gameId',async(req,res)=>{
+    try{
+        const {
+            title,
+            genre,
+            platform,
+            status,
+            progress,
+            playtime,
+            rating,
+            colorAccent,
+            achievementsEarned,
+            totalAchievements,
+            notes
+        } = req.body;
+        const updatedGame = await Game.findByIdAndUpdate(
+            req.params.gameId,
+            {
+                title,
+                genre,
+                platform,
+                status,
+                progress,
+                playtime,
+                rating,
+                colorAccent,
+                achievementsEarned,
+                totalAchievements,
+                notes
+            },
+            {new : true}
+        )
+        if(!updatedGame){
+            return res.status(404).json({
+                success : false,
+                message : "Game not found"
+            })
+        }
+        return res.status(200).json({
+            success : true,
+            message : "Updating game",
+            updatedGame
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
+
 app.listen(5000,()=>{
     console.log('Server started on port 5000');
 });

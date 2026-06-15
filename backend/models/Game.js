@@ -50,6 +50,10 @@ const gameSchema = new mongoose.Schema({
     notes:{
         type : String,
         default : ""
+    },
+    coverImage:{
+        type : String,
+        default : ""
     }
 })
 

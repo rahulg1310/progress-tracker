@@ -3,6 +3,7 @@ import { Search } from 'lucide-react'
 import LibraryModal from './LibraryModal';
 import LibraryGameCard from './LibraryGameCard';
 import { GamesData } from '../context/GamesContext';
+import axios from 'axios';
 
 const LibraryContent = () => {
   const [searchGame, setSearchGame] = useState('');
@@ -41,16 +42,22 @@ const LibraryContent = () => {
   }
   const totalGames = sortedGames.length;
 
-  const deleteGame = (id)=>{
-    const updatedGames = games.filter((elem)=>{
-      return id!==elem.id;
-    });
-    setGames(updatedGames);
-    localStorage.setItem('games',JSON.stringify(updatedGames));
+  const deleteGame =async (id)=>{
+    try{
+      const res = await axios.delete(`http://localhost:5000/games/${id}`);
+      setGames(()=>{
+        return games.filter((elem)=>{
+          return elem._id !== id;
+        })
+      });
+    }
+    catch(error){
+      console.log(error);
+    }
   }
-  const editGame = (id)=>{
+  const editGame =async (id)=>{
     const game=games.find(function(elem){
-      return elem.id===id;
+      return elem._id===id;
     })
     setTitle(game.title);
     setGenre(game.genre);
@@ -171,7 +178,7 @@ const LibraryContent = () => {
                 )
                 :
                 sortedGames.map(function(elem,idx){
-                    return <LibraryGameCard key={idx} id={elem.id} index={idx} title={elem.title} genre={elem.genre} platform={elem.platform} status={elem.status} progress={elem.progress} playtime={elem.playtime} rating={elem.rating} colorAccent={elem.colorAccent} achievementsEarned={elem.achievementsEarned} totalAchievements={elem.totalAchievements} notes={elem.notes} deleteGame={deleteGame} editGame={editGame}  />
+                    return <LibraryGameCard key={idx} id={elem._id} index={idx} title={elem.title} genre={elem.genre} platform={elem.platform} status={elem.status} progress={elem.progress} playtime={elem.playtime} rating={elem.rating} colorAccent={elem.colorAccent} achievementsEarned={elem.achievementsEarned} totalAchievements={elem.totalAchievements} notes={elem.notes} deleteGame={deleteGame} editGame={editGame}  />
                 })
             }
         </div>

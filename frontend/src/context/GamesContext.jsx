@@ -1,15 +1,28 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
+import { useContext } from 'react';
+import { UserData } from './UserContext';
+import axios from 'axios';
+
 
 export const GamesData = createContext();
 
 const GamesContext = ({children}) => {
-  const [games,setGames] = useState(()=>{
-    const storedGames=localStorage.getItem('games')
-    if(storedGames){
-        return JSON.parse(storedGames);
+  const [games,setGames] = useState([]);
+  const {user} = useContext(UserData);
+  useEffect(()=>{
+    if(!user) return;
+    const fetchGames = async ()=>{
+      try{
+        const res = await axios.get(`http://localhost:5000/games/${user._id}`);
+        setGames(res.data.existingGames);
+      }
+      catch(error){
+        console.log(error);
+      }
     }
-    return [];
-  })
+    fetchGames();
+  },[user])
+  
   return (
     <div>
       <GamesData.Provider value={{games,setGames}}>
