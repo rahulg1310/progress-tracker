@@ -47,7 +47,7 @@ const LibraryGameCard = (props) => {
           }}
           className='rounded bg-black backdrop-blur-sm px-2 py-1 hover:bg-gray-600 transition-all duration-300'><Trash2 size={17} color='#878787'/></button>
         </div>
-        <span style={{boxShadow : `0 0 10px ${cfg.glow}`}} className={`absolute top-3 right-3 w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
+        <span style={{boxShadow : `0 0 10px ${cfg.glow}`}} className={`absolute z-15 top-3 right-3 w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
         {
           props.coverImage ? (<img src={props.coverImage} alt={props.title} className="w-full h-full object-cover group-hover:scale-100 transition-all duration-300 "/>) : (<h1 className='font-bold text-5xl text-white'>{props.title[0]}</h1>)
         }

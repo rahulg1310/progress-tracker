@@ -10,13 +10,19 @@ const ProfileModal = (props) => {
   const updateProfile = async ()=>{
     if(!isValid()) return;
     try{
-        const res = await axios.put(`http://localhost:5000/profile/${user._id}`,
+        const token=JSON.parse(localStorage.getItem("token"));
+        const res = await axios.put(`http://localhost:5000/profile`,
         {
         username : props.editUser,
         bio : props.editBio,
         profilePicture: props.editPfp
-        
-    });
+        },
+        {
+            headers:{
+                Authorization : `Bearer ${token}`
+            }
+        }
+    );
     console.log(res.data.user);
     setUser(res.data.user);
     localStorage.setItem("user",JSON.stringify(res.data.user));

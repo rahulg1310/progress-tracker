@@ -7,6 +7,7 @@ const User = require('./models/User');
 const Game = require('./models/Game')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const authMiddleware = require('./middleware/authMiddleware');
 
 const app = express();
 app.use(express.json());
@@ -113,13 +114,13 @@ app.post('/signup',async (req,res)=>{
     }
 });
 
-app.put('/profile/:id',async(req,res)=>{
+app.put('/profile',authMiddleware,async(req,res)=>{
     try{
         const {username,bio,profilePicture} = req.body;
         const existingUser = await User.findOne({
             username
         });
-        if(existingUser && existingUser._id.toString()!==req.params.id){
+        if(existingUser && existingUser._id.toString()!==req.user.userId){
             return res.status(400).json({
                 success : false,
                 message : "Username already taken"
@@ -127,7 +128,7 @@ app.put('/profile/:id',async(req,res)=>{
             )
         }
         const updatedUser = await User.findByIdAndUpdate(
-            req.params.id,
+            req.user.userId,
             {
                 username,
                 bio,
@@ -157,9 +158,9 @@ app.put('/profile/:id',async(req,res)=>{
         })
     }
 })
-app.post('/games',async(req,res)=>{
+app.post('/games',authMiddleware,async(req,res)=>{
     try{
-        const {user,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes} = req.body;
+        const {title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes} = req.body;
         const rawgResponse = await axios.get("https://api.rawg.io/api/games",
             {
                 params:{
@@ -169,7 +170,7 @@ app.post('/games',async(req,res)=>{
             }
         );
         const coverImage = rawgResponse.data.results[0]?.background_image || "";
-        if(!user){
+        if(!req.user.userId){
             return res.status(400).json({
                 success : false,
                 message : "User required"
@@ -187,14 +188,14 @@ app.post('/games',async(req,res)=>{
                 message : "Genre required"
             })
         }
-        const existingUser = await User.findById(user);
+        const existingUser = await User.findById(req.user.userId);
         if(!existingUser){
             return res.status(404).json({
                 success : false,
                 message : "User not found"
             })
         }
-        const newGame = await Game.create({user,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes,coverImage});
+        const newGame = await Game.create({user : req.user.userId,title,genre,platform,status,progress,playtime,rating,colorAccent,achievementsEarned,totalAchievements,notes,coverImage});
         return res.status(201).json({
             success : true,
             message : "Game created",
@@ -210,9 +211,9 @@ app.post('/games',async(req,res)=>{
     }
 })
 
-app.get('/games/:userId',async(req,res)=>{
+app.get('/games',authMiddleware,async(req,res)=>{
     try{
-        const existingUser = await User.findById(req.params.userId);
+        const existingUser = await User.findById(req.user.userId);
         if(!existingUser){
             return res.status(404).json({
                 success : false,
@@ -220,7 +221,7 @@ app.get('/games/:userId',async(req,res)=>{
             })
         }
         const existingGames = await Game.find({
-                        user:req.params.userId
+                        user:req.user.userId
                     }).sort({ createdAt: -1 });
         return res.status(200).json({
             success : true,
@@ -237,8 +238,28 @@ app.get('/games/:userId',async(req,res)=>{
     }
 })
 
-app.delete('/games/:gameId',async(req,res)=>{
+app.delete('/games/:gameId',authMiddleware,async(req,res)=>{
     try{
+        const existingUser = await User.findById(req.user.userId);
+        if(!existingUser){
+            return res.status(404).json({
+                success : false,
+                message : "User not found"
+            })
+        }
+        const game = await Game.findById(req.params.gameId);
+        if(game.user.toString()!==req.user.userId){
+            return res.status(403).json({
+                success : false,
+                message : "Wrong User"
+            })
+        }
+        if(!game){
+            return res.json(404).json({
+                success : false,
+                message : "Game not found"
+            })
+        }
         const deletedGame = await Game.findByIdAndDelete(req.params.gameId);
         if(!deletedGame){
             return res.status(404).json({
@@ -260,8 +281,28 @@ app.delete('/games/:gameId',async(req,res)=>{
     }
 })
 
-app.put('/games/:gameId',async(req,res)=>{
+app.put('/games/:gameId',authMiddleware,async(req,res)=>{
     try{
+        const existingUser = await User.findById(req.user.userId);
+        if(!existingUser){
+            return res.status(404).json({
+                success : false,
+                message : "User not found"
+            })
+        }
+        const game=await Game.findById(req.params.gameId);
+        if(game.user.toString()!==req.user.userId){
+            return res.status(403).json({
+                success : false,
+                message : "Wrong User"
+            })
+        }
+        if(!game){
+            return res.json(404).json({
+                success : false,
+                message : "Game not found"
+            })
+        }
         const {
             title,
             genre,

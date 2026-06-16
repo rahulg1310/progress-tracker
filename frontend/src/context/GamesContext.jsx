@@ -13,7 +13,12 @@ const GamesContext = ({children}) => {
     if(!user) return;
     const fetchGames = async ()=>{
       try{
-        const res = await axios.get(`http://localhost:5000/games/${user._id}`);
+        const token=JSON.parse(localStorage.getItem("token"));
+        const res = await axios.get(`http://localhost:5000/games`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
         setGames(res.data.existingGames);
       }
       catch(error){

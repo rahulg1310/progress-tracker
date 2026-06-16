@@ -23,9 +23,9 @@ const LibraryModal = (props) => {
   const addGames = async ()=>{
     try{
         if(!isValid()) return;
+        const token = JSON.parse(localStorage.getItem("token"));
         const res = await axios.post('http://localhost:5000/games',
             {
-                user : user._id,
                 title : props.title,
                 genre:props.genre,
                 platform:props.platform,
@@ -38,6 +38,11 @@ const LibraryModal = (props) => {
                 totalAchievements:props.totalAchievements,
                 notes:props.notes,
                 coverImage : props.coverImage
+            },
+            {
+                headers:{
+                    Authorization : `Bearer ${token}`
+                }
             }
         );
         props.setGames((prevGames)=>[
@@ -53,6 +58,7 @@ const LibraryModal = (props) => {
   const updateGame = async () =>{
     try{
         if(!isValid()) return;
+        const token = JSON.parse(localStorage.getItem("token"));
         const res=await axios.put(`http://localhost:5000/games/${props.editIndex}`,
             {
                 title:props.title,
@@ -67,6 +73,11 @@ const LibraryModal = (props) => {
                 totalAchievements:props.totalAchievements,
                 notes:props.notes,
                 coverImage : props.coverImage
+            },
+            {
+                headers:{
+                    Authorization : `Bearer ${token}`
+                }
             }
         );
         props.setGames((prevGames)=>{
