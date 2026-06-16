@@ -1,6 +1,38 @@
+import axios from 'axios';
 import React from 'react'
 
 const SessionModal = (props) => {
+  const addSessions = async ()=>{
+    try{
+      const token = JSON.parse(localStorage.getItem("token"));
+      const res =  await axios.post('http://localhost:5000/sessions',{
+        game : props.game,
+        duration : props.duration,
+        kills : props.kills,
+        deaths : props.deaths,
+        assists : props.assists,
+        ratio : props.ratio,
+        rankBefore : props.brank,
+        rankAfter : props.arank,
+        result : props.sessionResult,
+        date : props.date,
+        mood : props.mood
+      },
+      {
+        headers:{
+          Authorization : `Bearer ${token}`
+        }
+      }
+      )
+      props.setSessions((prevSessions)=>[
+        res.data.newSession,...prevSessions
+      ])
+      props.setModal(false);
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
   return (
         <div className='fixed inset-0 bg-black/70 flex justify-center items-center p-4 z-50'>
           <div className='bg-[#111820] max-w-3xl w-full rounded-2xl border border-gray-400/20 flex flex-col gap-5 p-6'>
@@ -184,23 +216,7 @@ const SessionModal = (props) => {
                 className='font-bold tracking-wider text-white bg-linear-to-r bg-[#080c10] rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>Cancel</button>
                 <button 
                 onClick={()=>{
-                  const newSession = {
-                    game : props.game,
-                    duration : props.duration,
-                    kills : props.kills,
-                    deaths : props.deaths,
-                    assists : props.assists,
-                    ratio : props.ratio,
-                    rankBefore : props.brank,
-                    rankAfter : props.arank,
-                    result : props.sessionResult,
-                    date : props.date,
-                    mood : props.mood
-                  };
-                  const updatedSessions = [newSession,...props.sessions];
-                  props.setSessions(updatedSessions);
-                  localStorage.setItem('sessions',JSON.stringify(updatedSessions));
-                  props.setModal(false);
+                  addSessions();
                 }}
                 className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>Log Session</button>
             </div>

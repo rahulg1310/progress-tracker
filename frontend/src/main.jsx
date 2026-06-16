@@ -5,12 +5,15 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import UserContext from './context/UserContext.jsx'
 import GamesContext from './context/GamesContext.jsx'
+import SessionContext from './context/SessionContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <UserContext>
     <GamesContext>
       <BrowserRouter>
-        <App />
+        <SessionContext>
+          <App />
+        </SessionContext>
       </BrowserRouter>
     </GamesContext>
   </UserContext>

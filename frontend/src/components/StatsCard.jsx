@@ -12,7 +12,7 @@ const StatsCard = (props) => {
                 props.result === "Win" ? "text-green-500 bg-green-500/10" : props.result === "Loss" ? "text-red-500 bg-red-500/10" : "text-cyan-500 bg-cyan-500/10"
             }  py-1 px-3  rounded-xl`}>{props.result}</h1>
           </div>
-          <h2 className='body text-[12px] text-[#4a5568]'>{props.date}</h2>
+          <h2 className='body text-[12px] text-[#4a5568]'>{new Date(props.date).toLocaleDateString()}</h2>
           <div className='flex gap-6'>
             <div className='flex flex-col gap-0 justify-center items-center'>
               <h1 className='mono text-[16px] text-green-400'>{props.kills}</h1>
@@ -48,7 +48,7 @@ const StatsCard = (props) => {
             <div>
                 <button 
                 onClick={()=>{
-                    props.deleteSession(props.index);
+                    props.deleteSession(props.id);
                 }}
                 className='body hover:bg-gray-700 transition-all duration-200 p-[5px] rounded-[8px] '><Trash2 size={20} color='#948f8f' /></button>
             </div>

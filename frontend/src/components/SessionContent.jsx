@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import SessionContentCard from './SessionContentCard'
 import SessionGameButton from './SessionGameButton'
 import SessionModal from './SessionModal'
 import StatsCard from './StatsCard'
+import { UserData } from '../context/UserContext'
+import { SessionData } from '../context/SessionContext'
+import axios from 'axios'
 
 const SessionContent = (props) => {
+  const {sessions,setSessions} = useContext(SessionData);
+  const {user} = useContext(UserData);
   const ranks = {
   Valorant: [
     "Iron 1",
@@ -124,21 +129,24 @@ const SessionContent = (props) => {
   ]
   };
   
-  
   const [modal, setModal] = useState(false);
-  const [sessions, setSessions] = useState(()=>{
-    const savedSessions=localStorage.getItem("sessions");
-    if(savedSessions){
-      return JSON.parse(savedSessions);
+  const deleteSession =async (id)=>{
+    try{
+      const token = JSON.parse(localStorage.getItem("token"));
+      const res = await axios.delete(`http://localhost:5000/sessions/${id}`,{
+        headers:{
+          Authorization : `Bearer ${token}`
+        }
+      });
+      setSessions(()=>{
+        return sessions.filter((elem)=>{
+          return elem._id !== id;
+        })
+      });
     }
-    return [];
-  });
-  const deleteSession = (index) =>{
-    const updatedSession = sessions.filter((_,idx)=>{
-      return idx!==index;
-    });
-    setSessions(updatedSession);
-    localStorage.setItem('sessions',JSON.stringify(updatedSession));
+    catch(error){
+      console.log(error);
+    }
   }
   const [duration, setDuration] = useState(0);
   const [kills, setKills] = useState(0);
@@ -287,7 +295,7 @@ const SessionContent = (props) => {
             </div>
           ) :
           (filteredSessions.map(function(elem,idx){
-            return <StatsCard key={idx} index={idx} game={elem.game} duration={elem.duration} kills={elem.kills} deaths={elem.deaths} assists={elem.assists} ratio={elem.ratio} rankBefore={elem.rankBefore} rankAfter={elem.rankAfter} result={elem.result} date={elem.date} mood={elem.mood} deleteSession={deleteSession} />
+            return <StatsCard key={idx} index={idx} game={elem.game} duration={elem.duration} kills={elem.kills} deaths={elem.deaths} assists={elem.assists} ratio={elem.ratio} rankBefore={elem.rankBefore} rankAfter={elem.rankAfter} result={elem.result} date={elem.date} mood={elem.mood} deleteSession={deleteSession} id={elem._id} />
           }))
         }
       </div>

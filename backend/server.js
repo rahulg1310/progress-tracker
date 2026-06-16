@@ -5,6 +5,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const User = require('./models/User');
 const Game = require('./models/Game')
+const Session = require('./models/Session')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('./middleware/authMiddleware');
@@ -34,7 +35,7 @@ app.post('/signin',async (req,res)=>{
         }
         const token = jwt.sign({
             userId : existingEmail._id
-        },'questlog_secret');
+        },process.env.JWT_SECRET);
         res.status(200).json({
             success:true,
             message:'Login Successful',
@@ -343,6 +344,86 @@ app.put('/games/:gameId',authMiddleware,async(req,res)=>{
             success : true,
             message : "Updating game",
             updatedGame
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
+
+app.post('/sessions',authMiddleware,async (req,res)=>{
+    try{
+        const {game,duration,kills,deaths,assists,ratio,rankBefore,rankAfter,result,date,mood} = req.body;
+        const newSession = await Session.create({user : req.user.userId,game,duration,kills,deaths,assists,ratio,rankBefore,rankAfter,result,date,mood});
+        return res.status(201).json({
+            success : true,
+            message : "Sending Sessions",
+            newSession
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
+
+app.get('/sessions',authMiddleware,async (req,res)=>{
+    try{
+        const existingUser = await User.findById(req.user.userId);
+        if(!existingUser){
+            return res.status(404).json({
+                success : false,
+                message : "User not found"
+            })
+        }
+        const existingSessions = await Session.find({
+                        user:req.user.userId
+                    }).sort({ createdAt: -1 });
+        return res.status(200).json({
+            success : true,
+            message : "Getting sessions",
+            existingSessions
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success : false,
+            message : "Server Error"
+        })
+    }
+})
+
+app.delete('/sessions/:sessionId',authMiddleware,async (req,res)=>{
+    try{
+        const session = await Session.findById(req.params.sessionId);
+        if(session.user.toString()!==req.user.userId){
+            return res.status(403).json({
+                success : false,
+                message : "Wrong User"
+            })
+        }
+        if(!session){
+            return res.json(404).json({
+                success : false,
+                message : "Session not found"
+            })
+        }
+        const deletedSession = await Session.findByIdAndDelete(req.params.sessionId);
+        if(!deletedSession){
+            return res.status(404).json({
+                success : false,
+                message : "Session not found"
+            })
+        }
+        return res.status(200).json({
+            success : true,
+            message : "Deleting session",
+            deletedSession
         })
     }
     catch(error){
