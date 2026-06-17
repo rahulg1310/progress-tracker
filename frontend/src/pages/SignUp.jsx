@@ -54,8 +54,7 @@ const SignUp = () => {
     <div className='min-h-screen w-full bg-[#080c10] flex justify-center items-center px-4'>
       <div className='bg-[#111820] flex flex-col gap-5 py-8 px-8 rounded-2xl border border-white/15 items-center w-full max-w-110'>
         <div className='flex items-center'>
-            <Gamepad2 size={38} className='mr-3'/>
-            <h1 className='font-bold bg-linear-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent text-3xl tracking-wider'>QUESTLOG</h1>
+            <h1 className='font-bold bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent text-3xl tracking-wider'>路 KAIRO</h1>
         </div>
         <div className='flex flex-col justify-center gap-3 items-center'>
             <h1 className='font-bold text-2xl tracking-normal'>Create account</h1>
@@ -128,7 +127,7 @@ const SignUp = () => {
                     value={cpass} type="password" name="" id="" placeholder='Enter Password' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 ' />
                     <span className='body text-[11px] text-[#ff2929] ml-1 mb-3'>{cpassError}</span>
                 </div>
-                <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 mt-3'>Create Account</button>       
+                <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-purple-400 to-red-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200 mt-3'>Create Account</button>       
             </form>
         </div>
         

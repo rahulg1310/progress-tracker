@@ -51,16 +51,10 @@ const Sidebar = () => {
                 </div>
             </div>
         </div>
-        <div className='w-full flex flex-col justify-between px-4 py-4 flex-1 border-t-2 border-gray-600/40'>
+        <div className='w-full flex flex-col justify-around px-4 py-4 flex-1 border-t-2 border-gray-600/40'>
             <div className='w-full flex justify-center mono text-xl font-semibold'>
               <div className='flex gap-1 items-center'>
-                <div className='w-18 h-18 flex justify-center items-center bg-gray-700 rounded-full mr-2'>
-                  <div className='w-17 h-17 rounded-full overflow-hidden'>
-                    <img src="https://pbs.twimg.com/media/G1c19UTWoAAYFAs.jpg" alt="pfp" className='' />
-                  </div>
-                </div>
                   <h1>{user?.username}</h1>
-                  <span className='text-[12px] text-[#4a5568] mt-2.5'>#7743</span>
               </div>
             </div>
             <div className='w-full flex justify-center'>
@@ -71,7 +65,7 @@ const Sidebar = () => {
                 localStorage.removeItem("token");
                 navigate('/');
               }}
-              className='w-full py-1 flex justify-center items-center gap-2 font-bold tracking-wider text-xl hover:bg-gray-800 rounded-[7px] transition-all duration-200 text-[#8a9bb0]'>Logout <LogOut size={15}/></button>
+              className='w-full py-1 flex justify-center items-center gap-2 font-bold tracking-wider text-xl hover:bg-gray-800 rounded-[7px] transition-all duration-200 text-[#8a9bb0]'>Sign out <LogOut size={15}/></button>
             </div>
         </div>
       </div>

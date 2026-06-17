@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { UserData } from '../context/UserContext'
 import ProfileModal from './ProfileModal';
+import { GamesData } from '../context/GamesContext';
+import { SessionData } from '../context/SessionContext';
 
 const ProfileContent = () => {
   const {user,setUser} = useContext(UserData);
@@ -12,14 +14,8 @@ const ProfileContent = () => {
     <div className='w-full py-5 px-12 flex flex-col'>
       <h1 className='font-bold text-4xl tracking-wider mb-10'>Profile</h1>
       <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4 mb-5'>
-        <div className='h-20 w-20 rounded-full bg-gray-700 flex justify-center items-center'>
-            <div className='h-19 w-19 rounded-full bg-[#1a2332] overflow-hidden'>
-                <img src="https://pbs.twimg.com/media/G1c19UTWoAAYFAs.jpg" alt="pfp" />
-            </div>
-        </div>
         <div className='font-bold text-3xl flex gap-1 items-end'>
             <h1 className='min-w-0'>{user?.username}</h1>
-            <span className='text-[#4a5568] text-lg min-w-0'>#7743</span>
             <button 
             onClick={()=>{
                 setEditUser(user.username || "");

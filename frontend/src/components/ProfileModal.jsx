@@ -55,20 +55,6 @@ const ProfileModal = (props) => {
                 }}
                 className='body hover:bg-gray-700 transition-all duration-200 py-1 px-2 rounded'>X</button>
             </div>
-            <div className='h-20 w-20 rounded-full bg-gray-700 flex justify-center items-center'>
-                <div className='h-19 w-19 rounded-full bg-[#1a2332] overflow-hidden'>
-                    <img src="https://pbs.twimg.com/media/G1c19UTWoAAYFAs.jpg" alt="pfp" />
-                </div>
-            </div>
-            <div className='w-full flex flex-col gap-1'>
-                <span className='body text-[#8a9bb0] text-[12px] font-semibold'>Profile Picture</span>
-                <input 
-                onChange={(e)=>{
-                    props.setEditPfp(e.target.value);
-                }}
-                type="text" value={props.editPfp} placeholder='Set Profile Pic...' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
-                <span className='body text-[11px] text-[#ff2929]'></span>
-            </div>
             <div className='w-full flex flex-col gap-1'>
                 <span className='body text-[#8a9bb0] text-[12px] font-semibold'>Username</span>
                 <input 
