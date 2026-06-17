@@ -6,9 +6,12 @@ import GenreBreakdown from './GenreBreakdown'
 import TopByPlaytime from './TopByPlaytime'
 import { useContext } from 'react'
 import { UserData } from '../context/UserContext'
+import { GamesData } from '../context/GamesContext'
 
 const DashContent = (props) => {
   const {user} = useContext(UserData);
+  const {games} = useContext(GamesData);
+  const totalGames = games.length;
   return (
     <div className='min-h-screen w-full px-4 md:px-8  xl:px-12 py-5 overflow-y-auto'>
       <div className='flex flex-col gap-6 w-full'>
@@ -36,11 +39,25 @@ const DashContent = (props) => {
             <div className='flex-1 min-w-0 bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4'>
                 <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
                     <h1 className='font-bold text-[#8a9bb0] tracking-wider'>RECENTLY PLAYED</h1>
-                    <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>5 Games</span>
+                    <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>{totalGames} Games</span>
                 </div>
-                {props.game_card.map(function(elem,idx){
+                {
+                 totalGames === 0 ? (
+                  <div className='flex w-full justify-center items-center'>
+                  <div className='p-8 text-center'>
+                    <h1 className='font-bold text-xl text-[#8a9bb0]'>
+                      No Games Found
+                    </h1>
+                  <p className='body text-sm text-[#4a5568] mt-2'>
+                    Add your first game to get started.
+                  </p>
+                  </div>
+                  </div>)
+
+                : (props.game_card.map(function(elem,idx){
                     return <GameCard key={idx} name={elem.name} genre={elem.genre} hours={elem.hours} color1={elem.color1} initial={elem.initial} progress={elem.progress} color2={elem.color2} status={elem.status} />
-                })}
+                }))
+                }
             </div>
             <div className='w-full xl:w-[320px] flex flex-col min-w-0 gap-4'>
                 <div className='w-full bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-6'>
@@ -58,9 +75,23 @@ const DashContent = (props) => {
                         <h1 className='font-bold tracking-wider text-[#8a9bb0]'>GENRE BREAKDOWN</h1>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        {props.genre_breakdown.map(function(elem,idx){
+                        {
+                            totalGames === 0 ? (
+                                <div className='flex w-full justify-center items-center'>
+                                    <div className='p-8 text-center'>
+                                        <h1 className='font-bold text-xl text-[#8a9bb0]'>
+                                            No Games Found
+                                        </h1>
+                                        <p className='body text-sm text-[#4a5568] mt-2'>
+                                            Add your first game to get started.
+                                        </p>
+                                    </div>
+                                </div>)
+                        
+                        : (props.genre_breakdown.map(function(elem,idx){
                             return <GenreBreakdown key={idx} num={elem.num} progress={elem.progress} genre={elem.genre} />
-                        })}
+                        }))
+                        }
                     </div>
                 </div>
             </div>
@@ -71,9 +102,23 @@ const DashContent = (props) => {
                 <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>{props.totalPlaytime}h total</span>
             </div>
             <div className='flex flex-col gap-3'>
-                {props.top_by_playtime.map(function(elem,idx){
+                {
+                totalGames === 0 ? (
+                  <div className='flex w-full justify-center items-center'>
+                  <div className='p-8 text-center'>
+                    <h1 className='font-bold text-xl text-[#8a9bb0]'>
+                      No Games Found
+                    </h1>
+                  <p className='body text-sm text-[#4a5568] mt-2'>
+                    Add your first game to get started.
+                  </p>
+                  </div>
+                  </div>)
+
+                : (props.top_by_playtime.map(function(elem,idx){
                     return <TopByPlaytime key={idx} name={elem.name} progress={elem.progress} hours={elem.hours} color={elem.color}/>
-                })}
+                }))
+                }
             </div>
         </div>
       </div>

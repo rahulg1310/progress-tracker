@@ -22,10 +22,10 @@ const Dashboard = () => {
     return elem.status==="Dropped";
   }).length
   const totalDays = (totalPlayTime/24).toFixed(0);
-  const completionRate = games.reduce((sum,elem)=>{
+  const completionRate = totalGames===0 ? 0 : games.reduce((sum,elem)=>{
     return sum+elem.progress;
   },0)/totalGames;
-  const avgRating = games.reduce((sum,elem)=>{
+  const avgRating = totalGames===0 ? 0 : games.reduce((sum,elem)=>{
     return sum+elem.rating;
   },0)/totalGames;
   const gamesPlaying = games.filter((elem)=>{

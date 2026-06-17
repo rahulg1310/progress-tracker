@@ -72,6 +72,7 @@ const SignIn = () => {
                     <input 
                     onChange={(e)=>{
                         setEmail(e.target.value);
+                        setEmailError("");
                     }}
                     value={email} type="text" name="" id="" placeholder='user@example.com' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200' />
                     <span className='body text-[11px] text-[#ff2929] ml-1'>{emailError}</span>
@@ -81,12 +82,13 @@ const SignIn = () => {
                     <input 
                     onChange={(e)=>{
                         setPassword(e.target.value);
+                        setPassError("");
                     }}
                     value={password} type="password" name="" id="" placeholder='Enter Password' className='body text-[13px] px-2 py-2 rounded-[10px] mt-1 w-full bg-[#080c10] outline-none border border-gray-600/40 focus:border-cyan-400 transition-all duration-200 ' />
                     <span className='body text-[11px] text-[#ff2929] ml-1'>{passError}</span>
                 </div>
                 <div className='w-full flex justify-end'>
-                    <button className='body text-[13px] text-[#38d60c] transition-all duration-200'>Forgot Password?</button>
+                    <button className='body text-[13px] text-[#00ff80] transition-all duration-200'>Forgot Password?</button>
                 </div>
                 <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-purple-400 to-red-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200'
                 >Sign In</button>
@@ -98,7 +100,7 @@ const SignIn = () => {
             onClick={()=>{
                 navigate("/signup");
             }}
-            className='body text-[13px] text-[#38d60c] transition-all duration-200'>Create One</button>
+            className='body text-[13px] text-[#00ff80] transition-all duration-200'>Create One</button>
         </div>  
       </div>
     </div>
