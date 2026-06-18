@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserData } from '../context/UserContext';
+import { LoaderCircle } from 'lucide-react';
 
 const LibraryModal = (props) => {
   const {user} = useContext(UserData);
@@ -24,6 +25,7 @@ const LibraryModal = (props) => {
     try{
         if(!isValid()) return;
         const token = JSON.parse(localStorage.getItem("token"));
+        props.setLoading(true);
         const res = await axios.post('http://localhost:5000/games',
             {
                 title : props.title,
@@ -53,12 +55,16 @@ const LibraryModal = (props) => {
     catch(error){
         console.log(error);
     }
+    finally{
+        props.setLoading(false);
+    }
   }
 
   const updateGame = async () =>{
     try{
         if(!isValid()) return;
         const token = JSON.parse(localStorage.getItem("token"));
+        props.setLoading(true);
         const res=await axios.put(`http://localhost:5000/games/${props.editIndex}`,
             {
                 title:props.title,
@@ -90,11 +96,14 @@ const LibraryModal = (props) => {
     catch(error){
         console.log(error);
     }
+    finally{
+        props.setLoading(false);
+    }
   }
   
   return (
-    <div className='fixed inset-0 bg-black/70 flex justify-center items-center p-4 z-50'>
-      <div className='bg-[#111820] max-w-3xl w-full rounded-2xl border border-gray-400/20 flex flex-col gap-5 p-6'>
+    <div className='fixed inset-0 bg-black/70 flex justify-center items-start md:items-center px-8 pt-12 py-4 z-50 overflow-auto'>
+      <div className='bg-[#111820] max-w-3xl w-full rounded-2xl border border-gray-400/20 flex flex-col gap-3 p-6 '>
         <div className='flex justify-between items-center'>
             <h1 className='font-bold text-xl tracking-wider'>{props.editIndex === null ? "Add New Game" : "Edit Game"}</h1>
             <button 
@@ -234,6 +243,7 @@ const LibraryModal = (props) => {
                 }}
                 className='font-bold tracking-wider text-white bg-linear-to-r bg-[#080c10] rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>Cancel</button>
                 <button 
+                disabled={props.loading}
                 onClick={()=>{
                     if(props.editIndex===null){
                         addGames();
@@ -242,7 +252,11 @@ const LibraryModal = (props) => {
                         updateGame();
                     }
                 }}
-                className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3'>{props.editIndex === null ? "Add Game" : "Update Game  "}</button>
+                className={`font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5  transition-all duration-200 px-3 ${
+                    props.loading ? "opacity-50 cursor-not-allowed" : "hover:opacity-60"
+                }`}>{props.editIndex != null ? "Update Game" : props.loading ? (<div>
+                    <LoaderCircle className="animate-spin" size={18} />
+                </div>) : "Add Game"}</button>
             </div>
       </div>
     </div>

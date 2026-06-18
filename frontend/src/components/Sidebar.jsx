@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {Gamepad2} from 'lucide-react'
 import { LayoutDashboard } from 'lucide-react'
 import { Library } from 'lucide-react'
@@ -13,17 +13,108 @@ import { LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { UserData } from '../context/UserContext'
 import { useContext } from 'react'
+import { Menu } from 'lucide-react'
+import { X } from 'lucide-react'
 
 const Sidebar = () => {
   const {user , setUser} = useContext(UserData);
+  const [modal, setModal] = useState(false);
   const navigate = useNavigate();
   return (
     <>
-      <div className='w-60 bg-[#0d1117] h-screen border-r  border-r-gray-400/10 px-2 flex flex-col'>
+      <div className='md:hidden h-16 bg-[#0d1117] border-b border-gray-700 flex items-center justify-between px-2'>
+        <h1 className='font-bold mono text-4xl bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent ml-2 mr-2'>路 KAIRO</h1>
+        <button onClick={()=>{
+          setModal(!modal);
+        }}>
+          {
+            modal===true ? <X size={28}/> : <Menu size={28}/>
+          }
+        </button>
+
+      {
+        modal && (
+          <div 
+          onClick={()=>{
+            setModal(false)
+          }}
+          className='fixed inset-0 z-80 '>
+          </div>
+        )
+      }
+        <div className={`fixed top-16 left-0 z-100 w-full h-[calc(100vh-64px)] bg-[#0d1117] transition-transform duration-300 ${
+          modal ? "translate-x-0" : "-translate-x-full"
+        }`}>
+          <div className="flex flex-col justify-between h-full py-6">
+            <div className="tracking-normal flex flex-col gap-2 px-3 font-semibold text-2xl text-[#8a9bb0]">
+              <button
+                onClick={()=>{
+                  navigate('/dashboard');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <LayoutDashboard size={21} />
+                Dashboard
+              </button>
+              <button
+                onClick={()=>{
+                  navigate('/library');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <Library size={21} />
+                Library
+              </button>
+              <button
+                onClick={()=>{
+                  navigate('/sessions');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <Clock size={21} />
+                Sessions
+              </button>
+
+              <button
+                onClick={()=>{
+                  navigate('/profile');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <UserRound size={21} />
+                Profile
+              </button>
+            </div>
+            <div className="border-t flex flex-col border-gray-700 pt-5 px-4">
+              <h2 className="text-center text-2xl font-bold mb-4">
+                {user?.username}
+              </h2>
+              <button
+                onClick={()=>{
+                  setUser(null);
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("token");
+                  navigate('/');
+                  setModal(false);
+                }}
+                className="w-full font-semibold flex justify-center items-center gap-2 py-2 hover:bg-gray-800 rounded-lg text-[#8a9bb0]"
+              >
+                Sign Out
+                <LogOut size={21} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='hidden md:flex w-60 bg-[#0d1117] h-screen border-r  border-r-gray-400/10 px-2 flex flex-col'>
         <div className='h-[83%] w-full flex flex-col justify-between'>
             <div className='flex flex-col gap-4'>
                 <div className='py-5 flex justify-center '>
-                  
+        
                     <h1 className='font-bold mono text-4xl bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent ml-2 mr-2'>路 KAIRO</h1>
                     
                 </div>

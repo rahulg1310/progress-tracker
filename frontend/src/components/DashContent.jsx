@@ -13,22 +13,14 @@ const DashContent = (props) => {
   const {games} = useContext(GamesData);
   const totalGames = games.length;
   return (
-    <div className='min-h-screen w-full px-4 md:px-8  xl:px-12 py-5 overflow-y-auto'>
+    <div className='min-h-screen w-full px-8 md:px-12 py-5 overflow-y-auto'>
       <div className='flex flex-col gap-6 w-full'>
         <div className='flex justify-between items-center'>
             <div>
                 <h1 className='font-bold text-4xl tracking-wider'>Dashboard</h1>
                 <h4 className='body text-[13px] text-[#8a9bb0]'>Welcome Back, <span className='text-[#00f5a0] mono'>{user?.username}</span></h4>
             </div>
-            <div>
-                <div className='px-3 flex bg-yellow-400/10 rounded-3xl border border-yellow-400/20 justify-center items-center'>
-                    <span className='text-2xl'>🔥</span>
-                    <div className='py-2 px-4 flex items-center gap-2 '>
-                        <h4 className='font-bold text-xl text-yellow-400'>12</h4>
-                        <span className='body text-[#8a9bb0] text-xs'>Day Streak</span>
-                    </div>
-                </div>
-            </div>
+           
         </div>
         <div className='flex flex-wrap gap-4 w-full'>
             {props.profile_stats.map(function(elem,idx){
@@ -59,12 +51,12 @@ const DashContent = (props) => {
                 }))
                 }
             </div>
-            <div className='w-full xl:w-[320px] flex flex-col min-w-0 gap-4'>
-                <div className='w-full bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-6'>
+            <div className='w-full  xl:w-[320px] flex flex-col min-w-0 gap-4'>
+                <div className='w-full bg-[#111620] py-6 px-5 rounded-2xl border border-gray-400/15 flex flex-col gap-6'>
                     <div>
                         <h1 className='font-bold tracking-wider text-[#8a9bb0]'>LIBRARY STATUS</h1>
                     </div>
-                    <div className='flex gap-4 px-3 justify-center'>
+                    <div className='flex gap-3 px-6 justify-center'>
                         {props.library_status.map(function(elem,idx){
                             return <LibraryStatus key={idx} num={elem.num} cg={elem.cg} color2={elem.color2} status={elem.status} />
                         })}
@@ -74,7 +66,7 @@ const DashContent = (props) => {
                     <div>
                         <h1 className='font-bold tracking-wider text-[#8a9bb0]'>GENRE BREAKDOWN</h1>
                     </div>
-                    <div className='flex flex-col gap-2'>
+                    <div className='flex flex-col gap-6 md:gap-2'>
                         {
                             totalGames === 0 ? (
                                 <div className='flex w-full justify-center items-center'>
@@ -101,7 +93,7 @@ const DashContent = (props) => {
                 <h1 className='font-bold text-[#8a9bb0] tracking-wider'>TOP BY PLAYTIME</h1>
                 <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>{props.totalPlaytime}h total</span>
             </div>
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-6 md:gap-3'>
                 {
                 totalGames === 0 ? (
                   <div className='flex w-full justify-center items-center'>

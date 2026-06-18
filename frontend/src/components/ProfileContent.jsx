@@ -42,11 +42,11 @@ const ProfileContent = () => {
     return total+elem.totalAchievements;
   },0);
   const achievementRate = totalGames===0 ? 0 : ((earnedAchievements/fullAchievements)*100).toFixed(0);
-  const topGames = games.sort((a,b)=>b.rating-a.rating);
+  const topGames = [...games].sort((a,b)=>b.rating-a.rating);
   const topRatedGames = games.slice(0,3);
 
   return (
-    <div className='w-full py-5 px-12 flex flex-col'>
+    <div className='w-full py-5 px-8 md:px-12 flex flex-col'>
       <h1 className='font-bold text-4xl tracking-wider mb-10'>Profile</h1>
       <div className='w-full bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4 mb-5'>
         <div className='font-bold text-3xl flex gap-1 items-end'>
@@ -60,9 +60,8 @@ const ProfileContent = () => {
             }}
             className='text-[#7d8ca7] text-[13px] ml-0.5 rounded-[7px] px-2 py-1 bg-black hover:-translate-y-0.5 hover:bg-gray-800 transition-all duration-200 min-w-0 mb-1'>Edit Profile</button>
         </div>
-        <h1 className='body text-[#8a9bb0] text-[15px]'>{user?.bio}</h1>
+        <h1 className='mono text-[#8a9bb0] text-[15px]'>{user?.bio}</h1>
         <div className='flex gap-2 items-center'>
-            <h1 className='font-bold body text-[12px] text-green-400 bg-green-400/20 py-0.5 px-3 rounded-2xl border border-green-400'>Streak : </h1>
             <h1 className='font-bold body text-[12px] text-purple-400 bg-purple-400/20 py-0.5 px-3 rounded-2xl border border-purple-400'>Achievements : {earnedAchievements}</h1>
         </div>
         <div className='flex gap-5'>
@@ -100,13 +99,9 @@ const ProfileContent = () => {
             <h1 className='body text-[#8a9bb0] text-[14px]'>Achievements Earned</h1>
             <span className='mono text-[14px] text-green-400 font-semibold'>{earnedAchievements}</span>
         </div>
-        <div className='flex justify-between border-b border-gray-400/15 py-1'>
+        <div className='flex justify-between  py-1 mb-2'>
             <h1 className='body text-[#8a9bb0] text-[14px]'>Average Rating</h1>
             <span className='mono text-[14px] text-amber-400 font-semibold'>{averageRating} / 10</span>
-        </div>
-        <div className='flex justify-between mb-2 py-1'>
-            <h1 className='body text-[#8a9bb0] text-[14px]'>Current Streak</h1>
-            <span className='mono text-[14px] text-orange-400 font-semibold'>12 Days</span>
         </div>
       </div>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-5'>
@@ -148,7 +143,7 @@ const ProfileContent = () => {
 
             : (topRatedGames.map(function(elem,idx){
                     return (
-                        <div className='flex justify-between items-center'>
+                        <div key={idx} className='flex justify-between items-center'>
                             <div className='flex gap-3 items-center'>   
                                 <span className={`font-bold text-lg text-amber-400`}>#{idx+1}</span>
                                 <div className='h-10 w-10 flex justify-center items-center bg-amber-500/20 rounded-[8px] border border-amber-500/50'>{elem.title[0]}</div>
@@ -182,7 +177,7 @@ const ProfileContent = () => {
 
                 : (completedGames.map(function(elem,idx){
                     return (
-                        <div className='py-2 px-4 bg-[#080c10] rounded-[8px] flex gap-8'>
+                        <div key={idx} className='py-2 px-4 bg-[#080c10] rounded-[8px] flex gap-8'>
                             <div className='flex gap-3 items-center'>
                                 <div className='w-2 h-2 bg-amber-400 rounded-full'></div>
                                 <div className='flex flex-col'>

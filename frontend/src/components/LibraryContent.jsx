@@ -22,6 +22,7 @@ const LibraryContent = () => {
   const [achievementsEarned,setAchievementsEarned] = useState(0);
   const [totalAchievements,setTotalAchievements] = useState(0);
   const [notes,setNotes] = useState('');
+  const [loading, setLoading] = useState(false);
   const {games, setGames} = useContext(GamesData);
   
   const filteredGames = games.filter((elem)=>{
@@ -80,7 +81,7 @@ const LibraryContent = () => {
   }
 
   return (
-    <div className='w-full py-5 px-12 flex flex-col gap-6'>
+    <div className='w-full py-5 px-8 md:px-12 flex flex-col gap-6'>
       <div className='w-full flex justify-between'>
         <div className='flex flex-col'>
             <h1 className='font-bold text-4xl tracking-wider'>Game Library</h1>
@@ -114,7 +115,7 @@ const LibraryContent = () => {
             }}
             type="text" value={searchGame} placeholder='Search games...' className='w-full body outline-none placeholder:text-[#4a5568] font-normal'/>
         </div>
-        <div className='flex gap-2 items-center'>
+        <div className='flex gap-2 items-center flex-wrap'>
             <button 
             onClick={()=>{
               setResult("All");
@@ -165,9 +166,9 @@ const LibraryContent = () => {
             </select>
         </div>
       </div>
-      <div className='flex flex-col gap-3'>
+      <div className='flex flex-col gap-3 '>
         <h1 className='text-[#4a5568] text-[13px] font-semibold'>{totalGames} Games</h1>
-        <div className='flex flex-wrap gap-4'>
+        <div className='flex flex-wrap gap-4 '>
             {
                 sortedGames.length === 0 ? (
                   <div className='flex w-full justify-center items-center'>
@@ -189,7 +190,7 @@ const LibraryContent = () => {
         </div>
       </div>
       {modal && (
-        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlaytime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} editIndex={editIndex} setEditIndex={setEditIndex}  />
+        <LibraryModal modal={modal} setModal={setModal} title={title} setTitle={setTitle} genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} status={status} setStatus={setStatus} progress={progress} setProgress={setProgress} playtime={playtime} setPlaytime={setPlaytime} rating={rating} setRating={setRating} colorAccent={colorAccent} setColorAccent={setColorAccent} achievementsEarned={achievementsEarned} setAchievementsEarned={setAchievementsEarned} totalAchievements={totalAchievements} setTotalAchievements={setTotalAchievements} notes={notes} setNotes={setNotes} games={games} setGames={setGames} editIndex={editIndex} setEditIndex={setEditIndex} loading={loading} setLoading={setLoading} />
       )}
     </div>
   )

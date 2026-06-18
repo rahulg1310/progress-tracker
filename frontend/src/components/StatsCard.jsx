@@ -5,7 +5,7 @@ import { Trash2 } from 'lucide-react'
 
 const StatsCard = (props) => {
   return (
-        <div className='w-3/4 flex flex-col gap-3 bg-[#0d1117] border border-white/5 rounded-xl py-4 px-6 hover:border-white/13 hover:-translate-y-1 transition-all duration-200 '>
+        <div className='w-full md:w-3/4 flex flex-col gap-3  bg-[#0d1117] border border-white/5 rounded-xl py-4 px-6 hover:border-white/13 hover:-translate-y-1 transition-all duration-200 min-w-0 '>
           <div className='flex justify-between'>
             <h1 className='font-bold text-xl'>{props.game}</h1>
             <h1 className={`body font-semibold text-[13px] ${
@@ -13,7 +13,7 @@ const StatsCard = (props) => {
             }  py-1 px-3  rounded-xl`}>{props.result}</h1>
           </div>
           <h2 className='body text-[12px] text-[#4a5568]'>{new Date(props.date).toLocaleDateString()}</h2>
-          <div className='flex gap-6'>
+          <div className='flex gap-6 flex-wrap'>
             <div className='flex flex-col gap-0 justify-center items-center'>
               <h1 className='mono text-[16px] text-green-400'>{props.kills}</h1>
               <h1 className='body text-[12px] text-[#4a5568]'>KILLS</h1>

@@ -26,14 +26,14 @@ const LibraryGameCard = (props) => {
     onMouseLeave={()=>{
       setIsHovered(false);
     }}
-    style={{  boxShadow : isHovered ? `0 0 12px ${props.colorAccent}25` : ""}} className={`group w-[19%] flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0e1520] relative hover:-translate-y-1 duration-200 transition-all`}>
+    style={{  boxShadow : isHovered ? `0 0 12px ${props.colorAccent}25` : ""}} className={`group w-full md:w-[23%] xl:w-[23%] flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0e1520] relative hover:-translate-y-1 duration-200 transition-all`}>
       <div
         style={{ background: `linear-gradient(
                   135deg,
                   ${props.colorAccent}15,
                   #1a1f2e
                 )` }}
-        className='w-full h-48 relative overflow-hidden'
+        className='w-full h-48 relative overflow-hidden flex justify-center items-center' 
       >
         <div className='opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto  absolute top-3 left-3 flex gap-2 transition-all duration-500 z-10'>
           <button 

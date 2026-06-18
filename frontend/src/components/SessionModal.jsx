@@ -34,8 +34,8 @@ const SessionModal = (props) => {
     }
   }
   return (
-        <div className='fixed inset-0 bg-black/70 flex justify-center items-center p-4 z-50'>
-          <div className='bg-[#111820] max-w-3xl w-full rounded-2xl border border-gray-400/20 flex flex-col gap-5 p-6'>
+        <div className='fixed  inset-0 bg-black/70 flex justify-center items-start md:items-center pt-8 p-4 z-50 overflow-y-auto'>
+          <div className='bg-[#111820] max-w-3xl w-full rounded-2xl border border-gray-400/20 flex flex-col gap-3 p-6'>
             <div className='flex justify-between items-center'>
               <h1 className='font-bold text-xl tracking-wider'>Log Gaming Session</h1>
               <button 
@@ -170,7 +170,7 @@ const SessionModal = (props) => {
             </div>
             <div className='flex flex-col gap-1'>
               <span className='body text-[#8a9bb0] text-[12px] font-semibold'>Mood</span>
-              <div className='flex gap-3'>
+              <div className='flex gap-3 flex-wrap'>
                 <button 
                 onClick={()=>{
                   props.setMood("Focused");
