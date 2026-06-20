@@ -89,7 +89,7 @@ const Sidebar = () => {
                 Profile
               </button>
             </div>
-            <div className="border-t flex flex-col border-gray-700 pt-5 px-4">
+            <div className="mt-auto border-t border-gray-700 pt-5 px-4">
               <h2 className="text-center text-2xl font-bold mb-4">
                 {user?.username}
               </h2>
