@@ -65,8 +65,6 @@ const ProfileContent = () => {
             <h1 className='font-bold body text-[12px] text-purple-400 bg-purple-400/20 py-0.5 px-3 rounded-2xl border border-purple-400'>Achievements : {earnedAchievements}</h1>
         </div>
         <div className='flex gap-5'>
-            <span className='body text-[#8a9bb0] text-[13px]'>Joined May 2026</span>
-            <span className='body text-[#8a9bb0] text-[13px]'>Fav Genre : Souls</span>
         </div>
       </div>
       <div className='w-full md:w-1/2 bg-[#111620] py-4 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-2 mb-5'>
