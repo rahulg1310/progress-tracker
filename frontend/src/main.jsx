@@ -6,8 +6,10 @@ import { BrowserRouter } from 'react-router-dom'
 import UserContext from './context/UserContext.jsx'
 import GamesContext from './context/GamesContext.jsx'
 import SessionContext from './context/SessionContext.jsx'
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 createRoot(document.getElementById('root')).render(
+  <GoogleOAuthProvider clientId = {import.meta.env.VITE_GOOGLE_CLIENT_ID}>
   <UserContext>
     <GamesContext>
       <BrowserRouter>
@@ -17,5 +19,5 @@ createRoot(document.getElementById('root')).render(
       </BrowserRouter>
     </GamesContext>
   </UserContext>
-  
+  </GoogleOAuthProvider>
 )

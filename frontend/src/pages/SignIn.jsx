@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useContext } from 'react'
 import { UserData } from '../context/UserContext'
+import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -12,6 +14,26 @@ const SignIn = () => {
   const [emailError,setEmailError] = useState('');
   const [passError,setPassError] = useState('');
   const { setUser } = useContext(UserData);
+  const googleLogin = useGoogleLogin({
+    onSuccess : async (response)=>{
+        try{
+            const res = await axios.post('http://localhost:5000/google-signin',{
+                accessToken : response.access_token
+            })
+            setUser(res.data.user);
+            localStorage.setItem("user",JSON.stringify(res.data.user));
+            localStorage.setItem("token",JSON.stringify(res.data.token));
+            navigate('/dashboard');
+        }
+        catch(error){
+            console.log(error);
+            setEmailError(error.response.data.message);
+        }
+    },
+    onError : ()=>{
+        console.log("Google Login Failed");
+    }
+  })
   const validate = () =>{
     setEmailError('');
     setPassError('');
@@ -93,6 +115,19 @@ const SignIn = () => {
                 <button type='submit' className='font-bold tracking-wider text-black w-full bg-linear-to-r from-purple-400 to-red-400 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200'
                 >Sign In</button>
             </form>
+        </div>
+        <div className='w-full flex flex-col gap-5'>
+            <span className='text-[#8a9bb0] body text-[12px] text-center'>OR</span>
+            <div className='flex gap-2 justify-center'>
+                <button 
+                onClick={()=>{
+                    googleLogin();
+                }}
+                className='flex-1 flex gap-2 font-bold justify-center items-center tracking-wider text-black w-full bg-gray-300 rounded-[7px] py-1.5 hover:-translate-y-0.5 hover:opacity-80 transition-all duration-200'>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/3840px-Google_%22G%22_logo.svg.png" alt="" className='w-5 h-5' />
+                    Continue With Google
+                </button>
+            </div> 
         </div>
         <div className='w-full flex justify-center' >
             <h1 className='body text-[13px] text-[#8a9bb0] mr-1'>Don't have an account?</h1>

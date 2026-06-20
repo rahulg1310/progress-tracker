@@ -35,7 +35,9 @@ app.post('/signin',async (req,res)=>{
         }
         const token = jwt.sign({
             userId : existingEmail._id
-        },process.env.JWT_SECRET);
+        },process.env.JWT_SECRET,
+        {expiresIn : "7d"}
+    );
         res.status(200).json({
             success:true,
             message:'Login Successful',
@@ -55,6 +57,48 @@ app.post('/signin',async (req,res)=>{
             success : false,
             message : "Server Error"
         });
+    }
+})
+
+app.post('/google-signin',async (req,res)=>{
+    const {accessToken} = req.body;
+    try{
+        const googleRes = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo',{
+            headers:{
+                Authorization : `Bearer ${accessToken}`
+            }
+        })
+        const { email,name,picture } = googleRes.data;
+        const existingEmail = await User.findOne({email});
+        if(!existingEmail){
+            return res.status(404).json({
+                success : false,
+                message : "User does not exist, Please sign up first"
+            })
+        }
+        const token = jwt.sign(
+            {userId : existingEmail._id},
+            process.env.JWT_SECRET,
+            {expiresIn : "7d"}
+        )
+        return res.status(200).json({
+            success : true,
+            message : "Login Succesful",
+            token,
+            user : {
+                _id : existingEmail._id,
+                email : existingEmail.email,
+                username : existingEmail.username,
+                bio : existingEmail.bio,
+                profilePicture : existingEmail.profilePicture
+            }
+        })
+    }
+    catch{
+        return res.status(500).json({
+            success : false,
+            Message : "Server Error"
+        })
     }
 })
 
