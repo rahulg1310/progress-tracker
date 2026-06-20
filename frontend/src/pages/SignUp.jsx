@@ -67,7 +67,7 @@ const SignUp = () => {
                 e.preventDefault();
                 if(validate()){
                     try{
-                        const response = await axios.post('http://localhost:5000/signup',
+                        const response = await axios.post(`${import.meta.env.VITE_API_URL}/signup`,
                             {
                                 username : user,
                                 email : email,

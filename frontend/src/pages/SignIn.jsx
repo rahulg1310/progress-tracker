@@ -17,7 +17,7 @@ const SignIn = () => {
   const googleLogin = useGoogleLogin({
     onSuccess : async (response)=>{
         try{
-            const res = await axios.post('http://localhost:5000/google-signin',{
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/google-signin`,{
                 accessToken : response.access_token
             })
             setUser(res.data.user);
@@ -71,7 +71,7 @@ const SignIn = () => {
                 e.preventDefault();
                 if(validate()){
                     try{
-                        const response = await axios.post('http://localhost:5000/signin',{
+                        const response = await axios.post(`${import.meta.env.VITE_API_URL}/signin`,{
                             email : email,
                             password : password
                         });
