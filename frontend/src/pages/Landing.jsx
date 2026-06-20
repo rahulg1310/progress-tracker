@@ -27,8 +27,8 @@ const Landing = () => {
     {
       icon: <Target size={22} color="#f9e020" />,
       bg: 'bg-yellow-400/10',
-      title: 'Profile & Streaks',
-      desc: 'Your gaming identity — top rated games, completion overview, and a streak that keeps you honest.'
+      title: 'Profile',
+      desc: 'Your gaming identity — top rated games and a completion overview that keeps you honest.'
     }
   ]
 
@@ -36,8 +36,7 @@ const Landing = () => {
     { label: 'K/D', value: '2.46', color: '#00d9f5' },
     { label: 'COMPLETION', value: '61%', color: '#00f5a0' },
     { label: 'ACHIEVEMENTS', value: '336', color: '#a78bfa' },
-    { label: 'AVG RATING', value: '9.3', color: '#f9e020' },
-    { label: 'STREAK', value: '12d', color: '#f97316' },
+    { label: 'AVG RATING', value: '9.3', color: '#f9e020' }
   ]
 
   return (
