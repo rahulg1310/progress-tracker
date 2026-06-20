@@ -96,6 +96,7 @@ app.post('/google-signin',async (req,res)=>{
         })
     }
     catch{
+        console.log(error);
         return res.status(500).json({
             success : false,
             Message : "Server Error"
@@ -277,6 +278,7 @@ app.get('/games',authMiddleware,async(req,res)=>{
         
     }
     catch(error){
+        console.log(error);
         return res.status(500).json({
             success : false,
             message : "Server Error"
@@ -320,6 +322,7 @@ app.delete('/games/:gameId',authMiddleware,async(req,res)=>{
         })
     }
     catch(error){
+        console.log(error);
         return res.status(500).json({
             success : false,
             message : "Server Error"
@@ -392,6 +395,7 @@ app.put('/games/:gameId',authMiddleware,async(req,res)=>{
         })
     }
     catch(error){
+        console.log(error);
         return res.status(500).json({
             success : false,
             message : "Server Error"
@@ -410,6 +414,7 @@ app.post('/sessions',authMiddleware,async (req,res)=>{
         })
     }
     catch(error){
+        console.log(error);
         return res.status(500).json({
             success : false,
             message : "Server Error"
@@ -436,6 +441,7 @@ app.get('/sessions',authMiddleware,async (req,res)=>{
         })
     }
     catch(error){
+        console.log(error);
         return res.status(500).json({
             success : false,
             message : "Server Error"
@@ -472,6 +478,7 @@ app.delete('/sessions/:sessionId',authMiddleware,async (req,res)=>{
         })
     }
     catch(error){
+        console.log(error);
         return res.status(500).json({
             success : false,
             message : "Server Error"
