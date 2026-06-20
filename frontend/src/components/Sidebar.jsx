@@ -42,7 +42,7 @@ const Sidebar = () => {
           </div>
         )
       }
-        <div className={`fixed top-16 left-0 z-100 w-full h-[calc(100vh-64px)] bg-[#0d1117] transition-transform duration-300 ${
+        <div className={`fixed top-16 left-0 z-[100] overflow-y-auto w-full h-[calc(100vh-64px)] bg-[#0d1117] transition-transform duration-300 ${
           modal ? "translate-x-0" : "-translate-x-full"
         }`}>
           <div className="flex flex-col justify-between h-full py-6">
