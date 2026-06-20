@@ -133,7 +133,7 @@ const SessionContent = (props) => {
   const deleteSession =async (id)=>{
     try{
       const token = JSON.parse(localStorage.getItem("token"));
-      const res = await axios.delete(`http://localhost:5000/sessions/${id}`,{
+      const res = await axios.delete(`${import.meta.env.VITE_API_URL}/sessions/${id}`,{
         headers:{
           Authorization : `Bearer ${token}`
         }

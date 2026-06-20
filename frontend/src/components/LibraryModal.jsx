@@ -26,7 +26,7 @@ const LibraryModal = (props) => {
         if(!isValid()) return;
         const token = JSON.parse(localStorage.getItem("token"));
         props.setLoading(true);
-        const res = await axios.post('http://localhost:5000/games',
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/games`,
             {
                 title : props.title,
                 genre:props.genre,
@@ -65,7 +65,7 @@ const LibraryModal = (props) => {
         if(!isValid()) return;
         const token = JSON.parse(localStorage.getItem("token"));
         props.setLoading(true);
-        const res=await axios.put(`http://localhost:5000/games/${props.editIndex}`,
+        const res=await axios.put(`${import.meta.env.VITE_API_URL}/games/${props.editIndex}`,
             {
                 title:props.title,
                 genre:props.genre,

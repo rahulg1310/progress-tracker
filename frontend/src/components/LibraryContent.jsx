@@ -46,7 +46,7 @@ const LibraryContent = () => {
   const deleteGame =async (id)=>{
     try{
       const token = JSON.parse(localStorage.getItem("token"));
-      const res = await axios.delete(`http://localhost:5000/games/${id}`,{
+      const res = await axios.delete(`${import.meta.env.VITE_API_URL}/games/${id}`,{
         headers:{
           Authorization : `Bearer ${token}`
         }

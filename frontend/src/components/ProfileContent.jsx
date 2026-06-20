@@ -43,7 +43,7 @@ const ProfileContent = () => {
   },0);
   const achievementRate = totalGames===0 ? 0 : ((earnedAchievements/fullAchievements)*100).toFixed(0);
   const topGames = [...games].sort((a,b)=>b.rating-a.rating);
-  const topRatedGames = games.slice(0,3);
+  const topRatedGames = topGames.slice(0,3);
 
   return (
     <div className='w-full py-5 px-8 md:px-12 flex flex-col'>

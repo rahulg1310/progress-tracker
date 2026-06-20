@@ -5,7 +5,7 @@ const SessionModal = (props) => {
   const addSessions = async ()=>{
     try{
       const token = JSON.parse(localStorage.getItem("token"));
-      const res =  await axios.post('http://localhost:5000/sessions',{
+      const res =  await axios.post(`${import.meta.env.VITE_API_URL}/sessions`,{
         game : props.game,
         duration : props.duration,
         kills : props.kills,

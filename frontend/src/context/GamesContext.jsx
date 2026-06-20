@@ -14,7 +14,7 @@ const GamesContext = ({children}) => {
     const fetchGames = async ()=>{
       try{
         const token=JSON.parse(localStorage.getItem("token"));
-        const res = await axios.get(`http://localhost:5000/games`,{
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/games`,{
           headers : {
             Authorization : `Bearer ${token}`
           }

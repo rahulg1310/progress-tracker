@@ -11,7 +11,7 @@ const ProfileModal = (props) => {
     if(!isValid()) return;
     try{
         const token=JSON.parse(localStorage.getItem("token"));
-        const res = await axios.put(`http://localhost:5000/profile`,
+        const res = await axios.put(`${import.meta.env.VITE_API_URL}/profile`,
         {
         username : props.editUser,
         bio : props.editBio,
