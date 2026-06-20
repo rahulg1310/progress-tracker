@@ -98,7 +98,7 @@ const Landing = () => {
             <span className="w-2 h-2 rounded-full bg-[#00f5a0] animate-pulse" />
             <span className="body text-[11px] text-[#8a9bb0] tracking-wide">LIVE FROM A KAIRO PROFILE</span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 divide-x divide-y md:divide-y-0 divide-white/[0.07]">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/[0.07]">
             {tickerStats.map((s, i) => (
               <div key={i} className="px-5 py-5 flex flex-col gap-1">
                 <span className="mono text-2xl md:text-3xl font-semibold" style={{ color: s.color }}>
