@@ -142,9 +142,9 @@ const Dashboard = () => {
 
 
   return (
-    <div className='flex flex-col md:flex-row min-h-screen w-full bg-[#080c10]'>
+    <div className='flex flex-col md:flex-row h-screen w-full bg-[#080c10]'>
       <Sidebar />
-      <div className='flex-1 overflow-y-auto'>
+      <div className='flex-1 h-full overflow-y-auto'>
         <DashContent profile_stats={profile_stats} game_card={game_card} library_status={library_status} genre_breakdown={genre_breakdown} top_by_playtime={top_by_playtime} totalPlaytime={totalPlayTime}/>
       </div>
     </div>

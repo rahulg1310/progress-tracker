@@ -4,9 +4,9 @@ import LibraryContent from '../components/LibraryContent'
 
 const Library = () => {
   return (
-    <div className='flex flex-col md:flex-row min-h-screen w-full bg-[#080c10]'>
+    <div className='flex flex-col md:flex-row h-screen w-full bg-[#080c10]'>
         <Sidebar />
-        <div className='flex-1 overflow-y-auto'>
+        <div className='flex-1 h-full overflow-y-auto'>
             <LibraryContent />
         </div>
     </div>
