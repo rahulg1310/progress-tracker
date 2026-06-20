@@ -67,9 +67,6 @@ const Landing = () => {
       {/* HERO */}
       <section className="px-6 md:px-12 pt-16 md:pt-24 pb-16 max-w-6xl mx-auto">
         <div className="flex flex-col items-center text-center gap-6">
-          <div className="border border-white/15 rounded-full px-3 py-1 body text-[11px] text-[#8a9bb0] tracking-wide">
-            Built for people who actually finish their backlog
-          </div>
           <h1 className="font-bold text-4xl md:text-6xl tracking-normal leading-tight max-w-3xl">
             Your gaming life,<br />
             <span className="bg-linear-to-r from-[#00f5a0] to-[#00d9f5] bg-clip-text text-transparent">
