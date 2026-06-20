@@ -9,6 +9,7 @@ const Session = require('./models/Session')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('./middleware/authMiddleware');
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(express.json());
@@ -293,16 +294,16 @@ app.delete('/games/:gameId',authMiddleware,async(req,res)=>{
             })
         }
         const game = await Game.findById(req.params.gameId);
-        if(game.user.toString()!==req.user.userId){
-            return res.status(403).json({
-                success : false,
-                message : "Wrong User"
-            })
-        }
         if(!game){
             return res.json(404).json({
                 success : false,
                 message : "Game not found"
+            })
+        }
+        if(game.user.toString()!==req.user.userId){
+            return res.status(403).json({
+                success : false,
+                message : "Wrong User"
             })
         }
         const deletedGame = await Game.findByIdAndDelete(req.params.gameId);
@@ -445,16 +446,16 @@ app.get('/sessions',authMiddleware,async (req,res)=>{
 app.delete('/sessions/:sessionId',authMiddleware,async (req,res)=>{
     try{
         const session = await Session.findById(req.params.sessionId);
-        if(session.user.toString()!==req.user.userId){
-            return res.status(403).json({
-                success : false,
-                message : "Wrong User"
-            })
-        }
         if(!session){
             return res.json(404).json({
                 success : false,
                 message : "Session not found"
+            })
+        }
+        if(session.user.toString()!==req.user.userId){
+            return res.status(403).json({
+                success : false,
+                message : "Wrong User"
             })
         }
         const deletedSession = await Session.findByIdAndDelete(req.params.sessionId);
@@ -478,6 +479,6 @@ app.delete('/sessions/:sessionId',authMiddleware,async (req,res)=>{
     }
 })
 
-app.listen(5000,()=>{
-    console.log('Server started on port 5000');
+app.listen(PORT,()=>{
+    console.log('Server started');
 });
