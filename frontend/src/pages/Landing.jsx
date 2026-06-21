@@ -41,8 +41,6 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen w-full bg-[#080c10] overflow-x-hidden">
-
-      {/* NAV */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/[0.07]">
         <h1 className="font-bold bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent text-2xl tracking-wider">
           路 KAIRO
@@ -62,8 +60,6 @@ const Landing = () => {
           </button>
         </div>
       </nav>
-
-      {/* HERO */}
       <section className="px-6 md:px-12 pt-16 md:pt-24 pb-16 max-w-6xl mx-auto">
         <div className="flex flex-col items-center text-center gap-6">
           <h1 className="font-bold text-4xl md:text-6xl tracking-normal leading-tight max-w-3xl">
@@ -91,8 +87,6 @@ const Landing = () => {
             </button>
           </div>
         </div>
-
-        {/* Live stat ticker — signature element */}
         <div className="mt-16 bg-[#111820] border border-white/[0.07] rounded-2xl overflow-hidden">
           <div className="flex items-center gap-2 px-5 py-3 border-b border-white/[0.07]">
             <span className="w-2 h-2 rounded-full bg-[#00f5a0] animate-pulse" />
@@ -110,8 +104,6 @@ const Landing = () => {
           </div>
         </div>
       </section>
-
-      {/* FEATURES */}
       <section className="px-6 md:px-12 py-16 max-w-6xl mx-auto">
         <div className="flex flex-col gap-2 mb-10">
           <h2 className="font-bold text-2xl md:text-3xl tracking-normal">Everything your backlog needs</h2>
@@ -132,8 +124,6 @@ const Landing = () => {
           ))}
         </div>
       </section>
-
-      {/* CTA */}
       <section className="px-6 md:px-12 py-16 max-w-6xl mx-auto">
         <div className="bg-[#111820] border border-white/[0.07] rounded-2xl p-10 md:p-14 flex flex-col items-center text-center gap-5">
           <Hexagon size={32} color="#00f5a0" />
@@ -148,8 +138,6 @@ const Landing = () => {
           </button>
         </div>
       </section>
-
-      {/* FOOTER */}
       <footer className="px-6 md:px-12 py-6 border-t border-white/[0.07] flex flex-col md:flex-row items-center justify-between gap-3 max-w-6xl mx-auto">
         <h1 className="font-bold bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent text-lg tracking-wider">
           路 KAIRO
