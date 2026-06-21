@@ -6,17 +6,20 @@ import { useContext } from 'react'
 import { UserData } from '../context/UserContext'
 import { GoogleLogin } from "@react-oauth/google";
 import { useGoogleLogin } from "@react-oauth/google";
+import LoadModal from '../components/LoadModal'
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError,setEmailError] = useState('');
+  const [loadModal, setLoadModal] = useState(false);
   const [passError,setPassError] = useState('');
   const { setUser } = useContext(UserData);
   const googleLogin = useGoogleLogin({
     onSuccess : async (response)=>{
         try{
+            setLoadModal(true);
             const res = await axios.post(`${import.meta.env.VITE_API_URL}/google-signin`,{
                 accessToken : response.access_token
             })
@@ -28,6 +31,9 @@ const SignIn = () => {
         catch(error){
             console.log(error);
             setEmailError(error.response.data.message);
+        }
+        finally{
+            setLoadModal(false);
         }
     },
     onError : ()=>{
@@ -59,7 +65,13 @@ const SignIn = () => {
     <div className='min-h-screen w-full bg-[#080c10] flex justify-center items-center px-4'>
       <div className='bg-[#111820] flex flex-col gap-5 py-8 px-8     rounded-2xl border border-white/15 items-center w-full max-w-110'>
         <div className='flex items-center'>
+            <button
+            onClick={()=>{
+                navigate('/');
+            }}
+            >
             <h1 className='font-bold bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent text-3xl tracking-wider'>路 KAIRO</h1>
+            </button>
         </div>
         <div className='flex flex-col justify-center gap-3 items-center'>
             <h1 className='font-bold text-2xl tracking-normal'>Welcome Back</h1>
@@ -71,6 +83,7 @@ const SignIn = () => {
                 e.preventDefault();
                 if(validate()){
                     try{
+                        setLoadModal(true);
                         const response = await axios.post(`${import.meta.env.VITE_API_URL}/signin`,{
                             email : email,
                             password : password
@@ -85,6 +98,9 @@ const SignIn = () => {
                         console.log(error.response.data);
                         const message = error.response.data.message;
                         setPassError(message);
+                    }
+                    finally{
+                        setLoadModal(false);
                     }
                 }
             }}
@@ -135,6 +151,9 @@ const SignIn = () => {
             className='body text-[13px] text-[#00ff80] transition-all duration-200'>Create One</button>
         </div>  
       </div>
+      {
+        loadModal && (<LoadModal />)
+      }
     </div>
   )
 }

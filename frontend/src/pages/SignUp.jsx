@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Gamepad2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import LoadModal from '../components/LoadModal'
 import axios from 'axios'
 
 const SignUp = () => {
@@ -13,7 +14,7 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [cpassError, setCpassError] = useState('');
-
+  const [loadModal,setLoadModal] = useState(false);
   const validate = () =>{
     setUserError('');
     setEmailError('');
@@ -54,7 +55,13 @@ const SignUp = () => {
     <div className='min-h-screen w-full bg-[#080c10] flex justify-center items-center px-4'>
       <div className='bg-[#111820] flex flex-col gap-5 py-8 px-8 rounded-2xl border border-white/15 items-center w-full max-w-110'>
         <div className='flex items-center'>
+            <button
+            onClick={()=>{
+                navigate('/');
+            }}
+            >
             <h1 className='font-bold bg-linear-to-r from-red-800 to-purple-800 bg-clip-text text-transparent text-3xl tracking-wider'>路 KAIRO</h1>
+            </button>
         </div>
         <div className='flex flex-col justify-center gap-3 items-center'>
             <h1 className='font-bold text-2xl tracking-normal'>Create account</h1>
@@ -67,6 +74,7 @@ const SignUp = () => {
                 e.preventDefault();
                 if(validate()){
                     try{
+                        setLoadModal(true);
                         const response = await axios.post(`${import.meta.env.VITE_API_URL}/signup`,
                             {
                                 username : user,
@@ -75,7 +83,7 @@ const SignUp = () => {
                             }
                         );
                         console.log(response.data);
-                        navigate('/');
+                        navigate('/dashboard');
                     }
                     catch(error){
                         console.log(error.response.data);
@@ -86,6 +94,9 @@ const SignUp = () => {
                         else if(message.includes('Email')){
                             setEmailError(message);
                         }
+                    }
+                    finally{
+                        setLoadModal(false);
                     }
                 }
             }}
@@ -135,11 +146,14 @@ const SignUp = () => {
             <h1 className='body text-[13px] text-[#8a9bb0] mr-1'>Already have an account?</h1>
             <button 
             onClick={()=>{
-                navigate("/");
+                navigate("/signin");
             }}
             className='body text-[13px] text-[#38d60c] transition-all duration-200 transition-all duration-200 hover:text-cyan-400'>Sign In</button>
         </div>  
       </div>
+      {
+        loadModal && (<LoadModal />)
+      }
     </div>
   )
 }
