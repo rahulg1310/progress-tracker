@@ -40,7 +40,7 @@ const GamesContext = ({children}) => {
         {children}
       </GamesData.Provider >
       {
-        loadModal && (<LoadModal />)
+        user && loadModal && (<LoadModal />)
       }
     </div>
   )

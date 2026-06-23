@@ -83,7 +83,7 @@ const SignUp = () => {
                             }
                         );
                         console.log(response.data);
-                        navigate('/dashboard');
+                        navigate('/signin');
                     }
                     catch(error){
                         console.log(error.response.data);
