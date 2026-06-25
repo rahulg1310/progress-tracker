@@ -36,9 +36,6 @@ const SessionContext = ({children}) => {
       <SessionData.Provider value={{sessions,setSessions}}>
         {children}
       </SessionData.Provider>
-      {
-        user && loadModal && (<LoadModal />)
-      }
     </div>
   )
 }
