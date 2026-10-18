@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom'
 import UserContext from './context/UserContext.jsx'
 import GamesContext from './context/GamesContext.jsx'
 import SessionContext from './context/SessionContext.jsx'
+import AiContext from './context/AiContext.jsx'
+import CoachContext from './context/CoachContext.jsx'
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 createRoot(document.getElementById('root')).render(
@@ -14,7 +16,11 @@ createRoot(document.getElementById('root')).render(
     <GamesContext>
       <BrowserRouter>
         <SessionContext>
-          <App />
+          <AiContext>
+            <CoachContext>
+              <App />
+            </CoachContext>
+          </AiContext>
         </SessionContext>
       </BrowserRouter>
     </GamesContext>

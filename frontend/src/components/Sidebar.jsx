@@ -15,6 +15,9 @@ import { UserData } from '../context/UserContext'
 import { useContext } from 'react'
 import { Menu } from 'lucide-react'
 import { X } from 'lucide-react'
+import { Bot } from 'lucide-react'
+import { Target } from 'lucide-react'
+import { Compass } from 'lucide-react'
 
 const Sidebar = () => {
   const {user , setUser} = useContext(UserData);
@@ -46,7 +49,7 @@ const Sidebar = () => {
           modal ? "translate-x-0" : "-translate-x-full"
         }`}>
           <div className="flex flex-col justify-between h-full py-6">
-            <div className="tracking-normal flex flex-col gap-2 px-3 font-semibold text-2xl text-[#8a9bb0]">
+            <div className="tracking-normal flex flex-col gap-2 px-3 font-semibold text-2xl text-[#8a9bb0] overflow-y-auto">
               <button
                 onClick={()=>{
                   navigate('/dashboard');
@@ -88,6 +91,58 @@ const Sidebar = () => {
                 <UserRound size={21} />
                 Profile
               </button>
+
+              <h2 className="px-3 pt-3 text-[12px] tracking-[0.2em] text-[#4a5568]">AI</h2>
+              <button
+                onClick={()=>{
+                  navigate('/coach');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <Bot size={21} />
+                Coach
+              </button>
+              <button
+                onClick={()=>{
+                  navigate('/insights');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <ChartNoAxesColumn size={21} />
+                Insights
+              </button>
+              <button
+                onClick={()=>{
+                  navigate('/goals');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <Target size={21} />
+                Goals
+              </button>
+              <button
+                onClick={()=>{
+                  navigate('/achievements');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <Trophy size={21} />
+                Achievements
+              </button>
+              <button
+                onClick={()=>{
+                  navigate('/discover');
+                  setModal(false);
+                }}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
+              >
+                <Compass size={21} />
+                Discover
+              </button>
             </div>
             <div className="mt-auto border-t border-gray-700 pt-5 px-4">
               <h2 className="text-center text-2xl font-bold mb-4">
@@ -111,7 +166,7 @@ const Sidebar = () => {
         </div>
       </div>
       <div className='hidden md:flex w-60 bg-[#0d1117] h-screen border-r  border-r-gray-400/10 px-2 flex flex-col'>
-        <div className='h-[83%] w-full flex flex-col justify-between'>
+        <div className='h-[83%] w-full flex flex-col justify-between overflow-y-auto'>
             <div className='flex flex-col gap-4'>
                 <div className='py-5 flex justify-center '>
         
@@ -139,6 +194,32 @@ const Sidebar = () => {
                       navigate('/profile');
                     }}
                     className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><UserRound size={15} className='mb-0.5'/>Profile</button>
+                    <h2 className='px-3 pt-3 text-[12px] tracking-[0.2em] text-[#4a5568]'>AI</h2>
+                    <button 
+                    onClick={()=>{
+                      navigate('/coach');
+                    }}
+                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Bot size={15} className='mb-0.5'/>Coach</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/insights');
+                    }}
+                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><ChartNoAxesColumn size={15} className='mb-0.5'/>Insights</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/goals');
+                    }}
+                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Target size={15} className='mb-0.5'/>Goals</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/achievements');
+                    }}
+                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Trophy size={15} className='mb-0.5'/>Achievements</button>
+                    <button 
+                    onClick={()=>{
+                      navigate('/discover');
+                    }}
+                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Compass size={15} className='mb-0.5'/>Discover</button>
                 </div>
             </div>
         </div>

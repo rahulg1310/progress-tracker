@@ -4,6 +4,7 @@ import GameCard from './GameCard'
 import LibraryStatus from './LibraryStatus'
 import GenreBreakdown from './GenreBreakdown'
 import TopByPlaytime from './TopByPlaytime'
+import BriefingCard from './BriefingCard'
 import { useContext } from 'react'
 import { UserData } from '../context/UserContext'
 import { GamesData } from '../context/GamesContext'
@@ -22,6 +23,7 @@ const DashContent = (props) => {
             </div>
            
         </div>
+        <BriefingCard />
         <div className='flex flex-wrap gap-4 w-full'>
             {props.profile_stats.map(function(elem,idx){
                 return <ProfileStatsCard key={idx} num={elem.num} title={elem.title} stats={elem.stats} icon={elem.icon} color1={elem.color1} />
