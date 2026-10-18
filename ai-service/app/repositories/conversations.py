@@ -71,7 +71,10 @@ class MessageRepository:
     def __init__(self, db: AsyncDatabase):
         self._col = db[MESSAGES]
 
-    async def add(self, user_id: str, conversation_id: ObjectId, role: str, text: str, now: datetime) -> dict:
+    async def add(
+        self, user_id: str, conversation_id: ObjectId, role: str, text: str, now: datetime,
+        actions: list[dict] | None = None, stats: list[dict] | None = None,
+    ) -> dict:
         doc = {
             "conversation": conversation_id,
             "user": ObjectId(user_id),
@@ -79,9 +82,21 @@ class MessageRepository:
             "text": text,
             "createdAt": now,
         }
+        if actions:
+            doc["actions"] = actions
+        if stats:
+            doc["stats"] = stats
         result = await self._col.insert_one(doc)
         doc["_id"] = result.inserted_id
         return doc
+
+    async def set_action_status(self, user_id: str, message_id: ObjectId, action_id: ObjectId, status: str) -> None:
+        """Keeps the action card in chat history in sync (read-modify-write for portability)."""
+        doc = await self._col.find_one({"_id": message_id, "user": ObjectId(user_id)})
+        if not doc or not doc.get("actions"):
+            return
+        actions = [{**a, "status": status} if a.get("_id") == action_id else a for a in doc["actions"]]
+        await self._col.update_one({"_id": message_id, "user": ObjectId(user_id)}, {"$set": {"actions": actions}})
 
     async def recent(self, user_id: str, conversation_id: ObjectId, limit: int) -> list[dict]:
         """Newest `limit` messages, returned oldest-first for the model."""

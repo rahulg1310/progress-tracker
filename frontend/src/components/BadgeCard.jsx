@@ -32,7 +32,7 @@ const BadgeCard = (props) => {
       <h1 className={`font-bold tracking-wider ${props.earned ? 'text-white' : 'text-[#8a9bb0]'}`}>{props.name}</h1>
       <p className='body text-[11px] text-[#4a5568] min-h-8'>{props.description}</p>
       {props.earned ? (
-        <span className='body text-[11px] text-yellow-400'>Earned {formatShortDate(props.earnedAt)}</span>
+        <span className='body text-[11px] text-yellow-400'>{props.earnedAt ? `Earned ${formatShortDate(props.earnedAt)}` : 'Earned'}</span>
       ) : (
         <div className='w-full flex flex-col gap-1'>
           <div className='h-1 bg-[#1a2332] rounded-full overflow-hidden w-full'>

@@ -32,6 +32,7 @@ async def chat(
         conversation=conversation_out(result["conversation"]),
         userMessage=message_out(result["userMessage"]),
         assistantMessage=message_out(result["assistantMessage"]),
+        effects=result["effects"],
     )
 
 

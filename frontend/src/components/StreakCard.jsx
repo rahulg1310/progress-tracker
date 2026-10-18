@@ -13,7 +13,7 @@ const StreakCard = (props) => {
         <div className='bg-orange-500/15 p-3 rounded-xl'><Flame size={28} color='#f97316'/></div>
         <div>
           <h1 className='font-bold text-3xl'>{props.streak.current} <span className='text-lg text-[#8a9bb0]'>day{props.streak.current===1 ? '' : 's'}</span></h1>
-          <span className='body text-[12px] text-[#4a5568]'>Log a session today to keep it going</span>
+          <span className='body text-[12px] text-[#4a5568]'>{props.streak.playedToday ? 'You played today. Nice!' : props.streak.current>0 ? 'Log a session today to keep it going' : 'Log a session to start a streak'}</span>
         </div>
       </div>
       <div className='flex justify-between gap-1'>

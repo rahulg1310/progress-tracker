@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import { LoaderCircle, Sparkles } from 'lucide-react'
-import { mockDelay, buildMockPlan } from '../mock/aiMockData'
 import { toDateKey, formatMinutes } from '../utils/formatTime'
+import { aiHeaders, errorMessage } from '../utils/aiRequest'
 
 const twoWeeksFromNow = ()=>{
   const d = new Date();
@@ -19,41 +20,28 @@ const QuestPlanModal = (props) => {
   const [loading, setLoading] = useState(false);
 
   const createPlan = async ()=>{
+    if(!candidates.some((elem)=>elem._id===gameId)){
+      setError('Please choose a game');
+      return;
+    }
+    if(endDate<=toDateKey(new Date())){
+      setError('Deadline must be after today');
+      return;
+    }
     try{
-      const game = candidates.find((elem)=>elem._id===gameId);
-      if(!game){
-        setError('Please choose a game');
-        return;
-      }
-      const todayKey = toDateKey(new Date());
-      if(endDate<=todayKey){
-        setError('Deadline must be after today');
-        return;
-      }
       setError('');
       setLoading(true);
-      // MOCK: Phase 3 replaces this with POST /ai/plans (FastAPI planner)
-      await mockDelay(900);
-      const goalId = `goal-${Date.now()}`;
-      const plan = buildMockPlan({
-        goalId,
-        gameTitle : game.title,
-        colorAccent : game.colorAccent,
-        startDate : todayKey,
-        endDate,
-        dailyMinutes,
-        estimatedHours
-      });
-      props.setGoals((prevGoals)=>[
-        {_id : goalId, type : 'finish_game', title : `Finish ${game.title}`, targetValue : 100, currentValue : game.progress, gameTitle : game.title, endDate, status : 'active', planId : plan._id},
-        ...prevGoals
-      ]);
-      props.setPlans((prevPlans)=>[plan, ...prevPlans]);
+      const body = { gameId, endDate, dailyMinutes };
+      if(estimatedHours!==''){
+        body.estimatedHours = Number(estimatedHours);
+      }
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/ai/plans`, body, {headers : aiHeaders()});
+      props.setPlans((prevPlans)=>[res.data.plan, ...prevPlans]);
       props.setPlanModal(false);
     }
     catch(error){
       console.log(error);
-      setError('Could not create the plan. Please try again.');
+      setError(errorMessage(error, 'Could not create the plan. Please try again.'));
     }
     finally{
       setLoading(false);
@@ -71,7 +59,7 @@ const QuestPlanModal = (props) => {
           }}
           className='body hover:bg-gray-700 transition-all duration-200 py-1 px-2 rounded'>X</button>
         </div>
-        <p className='body text-[13px] text-[#8a9bb0]'>Tell Coach what you want to finish and how much time you have. It builds daily milestones and adjusts them when you miss a day.</p>
+        <p className='body text-[13px] text-[#8a9bb0]'>Pick a game, a deadline and how much you can play each day. Progress updates from the sessions you log, and you can adjust the plan if you fall behind. You can also ask Coach to plan it for you.</p>
         {candidates.length===0 ? (
           <div className='p-6 text-center'>
             <h1 className='font-bold text-xl text-[#8a9bb0]'>No Games to Plan</h1>
@@ -108,7 +96,7 @@ const QuestPlanModal = (props) => {
                     setEstimatedHours(e.target.value);
                   }
                 }}
-                type="number" min={0} value={estimatedHours} placeholder='Leave blank to estimate' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
+                type="number" min={1} max={500} value={estimatedHours} placeholder='e.g. 25' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
               </div>
             </div>
             <div className='w-full flex flex-col gap-1'>
@@ -120,7 +108,7 @@ const QuestPlanModal = (props) => {
               type="range" min='15' max='240' step='15' value={dailyMinutes} className='accent-[#00f5a0]'/>
             </div>
             {estimatedHours==='' && (
-              <p className='body text-[12px] text-yellow-200/80'>Without a length, Coach uses a rough estimate and labels it clearly as an estimate.</p>
+              <p className='body text-[12px] text-yellow-200/80'>Without a length the plan uses a 20h placeholder, clearly labelled. Ask Coach if you'd like an estimate.</p>
             )}
           </>
         )}
@@ -135,7 +123,7 @@ const QuestPlanModal = (props) => {
           onClick={()=>{
             createPlan();
           }}
-          className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3 flex items-center gap-2 disabled:opacity-50'>{loading ? <LoaderCircle size={16} className='animate-spin'/> : <Sparkles size={16}/>}Generate Plan</button>
+          className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1.5 hover:opacity-60 transition-all duration-200 px-3 flex items-center gap-2 disabled:opacity-50'>{loading ? <LoaderCircle size={16} className='animate-spin'/> : <Sparkles size={16}/>}Create Plan</button>
         </div>
       </div>
     </div>

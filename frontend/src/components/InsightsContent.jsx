@@ -67,13 +67,13 @@ const InsightsContent = () => {
     }
   ]
 
-  const goalPct = Math.min(100, Math.round((data.goal.current/data.goal.target)*100));
-  const goalLeft = Math.max(0, data.goal.target-data.goal.current);
+  const goalPct = data.goal ? Math.min(100, Math.round((data.goal.current/data.goal.target)*100)) : 0;
+  const goalLeft = data.goal ? Math.max(0, data.goal.target-data.goal.current) : 0;
 
   const top_games = data.topGames.map(function(elem){
     return {
       name : elem.title,
-      progress : `${Math.round((elem.minutes/data.totalMinutes)*100)}%`,
+      progress : data.totalMinutes===0 ? '0%' : `${Math.round((elem.minutes/data.totalMinutes)*100)}%`,
       color : elem.color,
       hours : formatMinutes(elem.minutes)
     }
@@ -120,17 +120,32 @@ const InsightsContent = () => {
         </div>
         <div className='w-full xl:w-[320px] bg-[#111620] py-6 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-5 items-center'>
           <h1 className='self-start font-bold tracking-wider text-[#8a9bb0]'>GOAL PROGRESS</h1>
-          <div className='h-32 w-32 rounded-full flex items-center justify-center'
-          style={{background : `conic-gradient(#00f5a0 ${goalPct}%,#1a2332 0)`}}>
-            <div className='w-28 h-28 rounded-full bg-[#111620] flex flex-col items-center justify-center'>
-              <span className='font-bold text-3xl text-[#00f5a0]'>{goalPct}%</span>
-              <span className='body text-[11px] text-[#4a5568]'>{data.goal.title}</span>
+          {data.goal ? (
+            <>
+              <div className='h-32 w-32 rounded-full flex items-center justify-center'
+              style={{background : `conic-gradient(#00f5a0 ${goalPct}%,#1a2332 0)`}}>
+                <div className='w-28 h-28 rounded-full bg-[#111620] flex flex-col items-center justify-center'>
+                  <span className='font-bold text-3xl text-[#00f5a0]'>{goalPct}%</span>
+                  <span className='body text-[11px] text-[#4a5568]'>{data.goal.title}</span>
+                </div>
+              </div>
+              <p className='body text-[13px] text-[#8a9bb0] text-center'>
+                <span className='mono text-white'>{formatMinutes(data.goal.current)}</span> of <span className='mono text-white'>{formatMinutes(data.goal.target)}</span>
+                {goalLeft>0 ? <> · {formatMinutes(goalLeft)} to go</> : <> · goal reached</>}
+              </p>
+            </>
+          ) : (
+            <div className='flex-1 flex flex-col justify-center items-center text-center gap-3'>
+              <p className='body text-[13px] text-[#8a9bb0]'>{period==='week' ? 'Set a weekly playtime goal to track it here.' : 'Monthly view has no goal. Switch to Weekly to see your goal.'}</p>
+              {period==='week' && (
+                <button
+                onClick={()=>{
+                  navigate('/goals');
+                }}
+                className='button_border border border-white/15 rounded-[7px] px-3 py-1 hover:bg-gray-700 transition-all duration-200 text-[#8a9bb0]'>Set a goal</button>
+              )}
             </div>
-          </div>
-          <p className='body text-[13px] text-[#8a9bb0] text-center'>
-            <span className='mono text-white'>{formatMinutes(data.goal.current)}</span> of <span className='mono text-white'>{formatMinutes(data.goal.target)}</span>
-            {goalLeft>0 ? <> · {formatMinutes(goalLeft)} to go</> : <> · goal reached</>}
-          </p>
+          )}
         </div>
       </div>
 
@@ -156,7 +171,7 @@ const InsightsContent = () => {
             )
           })}
         </ul>
-        <span className='body text-[11px] text-[#4a5568] flex items-center gap-1.5 border-t border-t-gray-600/40 pt-3'><Database size={12}/>{data.basedOn} Numbers are calculated from your records, not generated.</span>
+        <span className='body text-[11px] text-[#4a5568] flex items-center gap-1.5 border-t border-t-gray-600/40 pt-3'><Database size={12} className='shrink-0'/>{data.basedOn} Numbers are calculated from your records, not generated.</span>
       </div>
 
       <div className='w-full bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-4 mb-3'>
@@ -165,6 +180,9 @@ const InsightsContent = () => {
           <span className='text-[11px] bg-gray-400/15 rounded-2xl px-2 py-1 text-gray-500 tracking-wider'>{top_games.length} Games</span>
         </div>
         <div className='flex flex-col gap-6 md:gap-3'>
+          {top_games.length===0 && (
+            <p className='body text-[13px] text-[#4a5568]'>No sessions in this period yet.</p>
+          )}
           {top_games.map(function(elem,idx){
             return <TopByPlaytime key={idx} name={elem.name} progress={elem.progress} hours={elem.hours} color={elem.color}/>
           })}

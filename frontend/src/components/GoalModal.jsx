@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import { LoaderCircle } from 'lucide-react'
-import { mockDelay } from '../mock/aiMockData'
 import { toDateKey } from '../utils/formatTime'
+import { aiHeaders, errorMessage } from '../utils/aiRequest'
 
 const endOfWeek = ()=>{
   const d = new Date();
@@ -15,6 +16,7 @@ const GoalModal = (props) => {
   const [endDate, setEndDate] = useState(endOfWeek());
   const [targetError, setTargetError] = useState('');
   const [dateError, setDateError] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const targetLabel = {
@@ -37,6 +39,10 @@ const GoalModal = (props) => {
       setTargetError('Please enter 100 hours or less');
       return false;
     }
+    if(type==='weekly_sessions' && value>50){
+      setTargetError('Please enter 50 sessions or less');
+      return false;
+    }
     if(endDate<toDateKey(new Date())){
       setDateError('End date cannot be in the past');
       return false;
@@ -47,24 +53,19 @@ const GoalModal = (props) => {
   const addGoal = async ()=>{
     try{
       if(!isValid()) return;
+      setError('');
       setLoading(true);
-      // MOCK: Phase 2 replaces this with POST /ai/goals
-      await mockDelay(500);
-      const value = Number(target);
-      const week = props.insights?.week;
-      const goal = {
-        weekly_playtime : {title : `Play ${value}h this week`, targetValue : value*60, currentValue : week?.totalMinutes || 0},
-        active_days : {title : `Play on ${value} days this week`, targetValue : value, currentValue : week?.activeDays || 0},
-        weekly_sessions : {title : `Log ${value} sessions this week`, targetValue : value, currentValue : week?.sessions || 0},
-      }[type];
-      props.setGoals((prevGoals)=>[
-        {_id : `goal-${Date.now()}`, type, gameTitle : '', endDate, status : goal.currentValue>=goal.targetValue ? 'met' : 'active', ...goal},
-        ...prevGoals
-      ]);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/ai/goals`,
+        { type, target : Number(target), endDate },
+        { headers : aiHeaders() }
+      );
+      props.setGoals((prevGoals)=>[res.data.goal, ...prevGoals]);
+      props.refreshAiData();
       props.setGoalModal(false);
     }
     catch(error){
       console.log(error);
+      setError(errorMessage(error, 'Could not create the goal. Please try again.'));
     }
     finally{
       setLoading(false);
@@ -120,7 +121,8 @@ const GoalModal = (props) => {
             <span className='body text-[11px] text-[#ff2929]'>{dateError}</span>
           </div>
         </div>
-        <p className='body text-[12px] text-[#4a5568]'>Progress is tracked automatically from the sessions you log.</p>
+        <p className='body text-[12px] text-[#4a5568]'>Progress counts sessions from Monday of this week until the end date, using the sessions you log.</p>
+        <span className='body text-[11px] text-[#ff2929]'>{error}</span>
         <div className='flex justify-end gap-8 border-t border-t-gray-600/70 pt-5'>
           <button
           onClick={()=>{

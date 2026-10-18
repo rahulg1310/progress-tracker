@@ -1,24 +1,27 @@
 import React, { useContext, useState } from 'react'
-import { Sparkles, LoaderCircle, X, Compass } from 'lucide-react'
+import axios from 'axios'
+import { Sparkles, LoaderCircle, X, Compass, Database } from 'lucide-react'
 import { GamesData } from '../context/GamesContext'
 import RecommendationCard from './RecommendationCard'
 import CompareModal from './CompareModal'
-import { mockDelay, getMockRecommendations } from '../mock/aiMockData'
+import { aiHeaders, errorMessage } from '../utils/aiRequest'
 
 const DiscoverContent = () => {
-  const {games} = useContext(GamesData);
+  const {games, setGames} = useContext(GamesData);
   const favourites = games
     .filter((elem)=>elem.status==='Completed' || elem.rating>=8)
+    .sort((a,b)=>b.rating-a.rating)
     .slice(0,4)
     .map((elem)=>elem.title);
 
   // null = not edited yet, so follow the library (games load after first render)
   const [editedLiked, setLikedGames] = useState(null);
-  const likedGames = editedLiked ?? (favourites.length>0 ? favourites : ['Sekiro', 'Black Myth: Wukong']);
+  const likedGames = editedLiked ?? favourites;
   const [likedInput, setLikedInput] = useState('');
   const [mood, setMood] = useState('');
   const [platform, setPlatform] = useState('Any');
   const [recs, setRecs] = useState([]);
+  const [basedOn, setBasedOn] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
@@ -36,25 +39,26 @@ const DiscoverContent = () => {
   }
 
   const getRecommendations = async ()=>{
-    if(likedGames.length===0 && mood.trim()===''){
-      setError('Add at least one game you loved, or describe what you are in the mood for.');
+    if(likedGames.length===0){
+      setError('Add at least one game you loved, or rate some games in your Library.');
       return;
     }
     try{
       setError('');
       setLoading(true);
       setCompareIds([]);
-      // MOCK: Phase 4 replaces this with POST /ai/recommendations {likedGames, mood, platform}
-      await mockDelay(1100);
-      const results = getMockRecommendations(games.map((elem)=>elem.title)).filter((elem)=>{
-        return platform==='Any' || elem.platforms.includes(platform);
-      });
-      setRecs(results);
+      const body = { likedGames, mood };
+      if(platform!=='Any'){
+        body.platform = platform;
+      }
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/ai/recommendations`, body, {headers : aiHeaders()});
+      setRecs(res.data.recommendations);
+      setBasedOn(res.data.likedGames);
       setHasSearched(true);
     }
     catch(error){
       console.log(error);
-      setError('Could not get recommendations right now. Please try again.');
+      setError(errorMessage(error, 'Could not get recommendations right now. Please try again.'));
     }
     finally{
       setLoading(false);
@@ -70,9 +74,31 @@ const DiscoverContent = () => {
     }
   }
 
-  // MOCK: Phase 4 sends this through the agent's add_game action (POST /games via Express)
+  // Uses the existing POST /games route, so the game gets a RAWG cover like any other game
   const addGame = async (rec, status)=>{
-    await mockDelay(600);
+    const token = JSON.parse(localStorage.getItem("token"));
+    const chosenPlatform = platform!=='Any' && rec.platforms.includes(platform) ? platform : (rec.platforms[0] || 'PC');
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/games`,
+      {
+        title : rec.title,
+        genre : rec.genres[0] || 'Unknown',
+        platform : chosenPlatform,
+        status,
+        progress : 0,
+        playtime : 0,
+        rating : 0,
+        colorAccent : rec.colorAccent,
+        achievementsEarned : 0,
+        totalAchievements : 0,
+        notes : ''
+      },
+      {
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      }
+    );
+    setGames((prevGames)=>[res.data.game, ...prevGames]);
     setAdded((prev)=>({...prev, [rec._id] : status}));
   }
 
@@ -80,12 +106,12 @@ const DiscoverContent = () => {
     <div className='w-full py-5 px-8 md:px-12 flex flex-col gap-6'>
       <div className='flex flex-col'>
         <h1 className='font-bold text-4xl tracking-wider'>Discover</h1>
-        <h4 className='body text-[13px] text-[#8a9bb0]'>Recommendations based on your library and what you tell Coach</h4>
+        <h4 className='body text-[13px] text-[#8a9bb0]'>Recommendations matched to the games you loved, using RAWG game data</h4>
       </div>
 
       <div className='w-full bg-[#111620] py-5 px-6 rounded-2xl border border-gray-400/15 flex flex-col gap-4'>
         <div className='flex flex-col gap-2'>
-          <span className='body text-[#8a9bb0] text-[12px] font-semibold'>Games you loved</span>
+          <span className='body text-[#8a9bb0] text-[12px] font-semibold'>Games you loved {editedLiked===null && favourites.length>0 && <span className='text-[#4a5568] font-normal'>(from your completed and top-rated games)</span>}</span>
           <div className='flex gap-2 flex-wrap items-center'>
             {likedGames.map(function(elem){
               return (
@@ -110,7 +136,7 @@ const DiscoverContent = () => {
                   addLiked();
                 }
               }}
-              type="text" value={likedInput} placeholder='Type a game and press Enter' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[13px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568] w-56'/>
+              type="text" maxLength={100} value={likedInput} placeholder='Type a game and press Enter' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[13px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568] w-56'/>
             )}
           </div>
         </div>
@@ -121,7 +147,7 @@ const DiscoverContent = () => {
             onChange={(e)=>{
               setMood(e.target.value);
             }}
-            type="text" maxLength={200} value={mood} placeholder='e.g. something shorter, under 20 hours, with great bosses' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
+            type="text" maxLength={200} value={mood} placeholder='e.g. under 20 hours' className='bg-[#080c10] py-1 px-2 rounded-[6px] text-[15px] body border outline-none border-white/15 focus:border-green-400 transition-all duration-200 placeholder:text-[#4a5568]'/>
           </div>
           <div className='flex flex-col gap-1'>
             <span className='body text-[#8a9bb0] text-[12px] font-semibold'>Platform</span>
@@ -136,11 +162,13 @@ const DiscoverContent = () => {
               <option>PS4</option>
               <option>Xbox</option>
               <option>Switch</option>
+              <option>Mobile</option>
             </select>
           </div>
         </div>
         <span className='body text-[11px] text-[#ff2929]'>{error}</span>
-        <div className='flex justify-end'>
+        <div className='flex justify-between items-center gap-3 flex-wrap'>
+          <span className='body text-[11px] text-[#4a5568]'>Tip: ask Coach "what should I play next?" for a conversational version.</span>
           <button disabled={loading}
           onClick={()=>{
             getRecommendations();
@@ -166,15 +194,18 @@ const DiscoverContent = () => {
         <div className='flex w-full justify-center items-center'>
           <div className='p-8 text-center'>
             <h1 className='font-bold text-xl text-[#8a9bb0]'>No Matches Found</h1>
-            <p className='body text-sm text-[#4a5568] mt-2'>Try another platform or add more games you loved.</p>
+            <p className='body text-sm text-[#4a5568] mt-2'>Try another platform, remove the length limit, or add more games you loved.</p>
           </div>
         </div>
       ) : (
         <div className='flex flex-col gap-3 mb-20'>
-          <h1 className='text-[#4a5568] text-[13px] font-semibold'>{recs.length} Recommendations · select up to 3 to compare</h1>
+          <div className='flex flex-col md:flex-row md:justify-between gap-1'>
+            <h1 className='text-[#4a5568] text-[13px] font-semibold'>{recs.length} Recommendations · select up to 3 to compare</h1>
+            <span className='body text-[11px] text-[#4a5568] flex items-center gap-1'><Database size={12}/>Matched on the genres and tags of {basedOn.join(', ')}</span>
+          </div>
           <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
             {recs.map(function(elem){
-              return <RecommendationCard key={elem._id} rec={elem} likedGames={likedGames} selected={compareIds.includes(elem._id)} toggleCompare={toggleCompare} added={Boolean(added[elem._id])} addedStatus={added[elem._id]} addGame={addGame} />
+              return <RecommendationCard key={elem._id} rec={elem} likedGames={basedOn} selected={compareIds.includes(elem._id)} toggleCompare={toggleCompare} added={Boolean(added[elem._id])} addedStatus={added[elem._id]} addGame={addGame} />
             })}
           </div>
         </div>

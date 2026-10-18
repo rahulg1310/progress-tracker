@@ -6,58 +6,55 @@ import GoalCard from './GoalCard'
 import QuestPlanCard from './QuestPlanCard'
 import GoalModal from './GoalModal'
 import QuestPlanModal from './QuestPlanModal'
-import { replanMock } from '../mock/aiMockData'
-import { toDateKey } from '../utils/formatTime'
+import axios from 'axios'
+import { aiHeaders } from '../utils/aiRequest'
 
 const GoalsContent = () => {
-  const {goals, setGoals, plans, setPlans, insights, aiLoading} = useContext(AiData);
+  const {goals, setGoals, plans, setPlans, plansError, refreshAiData, aiLoading} = useContext(AiData);
   const {games} = useContext(GamesData);
   const [goalModal, setGoalModal] = useState(false);
   const [planModal, setPlanModal] = useState(false);
   const [filter, setFilter] = useState('All');
+  const [replanningId, setReplanningId] = useState(null);
 
-  const todayKey = toDateKey(new Date());
-  const goalsWithStatus = goals.map((elem)=>{
-    if(elem.currentValue>=elem.targetValue) return {...elem, status : 'met'};
-    if(elem.endDate<todayKey) return {...elem, status : 'missed'};
-    return {...elem, status : 'active'};
-  });
+  const goalsWithStatus = goals;
   const filteredGoals = goalsWithStatus.filter((elem)=>{
     return filter==='All' || (filter==='Active' && elem.status==='active') || (filter==='Met' && elem.status==='met') || (filter==='Missed' && elem.status==='missed');
   });
 
-  // MOCK: Phase 2 calls DELETE /ai/goals/:id
-  const deleteGoal = (id)=>{
-    const goal = goals.find((elem)=>elem._id===id);
-    setGoals((prevGoals)=>prevGoals.filter((elem)=>elem._id!==id));
-    if(goal?.planId){
-      setPlans((prevPlans)=>prevPlans.filter((elem)=>elem._id!==goal.planId));
+  const deleteGoal = async (id)=>{
+    try{
+      await axios.delete(`${import.meta.env.VITE_API_URL}/ai/goals/${id}`,{headers : aiHeaders()});
+      setGoals((prevGoals)=>prevGoals.filter((elem)=>elem._id!==id));
+      refreshAiData();
+    }
+    catch(error){
+      console.log(error);
     }
   }
 
-  const deletePlan = (id)=>{
-    setPlans((prevPlans)=>prevPlans.filter((elem)=>elem._id!==id));
-    setGoals((prevGoals)=>prevGoals.filter((elem)=>elem.planId!==id));
+  const deletePlan = async (id)=>{
+    try{
+      await axios.delete(`${import.meta.env.VITE_API_URL}/ai/plans/${id}`,{headers : aiHeaders()});
+      setPlans((prevPlans)=>prevPlans.filter((elem)=>elem._id!==id));
+    }
+    catch(error){
+      console.log(error);
+    }
   }
 
-  // MOCK: Phase 3 marks milestones automatically from logged sessions
-  const toggleMilestone = (planId, milestoneId)=>{
-    setPlans((prevPlans)=>prevPlans.map((plan)=>{
-      if(plan._id!==planId) return plan;
-      return {
-        ...plan,
-        milestones : plan.milestones.map((elem)=>{
-          if(elem._id!==milestoneId) return elem;
-          if(elem.status==='done') return {...elem, status : elem.date===todayKey ? 'today' : 'upcoming'};
-          return {...elem, status : 'done'};
-        })
-      }
-    }));
-  }
-
-  // MOCK: Phase 3 calls POST /ai/plans/:id/replan
-  const replan = (planId)=>{
-    setPlans((prevPlans)=>prevPlans.map((plan)=>plan._id===planId ? replanMock(plan) : plan));
+  const replan = async (id)=>{
+    try{
+      setReplanningId(id);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/ai/plans/${id}/replan`,{},{headers : aiHeaders()});
+      setPlans((prevPlans)=>prevPlans.map((elem)=>elem._id===id ? res.data.plan : elem));
+    }
+    catch(error){
+      console.log(error);
+    }
+    finally{
+      setReplanningId(null);
+    }
   }
 
   return (
@@ -107,7 +104,7 @@ const GoalsContent = () => {
                 <div className='flex w-full justify-center items-center'>
                   <div className='p-8 text-center'>
                     <h1 className='font-bold text-xl text-[#8a9bb0]'>No Goals Found</h1>
-                    <p className='body text-sm text-[#4a5568] mt-2'>Create a goal to start tracking it.</p>
+                    <p className='body text-sm text-[#4a5568] mt-2'>Create a goal, or ask Coach to set one for you.</p>
                   </div>
                 </div>
               ) : (
@@ -120,6 +117,9 @@ const GoalsContent = () => {
 
           <div className='flex flex-col gap-3 mb-3'>
             <h1 className='font-bold text-[#8a9bb0] tracking-wider'>QUEST PLANS</h1>
+            {plansError && (
+              <p className='body text-[12px] text-red-300'>{plansError}</p>
+            )}
             {plans.length===0 ? (
               <div className='flex w-full justify-center items-center'>
                 <div className='p-8 text-center'>
@@ -129,7 +129,7 @@ const GoalsContent = () => {
               </div>
             ) : (
               plans.map(function(elem){
-                return <QuestPlanCard key={elem._id} plan={elem} toggleMilestone={toggleMilestone} replan={replan} deletePlan={deletePlan} />
+                return <QuestPlanCard key={elem._id} plan={elem} replan={replan} replanning={replanningId===elem._id} deletePlan={deletePlan} />
               })
             )}
           </div>
@@ -137,10 +137,10 @@ const GoalsContent = () => {
       )}
 
       {goalModal && (
-        <GoalModal setGoalModal={setGoalModal} setGoals={setGoals} insights={insights} />
+        <GoalModal setGoalModal={setGoalModal} setGoals={setGoals} refreshAiData={refreshAiData} />
       )}
       {planModal && (
-        <QuestPlanModal setPlanModal={setPlanModal} setGoals={setGoals} setPlans={setPlans} games={games} />
+        <QuestPlanModal setPlanModal={setPlanModal} setPlans={setPlans} games={games} />
       )}
     </div>
   )

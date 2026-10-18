@@ -4,9 +4,9 @@ const CompareModal = (props) => {
   const rows = [
     { label : 'Match', render : (rec)=><span className='mono text-[#00f5a0]'>{rec.match}%</span> },
     { label : 'Genres', render : (rec)=>rec.genres.join(', ') },
-    { label : 'Length', render : (rec)=>`~${rec.estHours}h (estimate)` },
+    { label : 'Length', render : (rec)=>rec.estHours ? `~${rec.estHours}h (RAWG average)` : 'Unknown' },
     { label : 'Released', render : (rec)=>rec.released },
-    { label : 'Platforms', render : (rec)=>rec.platforms.join(', ') },
+    { label : 'Platforms', render : (rec)=>rec.platforms.join(', ') || 'Unknown' },
     { label : 'Why it fits', render : (rec)=>(
       <ul className='flex flex-col gap-1'>
         {rec.reasons.map(function(elem,idx){
@@ -78,7 +78,7 @@ const CompareModal = (props) => {
             </tbody>
           </table>
         </div>
-        <p className='body text-[11px] text-[#4a5568]'>Lengths are rough estimates and vary with playstyle.</p>
+        <p className='body text-[11px] text-[#4a5568]'>Lengths are RAWG community averages and vary with playstyle.</p>
       </div>
     </div>
   )

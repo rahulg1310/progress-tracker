@@ -6,11 +6,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from app.clients.core_api import CoreApiClient
+from app.clients.rawg import RawgClient
 from app.config import get_settings
 from app.db import create_client, ensure_indexes
 from app.errors import error_body, register_error_handlers
 from app.llm.gemini_client import GeminiClient, LlmError
-from app.routers import chat, health
+from app.routers import agent, chat, health, progress
 
 logger = logging.getLogger("kairo")
 
@@ -36,11 +38,17 @@ async def lifespan(app: FastAPI):
         logger.error("Could not reach MongoDB at startup: %s", type(exc).__name__)
 
     app.state.llm = GeminiClient(settings)
+    app.state.core_api = CoreApiClient(settings)
+    app.state.rawg = RawgClient(settings)
+    if not app.state.rawg.is_configured:
+        logger.warning("RAWG_API_KEY is not set; Discover will be unavailable")
     if not app.state.llm.is_configured:
         logger.warning("GEMINI_API_KEY is not set; /v1/chat will return AI_NOT_CONFIGURED")
 
     logger.info("Kairo AI service started (environment=%s, model=%s)", settings.environment, settings.gemini_model)
     yield
+    await app.state.core_api.close()
+    await app.state.rawg.close()
     await client.close()
 
 
@@ -74,6 +82,8 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(chat.router)
+    app.include_router(agent.router)
+    app.include_router(progress.router)
     return app
 
 

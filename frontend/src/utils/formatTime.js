@@ -34,12 +34,12 @@ export const formatClock = (iso) => {
   return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
 
-// ISO timestamp -> "Today" / "Yesterday" / "Oct 12"
+// ISO timestamp or "YYYY-MM-DD" -> "Today" / "Yesterday" / "Oct 12"
 export const formatRelativeDay = (iso) => {
   const todayKey = toDateKey(new Date());
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const key = toDateKey(iso);
+  const key = /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : toDateKey(iso);
   if (key === todayKey) return 'Today';
   if (key === toDateKey(yesterday)) return 'Yesterday';
   return formatShortDate(key);

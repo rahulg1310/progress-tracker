@@ -1,7 +1,7 @@
 """Request/response shapes. Output field names match what the React app already uses."""
 
-from datetime import datetime
-from typing import Literal
+from datetime import date, datetime
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -39,6 +39,8 @@ class MessageOut(OutModel):
     role: Literal["user", "assistant"]
     text: str
     createdAt: datetime
+    actions: list[dict[str, Any]] | None = None
+    stats: list[dict[str, Any]] | None = None
 
 
 class MemoryOut(OutModel):
@@ -53,6 +55,23 @@ class ChatResponse(BaseModel):
     conversation: ConversationOut
     userMessage: MessageOut
     assistantMessage: MessageOut
+    effects: dict[str, Any]
+
+
+class ActionResponse(BaseModel):
+    success: bool = True
+    action: dict[str, Any]
+    message: MessageOut | None = None
+    effects: dict[str, Any]
+
+
+class PlanCreateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    gameId: str = Field(pattern=OBJECT_ID_PATTERN)
+    endDate: date
+    dailyMinutes: int = Field(ge=15, le=480)
+    estimatedHours: float | None = Field(default=None, gt=0, le=500)
 
 
 class ConversationsResponse(BaseModel):
@@ -81,7 +100,16 @@ def conversation_out(doc: dict) -> ConversationOut:
 
 
 def message_out(doc: dict) -> MessageOut:
-    return MessageOut(id=str(doc["_id"]), role=doc["role"], text=doc["text"], createdAt=doc["createdAt"])
+    from app.agent.tools import to_jsonable  # local import avoids a cycle
+
+    return MessageOut(
+        id=str(doc["_id"]),
+        role=doc["role"],
+        text=doc["text"],
+        createdAt=doc["createdAt"],
+        actions=to_jsonable(doc["actions"]) if doc.get("actions") else None,
+        stats=doc.get("stats") or None,
+    )
 
 
 def memory_out(doc: dict) -> MemoryOut:

@@ -1,28 +1,27 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { UserData } from './UserContext';
-import { mockDelay } from '../mock/aiMockData';
-import { mockActionFollowUp } from '../mock/coachMock';
+import { GamesData } from './GamesContext';
+import { SessionData } from './SessionContext';
+import { AiData } from './AiContext';
+import { aiHeaders, errorMessage } from '../utils/aiRequest';
 
 export const CoachData = createContext();
 
 // Messages typed before the first reply arrives belong to a conversation that doesn't exist yet
 const DRAFT = 'draft';
 
-const aiHeaders = ()=>{
-  const token = JSON.parse(localStorage.getItem("token"));
-  return {
-    Authorization : `Bearer ${token}`,
-    'X-Timezone' : Intl.DateTimeFormat().resolvedOptions().timeZone
-  }
-}
-
-const errorMessage = (error, fallback)=>{
-  return error.response?.data?.message || fallback;
-}
+const actionEndpoints = {
+  confirmed : 'confirm',
+  cancelled : 'cancel',
+  undone : 'undo'
+};
 
 const CoachContext = ({children}) => {
   const {user} = useContext(UserData);
+  const {setGames} = useContext(GamesData);
+  const {setSessions} = useContext(SessionData);
+  const {refreshPlans, refreshAiData} = useContext(AiData);
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState({});
   const [activeId, setActiveId] = useState(null);
@@ -32,18 +31,20 @@ const CoachContext = ({children}) => {
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [historyError, setHistoryError] = useState('');
 
+  const fetchMemories = async ()=>{
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/ai/memories`,{headers : aiHeaders()});
+    setMemories(res.data.memories);
+  }
+
   useEffect(()=>{
     if(!user) return;
     setHistoryLoading(true);
     const fetchHistory = async ()=>{
       try{
         setHistoryError('');
-        const [conversationRes, memoryRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/ai/conversations`,{headers : aiHeaders()}),
-          axios.get(`${import.meta.env.VITE_API_URL}/ai/memories`,{headers : aiHeaders()})
-        ]);
-        setConversations(conversationRes.data.conversations);
-        setMemories(memoryRes.data.memories);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/ai/conversations`,{headers : aiHeaders()});
+        setConversations(res.data.conversations);
+        await fetchMemories();
       }
       catch(error){
         console.log(error);
@@ -55,6 +56,33 @@ const CoachContext = ({children}) => {
     }
     fetchHistory();
   },[user])
+
+  // Keep Library, Sessions, Dashboard and Goals in sync with what Coach changed
+  const applyEffects = (effects)=>{
+    if(!effects) return;
+    if(effects.sessionsAdded?.length){
+      setSessions((prevSessions)=>[...effects.sessionsAdded, ...prevSessions]);
+    }
+    if(effects.sessionsDeleted?.length){
+      setSessions((prevSessions)=>prevSessions.filter((elem)=>!effects.sessionsDeleted.includes(elem._id)));
+    }
+    const updatedGames = (effects.gamesUpdated || []).filter(Boolean);
+    if(updatedGames.length){
+      setGames((prevGames)=>prevGames.map((elem)=>{
+        const updated = updatedGames.find((game)=>game._id===elem._id);
+        return updated ? {...elem, ...updated} : elem;
+      }));
+    }
+    if(effects.plansChanged){
+      refreshPlans();
+    }
+    if(effects.goalsChanged){
+      refreshAiData();
+    }
+    if(effects.memoriesChanged){
+      fetchMemories().catch((error)=>console.log(error));
+    }
+  }
 
   const openConversation = async (id)=>{
     setActiveId(id);
@@ -96,7 +124,7 @@ const CoachContext = ({children}) => {
         conversationId ? {message : trimmed, conversationId} : {message : trimmed},
         {headers : aiHeaders()}
       );
-      const {conversation, userMessage, assistantMessage} = res.data;
+      const {conversation, userMessage, assistantMessage, effects} = res.data;
       setMessages((prevMessages)=>{
         const copy = {...prevMessages};
         const previous = key===DRAFT ? [] : (copy[key] || []).filter((elem)=>elem._id!==pendingMessage._id);
@@ -110,6 +138,7 @@ const CoachContext = ({children}) => {
       if(!conversationId){
         setActiveId(conversation._id);
       }
+      applyEffects(effects);
     }
     catch(error){
       console.log(error);
@@ -141,26 +170,55 @@ const CoachContext = ({children}) => {
     sendMessage(retryText);
   }
 
-  // MOCK until Phase 3: the agent doesn't return action cards yet.
-  // Phase 3 calls POST /ai/actions/:id/confirm | /cancel | /undo here.
+  // status: 'confirmed' | 'cancelled' | 'undone'
   const updateAction = async (messageId, actionId, status)=>{
     const key = activeId || DRAFT;
     const message = (messages[key] || []).find((elem)=>elem._id===messageId);
     const target = message?.actions?.find((action)=>action._id===actionId);
     if(!target) return;
-    const setStatus = (value)=>{
+
+    const setCard = (fields)=>{
       setMessages((prevMessages)=>({
         ...prevMessages,
         [key] : (prevMessages[key] || []).map((elem)=>{
           if(elem._id!==messageId) return elem;
-          return {...elem, actions : elem.actions.map((action)=>action._id===actionId ? {...action, status : value} : action)};
+          return {...elem, actions : elem.actions.map((action)=>action._id===actionId ? {...action, ...fields} : action)};
         })
       }));
     }
-    setStatus(status==='confirmed' ? 'executing' : status);
-    await mockDelay(status==='confirmed' ? 700 : 300);
-    if(status==='confirmed') setStatus('confirmed');
-    setMessages((prevMessages)=>({...prevMessages, [key] : [...(prevMessages[key] || []), mockActionFollowUp(target, status)]}));
+    const addMessage = (newMessage)=>{
+      setMessages((prevMessages)=>({...prevMessages, [key] : [...(prevMessages[key] || []), newMessage]}));
+    }
+
+    setCard({status : 'executing'});
+    try{
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/ai/actions/${actionId}/${actionEndpoints[status]}`,{},{headers : aiHeaders()});
+      setCard({status : res.data.action.status});
+      if(res.data.message){
+        addMessage(res.data.message);
+      }
+      applyEffects(res.data.effects);
+    }
+    catch(error){
+      console.log(error);
+      const code = error.response?.data?.code;
+      if(code==='EXPIRED'){
+        setCard({status : 'expired'});
+      }
+      else if(code==='UNDO_EXPIRED'){
+        setCard({status : 'done', undoUntil : new Date().toISOString()});
+      }
+      else{
+        setCard({status : target.status});
+      }
+      addMessage({
+        _id : `error-${Date.now()}`,
+        role : 'assistant',
+        error : true,
+        text : errorMessage(error, "That didn't go through. Please try again."),
+        createdAt : new Date().toISOString()
+      });
+    }
   }
 
   const startNewConversation = ()=>{

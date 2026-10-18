@@ -5,13 +5,15 @@ import LevelCard from './LevelCard'
 import StreakCard from './StreakCard'
 import BadgeCard from './BadgeCard'
 import ChallengeCard from './ChallengeCard'
-import { mockDelay, generateMockChallenge } from '../mock/aiMockData'
+import axios from 'axios'
+import { aiHeaders, errorMessage } from '../utils/aiRequest'
 import { formatRelativeDay } from '../utils/formatTime'
 
 const AchievementsContent = () => {
   const {progression, setProgression, aiLoading} = useContext(AiData);
   const [generating, setGenerating] = useState(false);
   const [badgeFilter, setBadgeFilter] = useState('All');
+  const [challengeError, setChallengeError] = useState('');
 
   if(aiLoading || !progression){
     return (
@@ -27,27 +29,31 @@ const AchievementsContent = () => {
 
   const newChallenge = async ()=>{
     try{
+      setChallengeError('');
       setGenerating(true);
-      // MOCK: Phase 4 calls POST /ai/challenges (Coach writes the text, rules are validated server-side)
-      await mockDelay(900);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/ai/challenges`,{},{headers : aiHeaders()});
       setProgression((prevProgression)=>({
         ...prevProgression,
-        challenges : [generateMockChallenge(prevProgression.challenges.length), ...prevProgression.challenges]
+        challenges : [res.data.challenge, ...prevProgression.challenges]
       }));
     }
     catch(error){
       console.log(error);
+      setChallengeError(errorMessage(error, 'Could not create a challenge right now.'));
     }
     finally{
       setGenerating(false);
     }
   }
 
+  const order = { active : 0, completed : 1, expired : 2 };
+  const sortedChallenges = [...progression.challenges].sort((a,b)=>order[a.status]-order[b.status]).slice(0,9);
+
   return (
     <div className='w-full py-5 px-8 md:px-12 flex flex-col gap-6'>
       <div className='flex flex-col'>
         <h1 className='font-bold text-4xl tracking-wider'>Achievements</h1>
-        <h4 className='body text-[13px] text-[#8a9bb0]'>Earned from your real sessions, goals and progress</h4>
+        <h4 className='body text-[13px] text-[#8a9bb0]'>Calculated from your real sessions, goals and library</h4>
       </div>
 
       <div className='flex flex-col lg:flex-row gap-4'>
@@ -69,9 +75,15 @@ const AchievementsContent = () => {
         {activeChallenges>=3 && (
           <p className='body text-[12px] text-[#4a5568]'>You can have up to 3 active challenges. Finish one to get another.</p>
         )}
+        {challengeError && (
+          <p className='body text-[12px] text-red-300'>{challengeError}</p>
+        )}
+        {progression.challenges.length===0 && (
+          <p className='body text-[13px] text-[#4a5568]'>No challenges yet. Coach picks one based on your recent sessions.</p>
+        )}
         <div className='flex flex-wrap gap-4'>
-          {progression.challenges.map(function(elem){
-            return <ChallengeCard key={elem._id} title={elem.title} description={elem.description} progress={elem.progress} target={elem.target} xp={elem.xp} expiresAt={elem.expiresAt} status={elem.status} />
+          {sortedChallenges.map(function(elem){
+            return <ChallengeCard key={elem._id} title={elem.title} description={elem.description} flavor={elem.flavor} unit={elem.unit} progress={elem.progress} target={elem.target} xp={elem.xp} expiresAt={elem.expiresAt} status={elem.status} />
           })}
         </div>
       </div>
@@ -101,7 +113,13 @@ const AchievementsContent = () => {
       </div>
 
       <div className='w-full bg-[#111620] py-4 px-6 rounded-xl border border-gray-400/15 flex flex-col gap-3 mb-3'>
-        <h1 className='font-bold text-[#8a9bb0] tracking-wider'>RECENT XP</h1>
+        <div className='flex flex-col md:flex-row md:justify-between md:items-center gap-1'>
+          <h1 className='font-bold text-[#8a9bb0] tracking-wider'>RECENT XP</h1>
+          <span className='body text-[11px] text-[#4a5568]'>Sessions: {progression.xpRules.session} · Completed game: {progression.xpRules.completedGame} XP · Goal met: {progression.xpRules.goalMet} XP</span>
+        </div>
+        {progression.recentXp.length===0 && (
+          <p className='body text-[13px] text-[#4a5568]'>Log a session to earn your first XP.</p>
+        )}
         {progression.recentXp.map(function(elem){
           return (
             <div key={elem._id} className='flex justify-between items-center gap-3'>

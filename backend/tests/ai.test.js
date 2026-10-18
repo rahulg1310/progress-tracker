@@ -130,3 +130,57 @@ test('limits chat messages per user', async ()=>{
     }
     assert.deepEqual(statuses, [200, 200, 200, 429]);
 });
+
+test('forwards action confirmations with the user from the login token', async ()=>{
+    const actionId = '64b7f0c2a1b2c3d4e5f6aaaa';
+    const res = await request(app).post(`/ai/actions/${actionId}/confirm`).set('Authorization', `Bearer ${loginToken(USER_A)}`);
+    assert.equal(res.status, 200);
+    assert.equal(received[0].url, `/v1/actions/${actionId}/confirm`);
+    assert.equal(received[0].claims.sub, USER_A);
+    assert.equal((await request(app).post(`/ai/actions/${actionId}/delete-everything`).set('Authorization', `Bearer ${loginToken(USER_A)}`)).status, 404);
+    assert.equal((await request(app).post('/ai/actions/xyz/confirm').set('Authorization', `Bearer ${loginToken(USER_A)}`)).status, 404);
+    assert.equal(received.length, 1);
+});
+
+test('validates and whitelists plan creation', async ()=>{
+    const auth = `Bearer ${loginToken(USER_A)}`;
+    const gameId = '64b7f0c2a1b2c3d4e5f6bbbb';
+    const bad = [
+        { gameId : 'x', endDate : '2026-11-01', dailyMinutes : 60 },
+        { gameId, endDate : 'soon', dailyMinutes : 60 },
+        { gameId, endDate : '2026-11-01', dailyMinutes : 5 },
+        { gameId, endDate : '2026-11-01', dailyMinutes : 60, estimatedHours : -3 },
+    ];
+    for(const body of bad){
+        assert.equal((await request(app).post('/ai/plans').set('Authorization', auth).send(body)).status, 400, JSON.stringify(body));
+    }
+    assert.equal(received.length, 0);
+    const ok = await request(app).post('/ai/plans').set('Authorization', auth).send({ gameId, endDate : '2026-11-01', dailyMinutes : 60, userId : USER_B });
+    assert.equal(ok.status, 200);
+    assert.deepEqual(JSON.parse(received[0].raw), { gameId, endDate : '2026-11-01', dailyMinutes : 60 });
+});
+
+test('validates goals and recommendations before forwarding', async ()=>{
+    const USER_D = '64b7f0c2a1b2c3d4e5f6071b'; // fresh user: chat-style limits are 3/minute in this file
+    const auth = `Bearer ${loginToken(USER_D)}`;
+    assert.equal((await request(app).post('/ai/goals').set('Authorization', auth).send({ type : 'laps', target : 3, endDate : '2026-10-25' })).status, 400);
+    assert.equal((await request(app).post('/ai/goals').set('Authorization', auth).send({ type : 'active_days', target : -1, endDate : '2026-10-25' })).status, 400);
+    assert.equal((await request(app).post('/ai/recommendations').set('Authorization', auth).send({ likedGames : 'Sekiro' })).status, 400);
+    assert.equal((await request(app).post('/ai/recommendations').set('Authorization', auth).send({ platform : 'Dreamcast' })).status, 400);
+    assert.equal(received.length, 0);
+
+    await request(app).post('/ai/goals').set('Authorization', auth).send({ type : 'active_days', target : 4, endDate : '2026-10-25', userId : USER_A });
+    assert.deepEqual(JSON.parse(received[0].raw), { type : 'active_days', target : 4, endDate : '2026-10-25' });
+    assert.equal(received[0].claims.sub, USER_D);
+
+    await request(app).post('/ai/recommendations').set('Authorization', auth).send({ likedGames : [' Sekiro '], platform : 'Any' });
+    assert.deepEqual(JSON.parse(received[1].raw), { likedGames : ['Sekiro'], mood : '' });
+});
+
+test('forwards read endpoints', async ()=>{
+    const auth = `Bearer ${loginToken(USER_A)}`;
+    for(const path of ['overview', 'insights', 'goals', 'briefing']){
+        assert.equal((await request(app).get(`/ai/${path}`).set('Authorization', auth)).status, 200);
+    }
+    assert.deepEqual(received.map((r)=>r.url), ['/v1/overview', '/v1/insights', '/v1/goals', '/v1/briefing']);
+});

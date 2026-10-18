@@ -1,8 +1,9 @@
-// MOCK DATA - Phase 1 only.
-// Phase 2/3 replace these with responses from the Express /ai/* routes.
+// MOCK DATA - goals, insights, progression, briefing and recommendations.
+// Phase 4 replaces these with responses from the Express /ai/* routes.
+// (Chat, memories and quest plans already use the real API.)
 // The object shapes here are the API contract, so components will not change.
 
-import { toDateKey, fromDateKey, formatMinutes, formatShortDate, daysBetween } from '../utils/formatTime';
+import { toDateKey, formatMinutes, formatShortDate } from '../utils/formatTime';
 
 export const mockDelay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -162,109 +163,7 @@ export const mockGoals = [
     endDate: toDateKey(weekEnd),
     status: weekActiveDays >= 5 ? 'met' : 'active',
   },
-  {
-    _id: 'goal-3',
-    type: 'finish_game',
-    title: 'Finish Cyberpunk 2077',
-    targetValue: 100,
-    currentValue: 34,
-    gameTitle: 'Cyberpunk 2077',
-    endDate: toDateKey(addDays(today, 9)),
-    status: 'active',
-    planId: 'plan-1',
-  },
 ];
-
-/* ------------------------------------------------------- QUEST PLANS */
-
-// Deterministic plan builder. Phase 3 moves this logic to the FastAPI planner.
-export const buildMockPlan = ({ goalId, gameTitle, colorAccent, startDate, endDate, dailyMinutes, estimatedHours }) => {
-  const hasUserEstimate = Number(estimatedHours) > 0;
-  const estimate = hasUserEstimate
-    ? { hours: Number(estimatedHours), source: 'user', confidence: 'high', note: 'Based on the length you provided.' }
-    : { hours: 20, source: 'model_estimate', confidence: 'low', note: 'Rough main-story estimate. Side content can add a lot of time.' };
-
-  const totalDays = Math.max(1, daysBetween(startDate, endDate) + 1);
-  const neededMinutes = estimate.hours * 60;
-  const availableMinutes = totalDays * dailyMinutes;
-  const start = fromDateKey(startDate);
-
-  let cumulative = 0;
-  const milestones = Array.from({ length: totalDays }, function (_, idx) {
-    const date = toDateKey(addDays(start, idx));
-    cumulative += dailyMinutes;
-    const pct = Math.min(100, Math.round((cumulative / neededMinutes) * 100));
-    return {
-      _id: `${goalId}-m${idx + 1}`,
-      date,
-      targetMinutes: dailyMinutes,
-      title: `Session ${idx + 1}: reach ~${pct}% of the estimate`,
-      status: date < todayKey ? 'missed' : date === todayKey ? 'today' : 'upcoming',
-    }
-  });
-
-  const feasible = availableMinutes >= neededMinutes;
-  const suggestedDaily = Math.ceil(neededMinutes / totalDays);
-
-  return {
-    _id: `plan-${Date.now()}`,
-    goalId,
-    gameTitle,
-    colorAccent: colorAccent || '#00f5a0',
-    dailyMinutes,
-    startDate,
-    endDate,
-    estimate,
-    milestones,
-    feasibility: feasible
-      ? `At ${formatMinutes(dailyMinutes)} a day you should finish by ${formatShortDate(endDate)}.`
-      : `At ${formatMinutes(dailyMinutes)} a day you'd reach about ${Math.round((availableMinutes / neededMinutes) * 100)}% by ${formatShortDate(endDate)}. Around ${formatMinutes(suggestedDaily)} a day would be enough.`,
-    adjustmentNote: '',
-    version: 1,
-  }
-}
-
-// Spread missed minutes over the remaining days.
-export const replanMock = (plan) => {
-  const missed = plan.milestones.filter((elem) => elem.status === 'missed');
-  const remaining = plan.milestones.filter((elem) => elem.status === 'today' || elem.status === 'upcoming');
-  if (missed.length === 0 || remaining.length === 0) return plan;
-
-  const missedMinutes = missed.reduce((total, elem) => total + elem.targetMinutes, 0);
-  const extraPerDay = Math.ceil(missedMinutes / remaining.length);
-
-  return {
-    ...plan,
-    milestones: plan.milestones.map(function (elem) {
-      if (elem.status === 'today' || elem.status === 'upcoming') {
-        return { ...elem, targetMinutes: elem.targetMinutes + extraPerDay };
-      }
-      if (elem.status === 'missed') {
-        return { ...elem, status: 'skipped' };
-      }
-      return elem;
-    }),
-    adjustmentNote: `You missed ${missed.length} session${missed.length > 1 ? 's' : ''} (${formatMinutes(missedMinutes)}). Added ${formatMinutes(extraPerDay)} to each remaining day.`,
-    version: plan.version + 1,
-  }
-}
-
-const seededPlan = buildMockPlan({
-  goalId: 'goal-3',
-  gameTitle: 'Cyberpunk 2077',
-  colorAccent: '#f9e020',
-  startDate: toDateKey(addDays(today, -4)),
-  endDate: toDateKey(addDays(today, 9)),
-  dailyMinutes: 60,
-  estimatedHours: 0,
-});
-seededPlan._id = 'plan-1';
-seededPlan.milestones = seededPlan.milestones.map(function (elem, idx) {
-  if (elem.status !== 'missed') return elem;
-  return { ...elem, status: idx === 2 ? 'missed' : 'done' };
-});
-
-export const mockPlans = [seededPlan];
 
 /* --------------------------------------------------------- PROGRESSION */
 

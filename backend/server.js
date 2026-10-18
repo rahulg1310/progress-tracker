@@ -10,10 +10,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('./middleware/authMiddleware');
 const aiRoutes = require('./routes/ai');
+const internalRoutes = require('./routes/internal');
 const PORT = process.env.PORT || 5000;
 
 const app = express();
-app.use(express.json());
+app.use(express.json({
+    // keep the exact bytes so /internal can check the service token's body hash
+    verify : (req,res,buf)=>{
+        req.rawBody = buf;
+    }
+}));
 app.use(cors());
 
 connectDB();
@@ -488,6 +494,7 @@ app.delete('/sessions/:sessionId',authMiddleware,async (req,res)=>{
 })
 
 app.use('/ai', aiRoutes);
+app.use('/internal', internalRoutes);
 
 app.listen(PORT,()=>{
     console.log('Server started');

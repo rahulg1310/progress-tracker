@@ -31,7 +31,7 @@ const ChatMessage = (props) => {
           message.error ? 'border-red-500/30' : 'border-gray-400/15'
         }`}>
           <p className={`body text-[14px] whitespace-pre-wrap wrap-break-word leading-relaxed ${message.error ? 'text-red-300' : ''}`}>{message.text}</p>
-          {message.error && (
+          {message.error && message.retryText && (
             <button
             onClick={()=>{
               props.onRetry(message._id, message.retryText);

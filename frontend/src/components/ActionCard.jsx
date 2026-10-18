@@ -9,6 +9,7 @@ const statusConfig = {
   cancelled: { label: 'Cancelled',          color: 'text-[#8a9bb0]',  border: 'border-white/10' },
   undone:    { label: 'Undone',             color: 'text-[#8a9bb0]',  border: 'border-white/10' },
   expired:   { label: 'Expired',            color: 'text-[#8a9bb0]',  border: 'border-white/10' },
+  failed:    { label: 'Failed',             color: 'text-red-400',    border: 'border-red-400/40' },
 }
 
 const ActionCard = (props) => {
@@ -38,6 +39,7 @@ const ActionCard = (props) => {
         <div className='flex items-center gap-2'>
           {status==='pending' ? <ShieldAlert size={17} color='#facc15'/>
           : status==='executing' ? <LoaderCircle size={17} className='animate-spin' color='#22d3ee'/>
+          : status==='failed' ? <CircleX size={17} color='#f87171'/>
           : status==='cancelled' || status==='undone' || status==='expired' ? <CircleX size={17} color='#8a9bb0'/>
           : <CircleCheck size={17} color='#4ade80'/>}
           <h1 className='font-bold tracking-wider'>{action.title}</h1>

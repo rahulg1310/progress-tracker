@@ -92,7 +92,6 @@ const Sidebar = () => {
                 Profile
               </button>
 
-              <h2 className="px-3 pt-3 text-[12px] tracking-[0.2em] text-[#4a5568]">AI</h2>
               <button
                 onClick={()=>{
                   navigate('/coach');
@@ -122,16 +121,6 @@ const Sidebar = () => {
               >
                 <Target size={21} />
                 Goals
-              </button>
-              <button
-                onClick={()=>{
-                  navigate('/achievements');
-                  setModal(false);
-                }}
-                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-800 rounded-lg"
-              >
-                <Trophy size={21} />
-                Achievements
               </button>
               <button
                 onClick={()=>{
@@ -194,7 +183,6 @@ const Sidebar = () => {
                       navigate('/profile');
                     }}
                     className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><UserRound size={15} className='mb-0.5'/>Profile</button>
-                    <h2 className='px-3 pt-3 text-[12px] tracking-[0.2em] text-[#4a5568]'>AI</h2>
                     <button 
                     onClick={()=>{
                       navigate('/coach');
@@ -210,11 +198,6 @@ const Sidebar = () => {
                       navigate('/goals');
                     }}
                     className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Target size={15} className='mb-0.5'/>Goals</button>
-                    <button 
-                    onClick={()=>{
-                      navigate('/achievements');
-                    }}
-                    className='flex items-center gap-2 w-full  hover:bg-gray-800 px-3 py-1 rounded-[7px] transition-all duration-200'><Trophy size={15} className='mb-0.5'/>Achievements</button>
                     <button 
                     onClick={()=>{
                       navigate('/discover');

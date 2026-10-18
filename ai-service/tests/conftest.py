@@ -20,9 +20,15 @@ import jwt  # noqa: E402
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
-from app.deps import get_conversation_repo, get_db, get_llm, get_memory_repo, get_message_repo  # noqa: E402
+from app.deps import (  # noqa: E402
+    get_action_repo, get_briefing_repo, get_conversation_repo, get_core_api, get_db,
+    get_game_repo, get_goal_repo, get_llm, get_memory_repo, get_message_repo, get_plan_repo, get_rawg, get_session_repo,
+)
 from app.main import create_app  # noqa: E402
-from tests.fakes import FakeConversationRepo, FakeDb, FakeLlm, FakeMemoryRepo, FakeMessageRepo, FakeStore  # noqa: E402
+from tests.fakes import (  # noqa: E402
+    FakeActionRepo, FakeBriefingRepo, FakeConversationRepo, FakeCore, FakeDb, FakeGameRepo,
+    FakeGoalRepo, FakeLlm, FakeMemoryRepo, FakeMessageRepo, FakePlanRepo, FakeRawg, FakeSessionRepo, FakeStore,
+)
 
 SECRET = os.environ["SERVICE_AUTH_SECRET"]
 USER_A = "64b7f0c2a1b2c3d4e5f60718"
@@ -80,13 +86,34 @@ def db():
 
 
 @pytest.fixture
-def app(store, llm, db):
+def core(store):
+    return FakeCore(store)
+
+
+@pytest.fixture
+def rawg():
+    return FakeRawg()
+
+
+@pytest.fixture
+def app(store, llm, db, core, rawg):
     application = create_app()
-    application.dependency_overrides[get_conversation_repo] = lambda: FakeConversationRepo(store)
-    application.dependency_overrides[get_message_repo] = lambda: FakeMessageRepo(store)
-    application.dependency_overrides[get_memory_repo] = lambda: FakeMemoryRepo(store)
-    application.dependency_overrides[get_llm] = lambda: llm
-    application.dependency_overrides[get_db] = lambda: db
+    overrides = {
+        get_conversation_repo: lambda: FakeConversationRepo(store),
+        get_message_repo: lambda: FakeMessageRepo(store),
+        get_memory_repo: lambda: FakeMemoryRepo(store),
+        get_game_repo: lambda: FakeGameRepo(store),
+        get_session_repo: lambda: FakeSessionRepo(store),
+        get_action_repo: lambda: FakeActionRepo(store),
+        get_plan_repo: lambda: FakePlanRepo(store),
+        get_core_api: lambda: core,
+        get_goal_repo: lambda: FakeGoalRepo(store),
+        get_briefing_repo: lambda: FakeBriefingRepo(store),
+        get_rawg: lambda: rawg,
+        get_llm: lambda: llm,
+        get_db: lambda: db,
+    }
+    application.dependency_overrides.update(overrides)
     return application
 
 

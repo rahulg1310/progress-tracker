@@ -1,6 +1,11 @@
 import React from 'react'
 import { Target, Trash2, CalendarDays } from 'lucide-react'
-import { goalTypes } from '../mock/aiMockData'
+
+const goalTypes = {
+  weekly_playtime : { label : 'Weekly Playtime', unit : 'minutes' },
+  active_days : { label : 'Active Days', unit : 'days' },
+  weekly_sessions : { label : 'Weekly Sessions', unit : 'sessions' },
+}
 import { formatMinutes, formatShortDate } from '../utils/formatTime'
 
 const statusConfig = {

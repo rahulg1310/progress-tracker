@@ -31,6 +31,15 @@ class Settings(BaseSettings):
 
     max_history_messages: int = Field(default=20, ge=2, le=100)
 
+    # Express base URL. The AI service calls Express /internal/* to change games and sessions.
+    core_api_url: str = "http://127.0.0.1:5000"
+    core_api_timeout_seconds: float = Field(default=15, gt=0, le=60)
+
+    # RAWG video game database (free key from https://rawg.io/apidocs) for Discover
+    rawg_api_key: str = ""
+    rawg_base_url: str = "https://api.rawg.io/api"
+    rawg_timeout_seconds: float = Field(default=10, gt=0, le=60)
+
     @property
     def is_production(self) -> bool:
         return self.environment.lower() == "production"

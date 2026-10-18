@@ -4,7 +4,7 @@ from tests.conftest import USER_A
 def test_public_health_needs_no_token(api):
     res = api.client.get("/health")
     assert res.status_code == 200
-    assert res.json() == {"status": "ok", "service": "kairo-ai", "version": "0.2.0"}
+    assert res.json() == {"status": "ok", "service": "kairo-ai", "version": "0.4.0"}
 
 
 def test_detailed_health_requires_token(api):

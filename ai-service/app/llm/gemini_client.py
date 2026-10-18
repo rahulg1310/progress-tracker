@@ -1,14 +1,15 @@
-"""Thin wrapper around the Google Gen AI SDK.
+"""Thin wrapper around the Google Gen AI SDK for a manual tool-calling loop.
 
 - Free tier only: we never touch billing; a 429 means the free quota is used up.
 - Retries transient 5xx/timeouts, then falls back to GEMINI_FALLBACK_MODEL.
-- Never logs prompts, replies or the API key.
+- Automatic function calling is OFF: our own agent loop validates and runs every tool.
+- Never logs prompts, replies, tool data or the API key.
 """
 
 import asyncio
 import logging
 from dataclasses import dataclass
-from typing import Literal, Protocol
+from typing import Any, Literal, Protocol
 
 import httpx
 from google import genai
@@ -26,11 +27,28 @@ class ChatTurn:
 
 
 @dataclass(frozen=True)
-class LlmReply:
+class ToolSpec:
+    name: str
+    description: str
+    parameters: dict
+
+
+@dataclass(frozen=True)
+class ToolCall:
+    id: str | None
+    name: str
+    args: dict
+
+
+@dataclass
+class ModelStep:
     text: str
+    calls: list[ToolCall]
     model: str
+    content: Any = None  # provider message to append back to the transcript
     input_tokens: int | None = None
     output_tokens: int | None = None
+    blocked: bool = False
 
 
 class LlmError(Exception):
@@ -48,7 +66,11 @@ class LlmClient(Protocol):
     @property
     def model(self) -> str: ...
 
-    async def generate(self, *, system_prompt: str, history: list[ChatTurn], user_message: str) -> LlmReply: ...
+    def new_transcript(self, history: list[ChatTurn], user_message: str) -> list: ...
+
+    async def step(self, *, system_prompt: str, transcript: list, tools: list[ToolSpec], allow_tools: bool = True, start_model: str | None = None) -> ModelStep: ...
+
+    def add_tool_results(self, transcript: list, step: ModelStep, results: list[tuple[ToolCall, dict]]) -> None: ...
 
 
 TRANSIENT_CODES = {500, 502, 503, 504}
@@ -86,32 +108,63 @@ class GeminiClient:
     def model(self) -> str:
         return self._settings.gemini_model
 
-    def _models(self) -> list[str]:
+    def _models(self, start_model: str | None) -> list[str]:
         models = [self._settings.gemini_model]
         fallback = self._settings.gemini_fallback_model
         if fallback and fallback not in models:
             models.append(fallback)
+        if start_model in models:
+            models = models[models.index(start_model):]
         return models
 
-    async def generate(self, *, system_prompt: str, history: list[ChatTurn], user_message: str) -> LlmReply:
+    def new_transcript(self, history: list[ChatTurn], user_message: str) -> list:
+        return to_contents(history, user_message)
+
+    def add_tool_results(self, transcript: list, step: ModelStep, results: list[tuple[ToolCall, dict]]) -> None:
+        # The model's own turn goes back unchanged (keeps Gemini's thought signatures intact).
+        transcript.append(step.content)
+        transcript.append(
+            types.Content(
+                role="user",
+                parts=[
+                    types.Part(function_response=types.FunctionResponse(id=call.id, name=call.name, response=result))
+                    for call, result in results
+                ],
+            )
+        )
+
+    def _config(self, system_prompt: str, tools: list[ToolSpec], allow_tools: bool) -> types.GenerateContentConfig:
+        config = types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            temperature=0.4,
+            max_output_tokens=self._settings.gemini_max_output_tokens,
+        )
+        if tools:
+            config.tools = [
+                types.Tool(
+                    function_declarations=[
+                        types.FunctionDeclaration(name=t.name, description=t.description, parameters_json_schema=t.parameters)
+                        for t in tools
+                    ]
+                )
+            ]
+            config.automatic_function_calling = types.AutomaticFunctionCallingConfig(disable=True)
+            config.tool_config = types.ToolConfig(
+                function_calling_config=types.FunctionCallingConfig(mode="AUTO" if allow_tools else "NONE")
+            )
+        return config
+
+    async def step(self, *, system_prompt: str, transcript: list, tools: list[ToolSpec], allow_tools: bool = True, start_model: str | None = None) -> ModelStep:
         if self._client is None:
             raise LlmError(503, "AI_NOT_CONFIGURED", "Coach isn't set up yet. Add GEMINI_API_KEY to the AI service.")
 
-        contents = to_contents(history, user_message)
-        config = types.GenerateContentConfig(
-            system_instruction=system_prompt,
-            temperature=0.7,
-            max_output_tokens=self._settings.gemini_max_output_tokens,
-        )
-
+        config = self._config(system_prompt, tools, allow_tools)
         last_code: int | None = None
-        for model in self._models():
+        for model in self._models(start_model):
             for attempt in range(2):
                 try:
-                    response = await self._client.aio.models.generate_content(
-                        model=model, contents=contents, config=config
-                    )
-                    return self._to_reply(response, model)
+                    response = await self._client.aio.models.generate_content(model=model, contents=transcript, config=config)
+                    return self._to_step(response, model)
                 except errors.APIError as exc:
                     last_code = exc.code
                     logger.warning("Gemini error model=%s code=%s status=%s", model, exc.code, exc.status)
@@ -140,22 +193,27 @@ class GeminiClient:
         raise LlmError(503, "AI_UNAVAILABLE", "Coach is temporarily unavailable. Please try again shortly.")
 
     @staticmethod
-    def _to_reply(response: types.GenerateContentResponse, model: str) -> LlmReply:
-        text = ""
-        try:
-            text = (response.text or "").strip()
-        except ValueError:
-            text = ""
-        if not text:
-            reason = None
-            if response.candidates:
-                reason = response.candidates[0].finish_reason
+    def _to_step(response: types.GenerateContentResponse, model: str) -> ModelStep:
+        content = response.candidates[0].content if response.candidates else None
+        parts = (content.parts if content and content.parts else []) or []
+        text = "".join(p.text for p in parts if getattr(p, "text", None) and not getattr(p, "thought", False)).strip()
+        calls = [
+            ToolCall(id=p.function_call.id, name=p.function_call.name or "", args=dict(p.function_call.args or {}))
+            for p in parts
+            if getattr(p, "function_call", None)
+        ]
+        blocked = False
+        if not text and not calls:
+            reason = response.candidates[0].finish_reason if response.candidates else None
             logger.warning("Gemini returned no text model=%s finish_reason=%s", model, reason)
-            text = BLOCKED_REPLY
+            blocked = True
         usage = response.usage_metadata
-        return LlmReply(
+        return ModelStep(
             text=text,
+            calls=calls,
             model=model,
+            content=content,
             input_tokens=getattr(usage, "prompt_token_count", None) if usage else None,
             output_tokens=getattr(usage, "candidates_token_count", None) if usage else None,
+            blocked=blocked,
         )

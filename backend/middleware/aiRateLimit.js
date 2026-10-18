@@ -14,7 +14,7 @@ const limitHandler = (message)=>(req,res)=>{
 
 const aiLimiter = rateLimit({
     windowMs : 60 * 1000,
-    limit : Number(process.env.AI_REQUESTS_PER_MINUTE) || 60,
+    limit : Number(process.env.AI_REQUESTS_PER_MINUTE) || 120,
     standardHeaders : 'draft-8',
     legacyHeaders : false,
     keyGenerator : perUser,

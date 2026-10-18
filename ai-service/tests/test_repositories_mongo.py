@@ -73,3 +73,61 @@ async def test_memories_isolation(db):
     assert await repo.delete_owned(USER_B, str(mem["_id"])) is False
     assert await repo.delete_owned(USER_A, "nope") is False
     assert await repo.delete_owned(USER_A, str(mem["_id"])) is True
+
+
+async def test_library_reads_mongoose_documents(db):
+    from bson import ObjectId
+
+    from app.repositories.library import GameRepository, SessionRepository
+
+    def day(value):
+        return datetime.fromisoformat(value).replace(tzinfo=timezone.utc)
+
+    await db["games"].insert_many([
+        {"user": ObjectId(USER_A), "title": "Elden Ring", "createdAt": datetime.now(timezone.utc)},
+        {"user": ObjectId(USER_B), "title": "Other", "createdAt": datetime.now(timezone.utc)},
+    ])
+    await db["sessions"].insert_many([
+        {"user": ObjectId(USER_A), "game": "Elden Ring", "duration": 30, "date": day("2026-10-11"), "createdAt": datetime.now(timezone.utc)},
+        {"user": ObjectId(USER_A), "game": "Elden Ring", "duration": 60, "date": day("2026-10-12"), "createdAt": datetime.now(timezone.utc)},
+        {"user": ObjectId(USER_A), "game": "Elden Ring", "duration": 90, "date": day("2026-10-18"), "createdAt": datetime.now(timezone.utc)},
+        {"user": ObjectId(USER_B), "game": "Other", "duration": 999, "date": day("2026-10-15"), "createdAt": datetime.now(timezone.utc)},
+    ])
+    games, sessions = GameRepository(db), SessionRepository(db)
+    assert [g["title"] for g in await games.list_for_user(USER_A)] == ["Elden Ring"]
+    from datetime import date
+
+    week = await sessions.list_between(USER_A, date(2026, 10, 12), date(2026, 10, 18))
+    assert [s["duration"] for s in week] == [90, 60]  # inclusive both ends, newest first, only user A
+    assert len(await sessions.list_between(USER_A, None, None)) == 3
+    other_id = str((await db["sessions"].find_one({"user": ObjectId(USER_B)}))["_id"])
+    assert await sessions.get_owned(USER_A, other_id) is None
+
+
+async def test_action_claim_is_atomic(db):
+    from app.repositories.actions import ActionRepository
+
+    repo = ActionRepository(db)
+    now = datetime.now(timezone.utc)
+    action = await repo.create(USER_A, {"type": "update_game", "status": "pending", "expiresAt": now + timedelta(minutes=5), "createdAt": now})
+    aid = str(action["_id"])
+    assert await repo.claim(USER_B, aid, "pending", "executing", now, "expiresAt") is None
+    assert (await repo.claim(USER_A, aid, "pending", "executing", now, "expiresAt"))["status"] == "executing"
+    assert await repo.claim(USER_A, aid, "pending", "executing", now, "expiresAt") is None  # second click
+
+    expired = await repo.create(USER_A, {"type": "update_game", "status": "pending", "expiresAt": now - timedelta(seconds=1), "createdAt": now})
+    assert await repo.claim(USER_A, str(expired["_id"]), "pending", "executing", now, "expiresAt") is None
+
+
+async def test_message_action_status_sync(db):
+    from bson import ObjectId
+
+    convs, msgs = ConversationRepository(db), MessageRepository(db)
+    now = datetime.now(timezone.utc)
+    conv = await convs.create(USER_A, "t", now)
+    action_id = ObjectId()
+    msg = await msgs.add(USER_A, conv["_id"], "assistant", "Confirm?", now, actions=[{"_id": action_id, "status": "pending", "title": "x", "details": []}])
+    await msgs.set_action_status(USER_B, msg["_id"], action_id, "confirmed")
+    await msgs.set_action_status(USER_A, msg["_id"], action_id, "confirmed")
+    stored = (await msgs.list_for_conversation(USER_A, conv["_id"]))[0]
+    assert stored["actions"][0]["status"] == "confirmed"

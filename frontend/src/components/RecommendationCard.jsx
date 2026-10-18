@@ -6,6 +6,8 @@ const RecommendationCard = (props) => {
   const [confirming, setConfirming] = useState(false);
   const [status, setStatus] = useState('Backlog');
   const [adding, setAdding] = useState(false);
+  const [addError, setAddError] = useState('');
+  const [imageFailed, setImageFailed] = useState(false);
 
   return (
     <div style={{boxShadow : props.selected ? `0 0 14px ${rec.colorAccent}30` : ''}} className={`w-full flex flex-col overflow-hidden rounded-2xl border bg-[#0e1520] transition-all duration-200 ${
@@ -13,13 +15,17 @@ const RecommendationCard = (props) => {
     }`}>
       <div style={{background : `linear-gradient(135deg, ${rec.colorAccent}30, #1a1f2e)`}}
       className='w-full h-28 relative flex justify-center items-center'>
-        <span className='font-bold text-6xl opacity-30'>{rec.title[0]}</span>
+        {rec.coverImage && !imageFailed ? (
+          <img src={rec.coverImage} alt='' loading='lazy' onError={()=>setImageFailed(true)} className='absolute inset-0 w-full h-full object-cover opacity-70'/>
+        ) : (
+          <span className='font-bold text-6xl opacity-30'>{rec.title[0]}</span>
+        )}
         <span className='absolute top-3 right-3 mono text-[12px] font-semibold text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-xl px-2 py-0.5'>{rec.match}% match</span>
       </div>
       <div className='p-4 flex flex-col gap-3 flex-1'>
         <div>
           <h1 className='font-bold text-xl tracking-wider'>{rec.title}</h1>
-          <span className='body text-[11px] text-[#4a5568]'>{rec.released} · ~{rec.estHours}h (estimate) · {rec.platforms.join(', ')}</span>
+          <span className='body text-[11px] text-[#4a5568]'>{rec.released} · {rec.estHours ? `~${rec.estHours}h (RAWG average)` : 'length unknown'}{rec.platforms.length ? ` · ${rec.platforms.join(', ')}` : ''}</span>
         </div>
         <div className='flex gap-1.5 flex-wrap'>
           {rec.genres.map(function(elem){
@@ -36,9 +42,7 @@ const RecommendationCard = (props) => {
             )
           })}
         </ul>
-        {props.likedGames.length>0 && (
-          <span className='body text-[11px] text-[#4a5568]'>Because you liked {props.likedGames.slice(0,2).join(' and ')}</span>
-        )}
+
 
         {props.added ? (
           <div className='flex items-center gap-2 text-green-400 body text-[13px] border-t border-t-gray-600/40 pt-3'><CircleCheck size={16}/>Added to your Library as {props.addedStatus}</div>
@@ -61,13 +65,23 @@ const RecommendationCard = (props) => {
               className='font-bold tracking-wider text-white bg-[#080c10] rounded-[7px] py-1 hover:opacity-60 transition-all duration-200 px-2.5'>Cancel</button>
               <button disabled={adding}
               onClick={async ()=>{
-                setAdding(true);
-                await props.addGame(rec, status);
-                setAdding(false);
-                setConfirming(false);
+                try{
+                  setAddError('');
+                  setAdding(true);
+                  await props.addGame(rec, status);
+                  setConfirming(false);
+                }
+                catch(error){
+                  console.log(error);
+                  setAddError('Could not add the game. Please try again.');
+                }
+                finally{
+                  setAdding(false);
+                }
               }}
               className='font-bold tracking-wider text-black bg-linear-to-r from-green-400 to-cyan-400 rounded-[7px] py-1 hover:opacity-80 transition-all duration-200 px-2.5 flex items-center gap-1'>{adding && <LoaderCircle size={14} className='animate-spin'/>}Add</button>
             </div>
+            {addError && <span className='body text-[11px] text-red-300'>{addError}</span>}
           </div>
         ) : (
           <div className='flex gap-2 border-t border-t-gray-600/40 pt-3'>

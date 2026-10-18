@@ -9,7 +9,7 @@ from app.security import ServiceContext, require_service_context
 
 router = APIRouter()
 
-SERVICE_VERSION = "0.2.0"
+SERVICE_VERSION = "0.4.0"
 
 
 @router.get("/health")

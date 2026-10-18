@@ -16,7 +16,8 @@ def test_first_message_creates_conversation(api, store, llm):
     assert data["userMessage"]["text"] == "How do I beat Malenia?"
     assert data["userMessage"]["role"] == "user"
     assert data["assistantMessage"]["text"] == "Try sprinting away from the first flurry."
-    assert set(data["assistantMessage"]) == {"_id", "role", "text", "createdAt"}
+    assert {"_id", "role", "text", "createdAt"} <= set(data["assistantMessage"])
+    assert data["effects"]["sessionsAdded"] == []
     assert len(store.conversations) == 1
     assert store.conversations[0]["user"] == ObjectId(USER_A)
     assert len(store.messages) == 2
@@ -28,19 +29,19 @@ def test_follow_up_sends_history(api, llm):
     res = api.request("POST", "/v1/chat", USER_A, {"conversationId": conv_id, "message": "It's Malenia"})
     assert res.status_code == 200
     assert res.json()["conversation"]["_id"] == conv_id
-    history = llm.calls[-1]["history"]
-    assert [t.role for t in history] == ["user", "assistant"]
-    assert history[0].text == "I'm stuck on a boss"
+    transcript = llm.calls[-1]["transcript"]
+    assert [t["role"] for t in transcript] == ["user", "assistant", "user"]
+    assert transcript[0]["text"] == "I'm stuck on a boss"
 
 
 def test_history_is_windowed_and_starts_with_user(api, llm):
     conv_id = api.request("POST", "/v1/chat", USER_A, {"message": "m0"}).json()["conversation"]["_id"]
     for i in range(1, 6):
         api.request("POST", "/v1/chat", USER_A, {"conversationId": conv_id, "message": f"m{i}"})
-    history = llm.calls[-1]["history"]
+    history = llm.calls[-1]["transcript"][:-1]
     assert len(history) <= 6  # MAX_HISTORY_MESSAGES in conftest
-    assert history[0].role == "user"
-    assert history[-1].role == "assistant"
+    assert history[0]["role"] == "user"
+    assert history[-1]["role"] == "assistant"
 
 
 def test_cannot_use_another_users_conversation(api, store):

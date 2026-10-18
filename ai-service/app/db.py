@@ -12,6 +12,14 @@ logger = logging.getLogger("kairo.db")
 CONVERSATIONS = "ai_conversations"
 MESSAGES = "ai_messages"
 MEMORIES = "ai_memories"
+ACTIONS = "ai_actions"
+PLANS = "ai_plans"
+GOALS = "ai_goals"
+BRIEFINGS = "ai_briefings"
+
+# Owned by Express (Mongoose models Game and Session). Read-only here.
+GAMES = "games"
+SESSIONS = "sessions"
 
 
 def create_client(settings: Settings) -> AsyncMongoClient:
@@ -28,4 +36,8 @@ async def ensure_indexes(db: AsyncDatabase) -> None:
     await db[MESSAGES].create_index([("conversation", ASCENDING), ("createdAt", ASCENDING)])
     await db[MESSAGES].create_index([("user", ASCENDING)])
     await db[MEMORIES].create_index([("user", ASCENDING), ("createdAt", DESCENDING)])
+    await db[ACTIONS].create_index([("user", ASCENDING), ("createdAt", DESCENDING)])
+    await db[PLANS].create_index([("user", ASCENDING), ("createdAt", DESCENDING)])
+    await db[GOALS].create_index([("user", ASCENDING), ("endDate", DESCENDING)])
+    await db[BRIEFINGS].create_index([("user", ASCENDING), ("date", ASCENDING)], unique=True)
     logger.info("MongoDB indexes ensured")
