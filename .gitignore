@@ -22,7 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-backend/.env
-frontend/.env
-backend/node_modules/
-frontend/node_modules/
+
+# Secrets: any .env file in any folder (the example template is committed on purpose)
+.env
+.env.*
+!.env.example
+
+# Python (AI service)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/

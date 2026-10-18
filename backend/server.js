@@ -9,6 +9,7 @@ const Session = require('./models/Session')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('./middleware/authMiddleware');
+const aiRoutes = require('./routes/ai');
 const PORT = process.env.PORT || 5000;
 
 const app = express();
@@ -485,6 +486,8 @@ app.delete('/sessions/:sessionId',authMiddleware,async (req,res)=>{
         })
     }
 })
+
+app.use('/ai', aiRoutes);
 
 app.listen(PORT,()=>{
     console.log('Server started');

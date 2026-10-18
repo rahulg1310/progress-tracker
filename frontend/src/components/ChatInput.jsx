@@ -29,7 +29,7 @@ const ChatInput = (props) => {
             if(canSend) props.onSend(props.input);
           }
         }}
-        value={props.input} placeholder='Ask your coach or say "Log a 90 minute Sekiro session today"...' className='flex-1 resize-none bg-transparent body text-[14px] outline-none placeholder:text-[#4a5568] py-1.5 max-h-40'/>
+        value={props.input} placeholder='Ask Coach about a game, a boss or your build...' className='flex-1 resize-none bg-transparent body text-[14px] outline-none placeholder:text-[#4a5568] py-1.5 max-h-40'/>
         <button disabled={!canSend}
         onClick={()=>{
           props.onSend(props.input);

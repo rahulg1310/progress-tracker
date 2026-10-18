@@ -1,22 +1,29 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Bot, Brain, History, Plus, Sparkles } from 'lucide-react'
+import { Bot, Brain, History, Plus, Sparkles, LoaderCircle } from 'lucide-react'
 import { CoachData } from '../context/CoachContext'
 import { UserData } from '../context/UserContext'
 import ConversationList from './ConversationList'
 import ChatMessage from './ChatMessage'
 import ChatInput from './ChatInput'
 import MemoryModal from './MemoryModal'
-import { suggestedPrompts } from '../mock/coachMock'
+
+const suggestedPrompts = [
+  "I'm stuck on a boss. What should I do?",
+  'How can I improve my aim in shooters?',
+  'Give me tips for my first Soulslike',
+  'What makes a good gaming routine?',
+];
 
 const CoachContent = () => {
   const {user} = useContext(UserData);
-  const {conversations, activeId, setActiveId, activeMessages, memories, sending, historyLoading, sendMessage, retryMessage, updateAction, startNewConversation, deleteConversation, deleteMemory} = useContext(CoachData);
+  const {conversations, activeId, setActiveId, activeMessages, memories, sending, historyLoading, messagesLoading, historyError, sendMessage, retryMessage, updateAction, startNewConversation, deleteConversation, deleteMemory} = useContext(CoachData);
   const location = useLocation();
   const navigate = useNavigate();
   const [input, setInput] = useState(location.state?.prompt || '');
   const [historyModal, setHistoryModal] = useState(false);
   const [memoryModal, setMemoryModal] = useState(false);
+  const [slowReply, setSlowReply] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(()=>{
@@ -29,6 +36,18 @@ const CoachContent = () => {
   useEffect(()=>{
     bottomRef.current?.scrollIntoView({behavior : 'smooth'});
   },[activeMessages.length, sending])
+
+  // The free AI host sleeps when idle; tell the user if the first reply is slow
+  useEffect(()=>{
+    if(!sending) return;
+    const timer = setTimeout(()=>{
+      setSlowReply(true);
+    },8000);
+    return ()=>{
+      clearTimeout(timer);
+      setSlowReply(false);
+    }
+  },[sending])
 
   const handleSend = (text)=>{
     sendMessage(text);
@@ -103,8 +122,14 @@ const CoachContent = () => {
           </div>
         </div>
 
+        {historyError && (
+          <div className='mx-4 md:mx-8 mt-3 body text-[12px] text-red-300 bg-red-500/5 border border-red-500/20 rounded-xl px-3 py-2'>{historyError}</div>
+        )}
+
         <div className='flex-1 min-h-0 overflow-y-auto px-4 md:px-8 py-5'>
-          {activeMessages.length===0 ? (
+          {messagesLoading ? (
+            <div className='h-full flex justify-center items-center'><LoaderCircle className='animate-spin' size={22} color='#8a9bb0'/></div>
+          ) : activeMessages.length===0 ? (
             <div className='h-full flex flex-col justify-center items-center text-center gap-6 max-w-2xl mx-auto'>
               <div className='bg-green-400/10 border border-green-400/20 p-4 rounded-2xl'>
                 <Bot size={32} color='#00f5a0'/>
@@ -143,6 +168,9 @@ const CoachContent = () => {
                     <span className='w-1.5 h-1.5 rounded-full bg-[#8a9bb0] animate-bounce [animation-delay:150ms]'></span>
                     <span className='w-1.5 h-1.5 rounded-full bg-[#8a9bb0] animate-bounce [animation-delay:300ms]'></span>
                   </div>
+                  {slowReply && (
+                    <span className='body text-[11px] text-[#4a5568]'>Waking Coach up. The first reply can take up to a minute.</span>
+                  )}
                 </div>
               )}
               <div ref={bottomRef}></div>
